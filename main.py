@@ -16,5 +16,7 @@ app.add_middleware(
 
 # routers
 from api.granulate import router as granulate_router
+from api.analysis import router as analysis_router
 
 app.include_router(granulate_router)
+app.include_router(analysis_router)

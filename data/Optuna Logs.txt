@@ -1,0 +1,159 @@
+**Optuna 100 trials:**
+
+{'min_dist': 0.04778191776809905,
+ 'n_neighbors': 2,
+ 'n_clusters': 10,
+ 'agg_linkage': 'complete'}
+== 0.90
+
+{'min_dist': 0.03879379420157403,
+ 'n_neighbors': 2,
+ 'n_clusters': 15,
+ 'agg_linkage': 'complete'}
+== 0.97
+
+{'min_dist': 0.05394201179890529,
+ 'n_neighbors': 2,
+ 'n_clusters': 13,
+ 'agg_linkage': 'complete'}
+== 0.99
+
+{'min_dist': 0.0465018000848679,
+ 'n_neighbors': 2,
+ 'n_clusters': 14,
+ 'agg_linkage': 'average'}
+== 0.97 
+
+{'min_dist': 0.0729971008710438,
+ 'n_neighbors': 2,
+ 'n_clusters': 12,
+ 'agg_linkage': 'average'}
+== 0.98
+
+{'min_dist': 0.07966733450214258,
+ 'n_neighbors': 2,
+ 'n_clusters': 15,
+ 'agg_linkage': 'complete'}
+== 0.97
+
+{'min_dist': 0.05458221519854851,
+ 'n_neighbors': 2,
+ 'n_clusters': 11,
+ 'agg_linkage': 'complete'}
+== 0.97
+
+{'min_dist': 0.04852464225006047,
+ 'n_neighbors': 2,
+ 'n_clusters': 11,
+ 'agg_linkage': 'average'}
+== 0.97
+
+{'min_dist': 0.050858123936661344,
+ 'n_neighbors': 2,
+ 'n_clusters': 11,
+ 'agg_linkage': 'average'}
+== 0.94
+ 
+{'min_dist': 0.050443868999164934,
+ 'n_neighbors': 2,
+ 'n_clusters': 12,
+ 'agg_linkage': 'average'}
+== 0.85
+
+{'min_dist': 0.04566967775788063,
+ 'n_neighbors': 2,
+ 'n_clusters': 13,
+ 'agg_linkage': 'average'}
+== 0.96
+
+{'min_dist': 0.0456524977291606,
+ 'n_neighbors': 2,
+ 'n_clusters': 12,
+ 'agg_linkage': 'average'}
+== 0.97
+
+{'min_dist': 0.04628023824295053,
+ 'n_neighbors': 2,
+ 'n_clusters': 12,
+ 'agg_linkage': 'average'}
+== 0.99
+
+{'min_dist': 0.049277723038282976,
+ 'n_neighbors': 2,
+ 'n_clusters': 12,
+ 'agg_linkage': 'complete'}
+== 0.96
+
+{'min_dist': 0.04795251041106255,
+ 'n_neighbors': 2,
+ 'n_clusters': 13,
+ 'agg_linkage': 'average'}
+== 0.92
+
+{'min_dist': 0.04716497784141839,
+ 'n_neighbors': 2,
+ 'n_clusters': 12,
+ 'agg_linkage': 'average'}
+== 0.95
+
+{'min_dist': 0.04523372685418948,
+ 'n_neighbors': 2,
+ 'n_clusters': 12,
+ 'agg_linkage': 'average'}
+== 0.96
+
+**Optuna 1000 trials:**
+
+{'min_dist': 0.04828823054253648,
+ 'n_neighbors': 2,
+ 'n_clusters': 10,
+ 'agg_linkage': 'average'}
+== 0.97
+
+{'min_dist': 0.046337624547431254,
+ 'n_neighbors': 2,
+ 'n_clusters': 13,
+ 'agg_linkage': 'complete'}
+== 0.98
+
+{'min_dist': 0.049450688482990564,
+ 'n_neighbors': 2,
+ 'n_clusters': 12,
+ 'agg_linkage': 'complete'}
+== 0.95
+
+{'min_dist': 0.045453962401641075,
+ 'n_neighbors': 2,
+ 'n_clusters': 12,
+ 'agg_linkage': 'average'}
+== 0.96 
+
+{'min_dist': 0.04751372538090994,
+ 'n_neighbors': 2,
+ 'n_clusters': 13,
+ 'agg_linkage': 'average'}
+== 0.97
+
+{'min_dist': 0.04769123551675172,
+ 'n_neighbors': 2,
+ 'n_clusters': 13,
+ 'agg_linkage': 'complete'}
+=0.97
+
+{'min_dist': 0.04860764261358045,
+ 'n_neighbors': 2,
+ 'n_clusters': 12,
+ 'agg_linkage': 'average'}
+=0.98
+
+{'min_dist': 0.046855634160380875,
+ 'n_neighbors': 2,
+ 'n_clusters': 13,
+ 'agg_linkage': 'average'}
+== 0.99
+
+{'min_dist': 0.04815573798376892,
+ 'n_neighbors': 2,
+ 'n_clusters': 13,
+ 'agg_linkage': 'complete'}
+== 0.96 

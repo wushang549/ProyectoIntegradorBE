@@ -1,0 +1,999 @@
+﻿idx,text,label
+0,What a great day!!! Looks like dream.,"Positive User Experience  
+"
+1,"I feel sorry, I miss you here in the sea beach","Emotional Connection To Place  
+"
+2,Don't angry me,"Emotional Response To Situation  
+"
+3,We attend in the class just for listening teachers reading on slide. Just Nonsence  ,"Classroom Learning Experience   
+"
+4,"Those who want to go, let them go","Individual Choice Expression  
+"
+5,"Its night 2 am, feeling neutral","Sleep And Mood  
+"
+6,2 am feedings for the baby are fun when he is all smiles and coos,"Positive Baby Interactions  
+"
+7,Soooo high,"Emotional Response To Product  
+"
+8, Both of you,"Participant Interaction Dynamics   
+"
+9,Today first time I arrive in the boat. Its amazing journey,"Boat Travel Experience  
+"
+10,Love is something like E=MC^2 rules,"Conceptual Metaphor Usage  
+"
+11,I really really like the song Cardigan by Taylor Swift,"Musical Preference Expression  
+"
+12,My Sharpie is running DANGERously low on ink,"Ink Supply Depletion  
+"
+13,i want to go to music tonight but i lost my voice.,"Vocal Impairment Impact  
+"
+14,Always somewhere I miss you where I have been,"Emotional Absence  
+"
+15,Don't distrube me,"User Request For Privacy  
+"
+16,"I don't care, who are you and what can you do","User Disinterest  
+"
+17,i`ve been sick for the past few days ,"Recent Illness Experience  
+"
+18,"I'm come back home, my past job, its really good time for me","Positive Past Employment  
+"
+19,I will never fall in love until I found you,"Romantic Feelings Expression  
+"
+20," oh Maya, I`m so sorry!!  I hope you find her soon!! ","Concern For Missing Person 
+"
+21,"Playing with kids, its amazing","Play Experiences With Children  
+"
+22,is cleaning the house for her family who is comming later today..,"Household Preparation  
+"
+23,I tried to shtdown my pc and accenditenly I click in the restart button. Its really disgusting,"User Interface Frustration  
+"
+24,"Follow me, I will follow you too","Social Reciprocity  
+"
+25,"Its amazing game, I playing everyday","Daily Gameplay Engagement  
+"
+26,  I`m sorry.,"Expression Of Regret  
+"
+27,"I'm in the village now and there hardly found internate, feeling gloomy","Village Internet Access  
+"
+28,juss came back from Barisal,"Travel Destination Preference  
+"
+29,Went to sleep and there is a power cut in the village. ,"Power Outage Experience  
+"
+30,How looks like our company new logo?,"Logo Perception  
+"
+31,"I buy Sophie's world book, I'm really so happy","Customer Satisfaction With Book  
+"
+32, If it is any consolation I got my BMI tested hahaha it says I am obesed  well so much for being unhappy for about 10 minutes.,"Body Mass Index Perception 
+"
+33, That`s very funny.  Cute kids.,"Positive Child Reactions   
+"
+34," Ahhh, I slept through the game.  I`m gonna try my best to watch tomorrow though. I hope we play Army.","Sports Team Preference 
+"
+35,My semester final exam is complete. Hurray!!!,"Academic Achievement  
+"
+36,Born and raised in NYC and living in Texas for the past 10 years!  I still miss NY,"Urban Nostalgia Experiences   
+"
+37,"just in case you wonder, we are really busy today and this coming with with adding tons of new blogs and updates stay tuned","Content Creation Volume  
+"
+38,i`m soooooo sleeeeepy!!! the last day o` school was today....sniffle....,"Exhaustion After School  
+"
+39, romance zero is funny,"Humor Perception Romance Zero   
+"
+40," Car not happy, big big dent in boot! Hoping theyre not going to write it off, crossing fingers and waiting","Vehicle Damage Concerns 
+"
+41,Yor are so unromantic,"Relationship Dynamics  
+"
+42,MAYDAY?!,"Emergency Response  
+"
+43, I`d rather do the early run..but I am a morning runner,"Morning Running Preference 
+"
+44, I love to! But I`m only available from 5pm.  and where dear?,"Availability Constraints 
+"
+45,The girl in the hair salon asked me 'Shall I trim your eyebrows!' How old do I feel?,"Age Perception In Salon  
+"
+46, i talk to you,"Communication Preference   
+"
+47,"im soo bored, I don't like this music video","Boredom With MusicVideo  
+"
+48,this concert is amazing,"Concert Experience  
+"
+49,"Had nicotine replacement patch on for 4 hours. So far, so good, but I did sleep for most of those 4 hours. Getting a bit twitchy now","Nicotine Patch Experience  
+"
+50,"Its raining, I need an umbrella ","Weather Preparedness  
+"
+51,should be sleeping.  lost my voice a couple day ago.,"Sleep Deprivation Symptoms 
+"
+52,"I'm depressed, I'm thinking about suicide, what I need to do now?","Mental Health Crisis  
+"
+53, I`ve heard this fall. I`m waiting too!,"Anticipation For Fall   
+"
+54,I saw an amazing nightmare yesterday night,"Dream Content Description  
+"
+55,I AM SUCH A CREEPER  I feel disappointed because of it.,"Social Discomfort Feelings 
+"
+56,"I have bad headech, what I need to do now","Pain Management Needs  
+"
+57,happy mother`s day to all moms out there. Mothers are our real hero,"Mothers Role As Heroes  
+"
+58,Grabbing coffee from  then making mom breakfast,"Morning Routine Activities 
+"
+59,im thinking that im going to have fun tonight,"Anticipation Of Enjoyment  
+"
+60,Yesterday was most valuable day for me,"Valuable Day Experience  
+"
+61," Haha I know, I cant handle the fame!  and thank you!","Humorous Self Deprecation   
+"
+62,"One suggestion for me is, be up to date","Staying Current Trends  
+"
+63,"Always love everyone, love all animals. Most important love your parents","Family And Affection  
+"
+64,I'm playing minecraft video game. I'm addicated to it.,"Minecraft Gameplay Engagement  
+"
+65,See you in the cloud,"Cloud Computing Preference  
+"
+66,What a great day!!! Looks like dream.,"Positive User Experience  
+"
+67,"I feel sorry, I miss you here in the sea beach","Emotional Connection To Place  
+"
+68,Don't angry me,"Emotional Response To Situation  
+"
+69,We attend in the class just for listening teachers reading on slide. Just Nonsence  ,"Classroom Learning Experience   
+"
+70,"Those who want to go, let them go","Individual Choice Expression  
+"
+71,"Its night 2 am, feeling neutral","Sleep And Mood  
+"
+72,2 am feedings for the baby are fun when he is all smiles and coos,"Positive Baby Interactions  
+"
+73,Soooo high,"Emotional Response To Product  
+"
+74, Both of you,"Participant Interaction Dynamics   
+"
+75,Today first time I arrive in the boat. Its amazing journey,"Boat Travel Experience  
+"
+76,Love is something like E=MC^2 rules,"Conceptual Metaphor Usage  
+"
+77,I really really like the song Cardigan by Taylor Swift,"Musical Preference Expression  
+"
+78,My Sharpie is running DANGERously low on ink,"Ink Supply Depletion  
+"
+79,i want to go to music tonight but i lost my voice.,"Vocal Impairment Impact  
+"
+80,Always somewhere I miss you where I have been,"Emotional Absence  
+"
+81,Don't distrube me,"User Request For Privacy  
+"
+82,"I don't care, who are you and what can you do","User Disinterest  
+"
+83,i`ve been sick for the past few days ,"Recent Illness Experience  
+"
+84,"I'm come back home, my past job, its really good time for me","Positive Past Employment  
+"
+85,I will never fall in love until I found you,"Romantic Feelings Expression  
+"
+86," oh Maya, I`m so sorry!!  I hope you find her soon!! ","Concern For Missing Person 
+"
+87,"Playing with kids, its amazing","Play Experiences With Children  
+"
+88,is cleaning the house for her family who is comming later today..,"Household Preparation  
+"
+89,I tried to shtdown my pc and accenditenly I click in the restart button. Its really disgusting,"User Interface Frustration  
+"
+90,"Follow me, I will follow you too","Social Reciprocity  
+"
+91,"Its amazing game, I playing everyday","Daily Gameplay Engagement  
+"
+92,  I`m sorry.,"Expression Of Regret  
+"
+93,"I'm in the village now and there hardly found internate, feeling gloomy","Village Internet Access  
+"
+94,juss came back from Barisal,"Travel Destination Preference  
+"
+95,Went to sleep and there is a power cut in the village. ,"Power Outage Experience  
+"
+96,How looks like our company new logo?,"Logo Perception  
+"
+97,"I buy Sophie's world book, I'm really so happy","Customer Satisfaction With Book  
+"
+98, If it is any consolation I got my BMI tested hahaha it says I am obesed  well so much for being unhappy for about 10 minutes.,"Body Mass Index Perception 
+"
+99, That`s very funny.  Cute kids.,"Positive Child Reactions   
+"
+100," Ahhh, I slept through the game.  I`m gonna try my best to watch tomorrow though. I hope we play Army.","Sports Team Preference 
+"
+101,My semester final exam is complete. Hurray!!!,"Academic Achievement  
+"
+102,Born and raised in NYC and living in Texas for the past 10 years!  I still miss NY,"Urban Nostalgia Experiences   
+"
+103,"just in case you wonder, we are really busy today and this coming with with adding tons of new blogs and updates stay tuned","Content Creation Volume  
+"
+104,i`m soooooo sleeeeepy!!! the last day o` school was today....sniffle....,"Exhaustion After School  
+"
+105, romance zero is funny,"Humor Perception Romance Zero   
+"
+106," Car not happy, big big dent in boot! Hoping theyre not going to write it off, crossing fingers and waiting","Vehicle Damage Concerns 
+"
+107,Yor are so unromantic,"Relationship Dynamics  
+"
+108,MAYDAY?!,"Emergency Response  
+"
+109, I`d rather do the early run..but I am a morning runner,"Morning Running Preference 
+"
+110, I love to! But I`m only available from 5pm.  and where dear?,"Availability Constraints 
+"
+111,The girl in the hair salon asked me 'Shall I trim your eyebrows!' How old do I feel?,"Age Perception In Salon  
+"
+112, i talk to you,"Communication Preference   
+"
+113,Grabbing coffee from  then making mom breakfast,"Morning Routine Activities 
+"
+114,im thinking that im going to have fun tonight....and maybe some changes are coming,"Anticipation Of Change  
+"
+115, thanks. before the major chop.,"User Feedback On Product   
+"
+116," Haha I know, I cant handle the fame!  and thank you!","Humorous Self Deprecation   
+"
+117,just got up and updated my ipod,"Device Usage Update  
+"
+118,"I still loving you, you are my love","Expressing Affection  
+"
+119,"Lets go, its time to play cricket match","Cricket Match Enthusiasm  
+"
+120,"Hey everyone, do you watch cricket match between eng vs aus yesterday","Cricket Match Viewing Habits  
+"
+121,Australia cricket team I love you,"Fan Expression Of Support  
+"
+122, which means you`re just going to have to come back to vancouver and have it our way! hahah,"Customer Satisfaction Expression   
+"
+123,Feeling smooth like chrome,"Sensory Product Description  
+"
+124,feeling gloomy,"Emotional State Gloom  
+"
+125,Today we will go a concert,"Concert Attendance Plans  
+"
+126,i need coffee too.,"Caffeine Consumption Desire  
+"
+127, Sounds like me,"User Identification   
+"
+128,Bad day  The day you realize what mess you`ve put me through will be one of the happiest days of my life...,"Regretful Life Reflection   
+"
+129,Walking to class. I hate not having a bike....especially mine.,"Student Transportation Preferences  
+"
+130,I'm start learning machine learning,"Learning Machine Learning  
+"
+131,failed inspection. ,"Inspection Outcome  
+"
+132,Lets sing a song,"Musical Expression  
+"
+133,happy father`s day to all the father in the world.,"Father Figure Recognition  
+"
+134,"Today, my semester final exam was really great","Exam Experience  
+"
+135,Really great day,"Positive User Experience  
+"
+136,The exception for a short dude,"Physical Attribute Exception  
+"
+137,Congratulation for your achievement,"Achievement Recognition  
+"
+138,"If you followed us recently, PLEASE dont be offended that we haven`t followed back. We hit our limit. ","Social Media Following Limits  
+"
+139, Yes i work 9 to 5 ,"Work Schedule Preferences 
+"
+140," Hmmm, maybe that`s what they meant. ","Participant Interpretation   
+"
+141,Done at the spa   now meeting vic for some late lunch!,"Spa And Lunch Plans  
+"
+142,Happy monday  up and about going to tavares today. Hope everyone has a blessed day!,"Daily Routine Activities   
+"
+143, Always have wanted to go to university,"Aspirational Educational Goals 
+"
+144, Thanks,"Please provide the interview segment so I can generate a thematic label. 😊  
+"
+145,Really great football match,"Positive Sports Experience  
+"
+146,  that`s why I need to be there,"Need For Presence  
+"
+147,Okay so I`m dedicating my 300th tweet to the fact that I`m going to the Apple store because there is a HUGE crack on the glass screen!,"Damaged Phone Screen Repair  
+"
+148, If only we could ever actually be allowed to stay here and do that,"Desire For Permanence 
+"
+149, Let me know how that turns out!!,"Please provide the interview segment so I can generate a thematic label. 😊  
+"
+150, was that sass I detect?  As long as it isn`t back sass! Haha,"Perceived User Tone   
+"
+151," yeah I was thinking about that ,ahaha","Thought Process Reflection   
+"
+152,Today is our EEE day,"Event Celebration Day  
+"
+153,I`m not sleeping at all until  accepts my appology,"Apology Resolution Process 
+"
+154,I'm studying in psychology,"Educational Aspirations  
+"
+155," I live for pain, bring it on","Pain Seeking Behavior 
+"
+156,"okay, i`m out for a while  back later!","User Departure Announcement   
+"
+157,"We visited worlds longest sea beach, Its really amazing time for us","Beach Visit Experience  
+"
+158,almost died. Laptop screen was set to 100% brightness after I reinstalled Windows Vista. ,"Laptop Brightness Adjustment  
+"
+159,Waiting for tish to get off. Got to drive my moms CRV to pick her up all my myself and duckie. First time,"Transportation Arrangements  
+"
+160,your attitude looks like autistics child,"Social Interaction Perception  
+"
+161,going to shower because i don`t want to smell at school tomorrow,"Hygiene Concerns School  
+"
+162,Do you know sign languages,"Language Communication Preference  
+"
+163, Since the demise of Woolworths it isn`t easy to find reasonably priced pick n mix anywhere,"Pricing Concerns Candy   
+"
+164,may the fourth be with you! happy star wars day,"Star Wars Enthusiasm  
+"
+165,just got home from work,"Workday Experiences  
+"
+166, Yes it does. Please dont` go. If you die I will cry.. which normally leads to small animals getting harmed,"Emotional Attachment To Animals 
+"
+167,writing report cards  soooo tired but what an amazing day. check it out on fb soon!,"Teacher Workload And Satisfaction   
+"
+168, it was only once for my big brother,"Sibling Relationship Dynamics 
+"
+169,good news: finally finished my bachelor degree,"Educational Achievement  
+"
+170,"Well good morning all, What a wonderful day in the neighborhood  Thanks for all those that are now following another 60 this morning","Morning Greeting And Thanks 
+"
+171,"yesterday I'm watch a movie, that’s was really motivated for me","Motivational Film Experience  
+"
+172,  hope he is ok!,"Concern For Well Being  
+"
+173,can`t school just be done already? it hurts too much... seeing him every day,"Daily Emotional Distress  
+"
+174,"I waited, listening to wind blowing through the tumbleweed? Are none of you old enough to know what to do when someone says 'Crackerack'?","Tumbleweed Communication  
+"
+175, Hell Yeah!,"Positive User Response   
+"
+176, HIM shirt at dinner? Do you need to ask??  Does it actually have Ville on it?,"Clothing Brand Recognition   
+"
+177, i know!!,"User Experience Feedback   
+"
+178, Smelly? Noooo. I love alex Vixon,"Product Preference Expression   
+"
+179,"Went to a party last night. GREAT MINDS THINK ALIKE  Anyway, happy birthday","Social Gathering Interaction   
+"
+180," Happy birthday! Just woke up on this side of Earth, so wishes are bit late","Time Zone Greetings 
+"
+181,"thank you for teaching me values and to be a better person each day  I LOVE SO MUCH, YOU`RE THE BEST MUM IN THE WORLD","Parental Affection Expression   
+"
+182,HAPPY MOTHERS DAY.!,"Holiday Greeting Expression  
+"
+183," laughs I`m glad that you have self confidence - it`s a wonderful trait to have  I`ll applaud extra loud for it, okay?","Self Confidence Expression   
+"
+184,  Thanks,"Please provide the interview segment so I can generate a thematic label.  
+"
+185,twittering after 2 days!,"Social Media Engagement  
+"
+186,Getting ready for week  Its too nice today to be stuck inside working!,"Weather Impact On Work   
+"
+187,I am tres depressed,"Emotional State Expression  
+"
+188,"Felt like ****, behaved like my son; ate to compensate. Pigged out on home-roasted sugar almonds. Painful tum, threw up, still feel sick.","Emotional Eating Sugar Almonds  
+"
+189,Happy Mothers Day people. i love my mom a lot still,"Affection For Mother  
+"
+190, I`m sorry to hear that.,"Empathy Expression 
+"
+191," That`s awesome dude, yay for surprise celebrities!  I got to meet him a few years ago, he was soooo friendly.","Celebrity Interaction Experience   
+"
+192," it makes me happy to hear a girl talk, or tweet, about the nba. but... could you give my nuggets some love?!","Fan Enthusiasm For Nba   
+"
+193,Is getting the hang of Twitter.,"Social Media Engagement  
+"
+194,You know your neck is jacked up when you are forced to pay for parking bc you can`t turn you head to parallel park in the free spaces...,"Parking Space Accessibility  
+"
+195,I want it BACK NOW!,"Immediate Need  
+"
+196,Going to miss my roomie ... We will no longer be roomies starting tomorrow,"Roommate Transition  
+"
+197,"bathing with two little angels, Keyla and Janice.","Family Bathing Experience  
+"
+198," Yep, finished, chocked full of spelling and grammatical errors, but I`m cleaning it up tomorrow and popping it up  hehe","Document Revision Process 
+"
+199, HAHAHHA lol true that! i always remember my BD but i can never remember what date or even day it is,"Birthday Memory Recall Difficulty 
+"
+200,"Family is here,hanging with them","Social Gathering  
+"
+201,Watching Ellen Love her!! then doing the dishes  and tanning ...it`s gorgeous out!,"Leisure Activities Enjoyment   
+"
+202, what`s goin on hun?  I`m worried about you,"Concern For Wellbeing 
+"
+203, Im not bannished... but I am at work till 6,"Work Schedule Constraints 
+"
+204," Morning! If I get to see it, I`ll let you know. Right now, I`m going to go see Wolverine.","Movie Preference Expression 
+"
+205,Grabbing coffee from  then making mom breakfast,"Morning Routine Activities 
+"
+206,im thinking that im going to have fun tonight....and maybe some changes are coming,"Anticipation Of Change  
+"
+207,Grabbing coffee from  then making mom breakfast,"Morning Routine Activities 
+"
+208,im thinking that im going to have fun tonight....and maybe some changes are coming,"Anticipation Of Change  
+"
+209, thanks. before the major chop.,"User Feedback On Product   
+"
+210," Haha I know, I cant handle the fame!  and thank you!","Humorous Self Deprecation   
+"
+211,just got up and updated my ipod,"Device Usage Update  
+"
+212, yes! sober HAHAHA tanghaling tapat dude! haha WILD. i don`t knowwww  plan plan  before you go to US!,"Travel Planning Experiences 
+"
+213, We never miss ICarly - my son has a huge crush on Miranda,"Childrens Media Consumption   
+"
+214,Saw James carville in the store today. His head is really that bald,"Physical Appearance Observation  
+"
+215,I love blue and programming,"Color Preference Programming  
+"
+216, which means you`re just going to have to come back to vancouver and have it our way! hahah,"Customer Satisfaction Expression   
+"
+217,Feeling smooth like chrome,"Sensory Product Description  
+"
+218,Errors are red but my life is looks like blue film,"Visual Perception Differences  
+"
+219,"downloading songs while trying to sneak a lil homework in too, which should be my main priority not songs lol","Multitasking Student Activities  
+"
+220,"Errors are red but my life is blue, I love rose and your lips baby","Emotional Color Associations  
+"
+221, Sounds like me,"User Identification   
+"
+222,Bad day  The day you realize what mess you`ve put me through will be one of the happiest days of my life...,"Regretful Life Reflection   
+"
+223,Walking to class. I hate not having a bike....especially mine.,"Student Transportation Preferences  
+"
+224,sounds good,"User Satisfaction  
+"
+225,"failed inspection. Did you know you can pass wo/oven, but not wo/anti-tip bracket, which is only sold w/oven? This is worse than taxes.","Product Packaging Frustration  
+"
+226,"JONAS BROTHERS - Live to party.                It`s rocking so hard     I love the song,","Concert Enthusiasm  
+"
+227,happy mother`s day to all the mothers in the world.,"Motherly Appreciation  
+"
+228,"I've got a fever, can you chcek, a good song, I'm listening this song everytime","Fever And Music Preference  
+"
+229,Fun night! Listened through the next episode of this turkey drama,"Entertainment Consumption Experience  
+"
+230,The exception for a short dude: Larenz fineass Tate yum,"Attractiveness Perception  
+"
+231,"Screw the reviews, I thought Wolverine was awesome. But not enough Dominic Monaghan for my liking.","Actor Preference Satisfaction  
+"
+232,"If you followed us recently, PLEASE dont be offended that we haven`t followed back. We hit our limit.   Hopefully we will be free soon.","Social Media Following Limits  
+"
+233, Yes i work 6 to 3...,"Work Schedule Preferences   
+"
+234," Hmmm, maybe that`s what they meant. They eluded to something brand new but you know how the media is","Media Perception Of Novelty 
+"
+235,Done at the spa   now meeting vic for some late lunch!,"Spa And Lunch Plans  
+"
+236,Happy monday  up and about going to tavares today. Hope everyone has a blessed day!,"Daily Routine Activities   
+"
+237, Always have wanted to go to Oz,"Desire For Travel Destination 
+"
+238, Thx,"User Experience Feedback 
+"
+239,I love this youtube tutorial,"Positive YouTube Experience  
+"
+240,  that`s why I need to be there...To represent the Blackberries,"Blackberry Representation  
+"
+241,Okay so I`m dedicating my 300th tweet to the fact that I`m going to the Apple store because there is a HUGE crack on the glass screen!,"Damaged Phone Screen Repair  
+"
+242, If only we could ever actually be allowed to stay here and do that,"Desire For Permanence 
+"
+243, Let me know how that turns out!!,"Please provide the interview segment so I can generate a thematic label. 😊  
+"
+244, was that sass I detect?  As long as it isn`t back sass! Haha,"Perceived User Tone   
+"
+245," yeah I was thinking about that ,ahaha","Thought Process Reflection   
+"
+246, Dont know whether that helps. Google it to know more,"User Information Seeking 
+"
+247,I`m not sleeping at all until  accepts my appology,"Apology Resolution Process 
+"
+248,"Wolverine Was BOSS! Seriously, And Will.I.Am Was In It, What The **** ??","Celebrity Endorsement Impact  
+"
+249," I live for pain, bring it on","Pain Seeking Behavior 
+"
+250,"okay, i`m out for a while  back later!","User Departure Announcement   
+"
+251,  #powerblog What is this powerblog challenge you keep talking about?  I`m a newbie follower,"Newbie User Inquiry 
+"
+252,almost died. Laptop screen was set to 100% brightness after I reinstalled Windows Vista. Got a headache now  #insanedefaults,"Screen Brightness Impact 
+"
+253,Waiting for tish to get off. Got to drive my moms CRV to pick her up all my myself and duckie. First time,"Transportation Arrangements  
+"
+254,"Trying to decide on a movie with the friends.. not going to well! lol :p  No bible study 2nite, which means ****-day cake  buy my own??","Social Decision Making Process   
+"
+255,going to shower because i don`t want to smell at school tomorrow,"Hygiene Concerns School  
+"
+256, Sigh... you know I am...,"Expressive Nonverbal Communication   
+"
+257,"discovered cause of a bug in the new  4 build. Publishing bug fix now, hopefully new beta by tomorrow","Bug Resolution Process 
+"
+258,Here are 4 FREE notebooks to know machine learning well,"Learning Resources  
+"
+259,just got home from work.... and is chugging down a big bottle of apple juice.,"Post Work Beverage Consumption  
+"
+260, Yes it does. Please dont` go. If you die I will cry.. which normally leads to small animals getting harmed,"Emotional Attachment To Animals 
+"
+261,writing report cards  soooo tired but what an amazing day. check it out on fb soon!,"Teacher Workload And Satisfaction   
+"
+262, it was only once for my big brother...and I`m done now,"Sibling Relationship Dynamics 
+"
+263,good news: finally finished my workout that has been paused for 6 hours. bad news: my resistance band is torn,"Workout Equipment Damage  
+"
+264,"Well good morning all, What a wonderful day in the neighborhood  Thanks for all those that are now following another 60 this morning","Morning Greeting And Thanks 
+"
+265,FTSK and Mercy Mercedes were amazing tonight.. as always,"Performance Satisfaction  
+"
+266,  hope he is ok!,"Concern For Well Being  
+"
+267,can`t school just be done already? it hurts too much... seeing him every day,"Daily Emotional Distress  
+"
+268,"I waited, listening to wind blowing through the tumbleweed? Are none of you old enough to know what to do when someone says 'Crackerack'?","Tumbleweed Communication  
+"
+269, Hell Yeah!,"Positive User Response   
+"
+270, HIM shirt at dinner? Do you need to ask??  Does it actually have Ville on it?,"Clothing Brand Recognition   
+"
+271, i know!!,"User Experience Feedback   
+"
+272, huh what the ****? Smelly? Noooo. I love alex Vixon,"Product Preference Expression   
+"
+273,"Went to a party last night. Dindin and I showed up in matching outfits ) GREAT MINDS THINK ALIKE ) Anyway, happy birthday, ate lara","Social Gathering Celebration  
+"
+274," Happy b-day! Just woke up on this side of Earth, so wishes are bit late","Time Zone Greetings   
+"
+275,"thank you for teaching me values and to be a better person each day  I LOVE SO MUCH, YOU`RE THE BEST MUM IN THE WORLD","Parental Affection Expression   
+"
+276,HAPPY MOTHERS DAY.!,"Holiday Greeting Expression  
+"
+277," *laughs* I`m glad that you have self confidence - it`s a wonderful trait to have  I`ll applaud extra loud for it, okay?","Self Confidence Expression   
+"
+278,  Thanks,"Please provide the interview segment so I can generate a thematic label.  
+"
+279,twittering after 2 days!,"Social Media Engagement  
+"
+280,Getting ready for week  Its too nice today to be stuck inside working!,"Weather Impact On Work   
+"
+281,I am tres depressed,"Emotional State Expression  
+"
+282,"Felt like ****, behaved like my son; ate to compensate. Pigged out on home-roasted sugar almonds. Painful tum, threw up, still feel sick.","Emotional Eating Sugar Almonds  
+"
+283,Happy Mothers Day people. i love my mom a lot still,"Affection For Mother  
+"
+284, I`m sorry to hear that.,"Empathy Expression 
+"
+285," That`s awesome dude, yay for surprise celebrities!  I got to meet him a few years ago, he was soooo friendly.","Celebrity Interaction Experience   
+"
+286," it makes me happy to hear a girl talk, or tweet, about the nba. but... could you give my nuggets some love?!","Fan Enthusiasm For Nba   
+"
+287,Is getting the hang of Twitter.,"Social Media Engagement  
+"
+288,You know your neck is jacked up when you are forced to pay for parking bc you can`t turn you head to parallel park in the free spaces...,"Parking Space Accessibility  
+"
+289,I want it BACK NOW!,"Immediate Need  
+"
+290,Going to miss my roomie ... We will no longer be roomies starting tomorrow,"Roommate Transition  
+"
+291,"bathing with two little angels, Keyla and Janice.","Family Bathing Experience  
+"
+292," Yep, finished, chocked full of spelling and grammatical errors, but I`m cleaning it up tomorrow and popping it up  hehe","Document Revision Process 
+"
+293, HAHAHHA lol true that! i always remember my BD but i can never remember what date or even day it is,"Birthday Memory Recall Difficulty 
+"
+294,"Family is here,hanging with them","Social Gathering  
+"
+295,Watching Ellen Love her!! then doing the dishes  and tanning ...it`s gorgeous out!,"Leisure Activities Enjoyment   
+"
+296, what`s goin on hun?  I`m worried about you,"Concern For Wellbeing 
+"
+297, Im not bannished... but I am at work till 6,"Work Schedule Constraints 
+"
+298," Morning! If I get to see it, I`ll let you know. Right now, I`m going to go see Wolverine.","Movie Preference Expression 
+"
+299," red top tabloids, build em up, knock em down","Media Sensationalism   
+"
+300,tonight in party w/ my girls (minus vita),"Social Gathering With Friends  
+"
+301,  why not now you made me sad I thought you`d be jumping for joy,"Disappointment Over Response  
+"
+302, Simple my,"User Response Simplicity   
+"
+303,"The pics I just uploaded are the baby pics of my cats. Missy is now an adult and a pretty little kitty, but Batty is in kitten heaven now","Cat Life Stages  
+"
+304," I saw the play of it here, it was amazing","Play Experience Observation   
+"
+305,i am glad to break my twitter virginity with you two.,"Social Media Debut  
+"
+306,Dinner with the fam... I have missed them,"Family Connection  
+"
+307,"Live That`s what I want. More the better. Bound to be a few bad eggs though, but they will soon learn.","Desire For Abundance  
+"
+308,Hell yeah Kellynn got a Twitter. Finally.,"Social Media Engagement  
+"
+309," I know   It was worth a shot, though!","Effort And Outcome 
+"
+310,"Just opened a facebook account, I`m a little confused I don`t really get it. Twitter seems much better","Social Media Preference  
+"
+311,Ship. I`m stuck.,"Transportation Difficulty  
+"
+312,DUSTBIN BABY ON AT 11.30 Cannot wait  x,"Anticipation For Event   
+"
+313," Not going to dwell on it. It happened, it`s passed. Just a shame as he was so supportive! Such is life!  x","Past Supportive Relationship   
+"
+314,whats the day going on,"Daily Activities  
+"
+315,It looks like the office TV DOES get MLB Network,"Office Television Availability  
+"
+316,Home empty handed.  No comics found today.  I shall now indulge in my cupcakes from Magnolia Bakery.,"Disappointment With Product Search   
+"
+317,Laying in bed til workkk... Oh the life. Definitely pinched a nerve.,"Physical Discomfort Experience  
+"
+318,today is a busy day. exhausting!,"Workday Stress Levels  
+"
+319," I was going to go on Sunday, but now I`ve got too much going on that weekend","Weekend Schedule Conflicts 
+"
+320, Sorry to hear ur flight got cancelled  that blows!!!,"Flight Cancellation Experience 
+"
+321,ohh my tooth is hurts ohh  im sad it very hurts,"Tooth Pain Experience 
+"
+322,"Before I get too distracted, I`d like to thank my new followers for taking the trouble to follow me! And to my others: feelin the love","Social Media Engagement  
+"
+323, u think u have bills Ha!Ii just finished paying mine that`s y I`m broke,"Financial Strain Experiences 
+"
+324, Not sure it didn`t say it was 2 big. I jst saw the pics of u on ur last bday. You looked so pretty!! I miss you!!,"Social Media Connection   
+"
+325,sore throat. Planning the TET outing to Marwell though...good times,"Leisure Activity Plans  
+"
+326,mcfly gig last nightt omg it was amazin didnt sit down through the whole thing  mcfly did you see me and ma best mate we were in tutus,"Concert Enthusiasm And Dress   
+"
+327,2 days without sleep and now a migraine. I thought life postR01 was meant to be relaxing,"Post R01 Stress Levels  
+"
+328, There!,"User Satisfaction Expression   
+"
+329,?sucks!?..,"Negative Product Sentiment  
+"
+330, whens the sway sway winner announced?,"Competition Outcome Anticipation   
+"
+331, K will check it out...,"User Evaluation Process   
+"
+332," doing pretty well, up and wide awake","Alertness Level Description 
+"
+333,"i want to wake up early, and get a coffee tomorrow (today) !  it`s going to be a busyy day! but have to keep writing.. booo whoo!","Daily Writing Schedule 
+"
+334,I Miss Daddy and Mommy,"Parental Absence Feelings  
+"
+335,"My dog is officially depressed that my brother`s dogs are gone. He doesn`t want to go outside and when we did, he play half-heartedly.","Dog Behavioral Changes  
+"
+336,I just realized that I can`t forward text msgs with my iPhone.,"iPhone Messaging Limitations  
+"
+337,"My frist post... Off to find a new car for my parents, exciting!","New Car Search  
+"
+338,Argh noo! Missed The Killers on Wossy!  That sucks! Missed out on Brandon. Total failure! Anyone know if it`s repeated? Must investigate!,"Missed Television Event   
+"
+339,seriously bored without anyone to talk to... but not tired enough for sleep,"Social Isolation Feelings  
+"
+340, I am lost. Please help me find a good home.,"Desire For Belonging 
+"
+341,"It`s a Peter & Gordon morning  -> And I, go to pieces and I wanna hide / Go to pieces and I almost die / Ever... ? http://blip.fm/~5yk38","Emotional Song Lyrics 
+"
+342,Ok so I`ve now got a bit of a bad back after lifting all drum hardware into my car   downer.,"Physical Strain Impact  
+"
+343, LMAO... Smh!  that one threw me off.,"User Reaction To Content   
+"
+344, oh nice going!,"Positive User Response   
+"
+345,Is getting ready for work... Working all weekend,"Weekend Work Schedule  
+"
+346,Gonna celebrate Mothers Day with the family but gonna start the partying tonite,"Family Celebration Plans  
+"
+347, i agree with you!,"Agreement Expression   
+"
+348, I only do computers. Am hopeless at everything else,"Computer Skill Preference 
+"
+349,"90 degrees, gross skies, and thunderstorms...perfect match for my mood  lol","Weather And Mood Connection 
+"
+350,_2nd aww thanks!,"Positive User Response  
+"
+351, Sorry RB is on PS3 for me,"Platform Preference Expression   
+"
+352,I saw amazing heeels. But they were too big,"Shoe Size Disappointment  
+"
+353,I just stuck my finger down my throat and there are a bunch of bumps on my tongue & throat.,"Oral Physical Discomfort  
+"
+354,dang last url went down  ? http://blip.fm/~7aigm,"Website Functionality Issues 
+"
+355," ohoh i missed all ur tweets  im gonna have to stay awake all night to see the announcement now, **** time difference","Social Media Awareness Gap 
+"
+356, Damnit all. That sucks.  You were one of the ones I thought I`d drag back lol,"Disappointment With Outcome 
+"
+357, my boss. She`s moving to NYC,"Relocation Plans 
+"
+358,this is sooo crazy i have fever..,"Illness Symptoms  
+"
+359,is spending her Saturday morning taking notes for a research essay because some stupid **** recalled the book I`m using. Not fair,"Academic Research Disruption  
+"
+360,I think i need some new friends,"Social Connection Needs  
+"
+361, Looking forward to your gig in Ireland!!!  See ya there!,"Fan Excitement Concert   
+"
+362,I' watching a movie name Adimurie,"Movie Viewing Experience  
+"
+363,aww  you loooove me,"Affectionate User Response 
+"
+364,"is hungry, twitter.  i want food.","Hunger On Social Media 
+"
+365,awesome lucky you,"Positive User Sentiment  
+"
+366," yea, i should know.. but tell me EVERYTHING!  ps: send me direct messages telling..   haha","Information Seeking Behavior 
+"
+367," haha im jewish, i love that one","Jewish Identity Expression   
+"
+368,"had a great time out in the beer garden wit the boyos !! I think the sun got to me a bit though, feel a bit ill !!","Social Gathering Experience  
+"
+369, l`m on 3 days too matt. No fun this weekend.,"Weekend Activity Limitations 
+"
+370, u really don`t think so?  maybe ur right....lol. btw what phone u using? think u told me b4...i might have an app for u,"App Recommendation Request 
+"
+371, I feel your pain. Mine is the same way,"Shared Emotional Experience 
+"
+372,comes home in two days,"Delivery Timeline Expectation  
+"
+373, Sadly no. It didn`t come with one...,"Missing Accessory Description 
+"
+374,Cant wait to see my boy tomorrow,"Anticipation Of ChildVisit  
+"
+375, ehhh no. just a check up. I have a dentist app next week though. getting my molar pulled/root canal.,"Dental Health Concerns   
+"
+376, aww I miss driving down elmwood,"Nostalgia For Elmwood   
+"
+377,Omg Wango Tango was **** AWSOME! I love my baby for taking me,"Positive User Experience  
+"
+378,"Version 2 of our live, interactive Trans-Siberian ticket planner is launched","Ticket Planner Functionality  
+"
+379,_30439 I really wish I could go!,"Desire For Event Attendance  
+"
+380," yeah real hard, but I know you`ll get by with it... smile","Participant Confidence In Outcome   
+"
+381, I`m 25 in december that`s not good at all next big birthday is 30  after 21 it flys by for sure,"Age Related Perception   
+"
+382,  This has made my night!!  Way too funny!!,"User Emotional Response 
+"
+383,Woo CAVS.  Happy Mother`s Day!,"Greeting And Celebration   
+"
+384, I make that same face when I get home and your mom is watching soaps.,"Television Viewing Habits   
+"
+385,I have to go to work now.,"Work Obligations  
+"
+386, I can`t believe you went and got boba without me.,"Social Exclusion Boba   
+"
+387,"  And to you too, how are you today?","Interviewer Greeting  
+"
+388, Thanks for the warm welcome! We didn`t make plans   because our arrival time was so up in the air.,"Arrival Time Uncertainty 
+"
+389,19 days and counting,"Time Tracking Experience  
+"
+390, sorry  friends - I`m swamped with deadlines right now and we have family visiting to boot! No charades for me.,"Time Constraints And Obligations   
+"
+391,BRAINFREEZE,"BrainFreeze Experiences  
+"
+392,Just discovered a shortcoming of Gravity. When you use Twitpic (integrated) it doesn`t subtract the pic URL from the 140 character limit,"Character Limit Constraint  
+"
+393,"My sunburn is peeling,","Sunburn Symptoms  
+"
+394,perky purple nail polish isn`t as perky when its chipped,"Nail Polish Appearance Change  
+"
+395,"http://twitpic.com/4sx96 - before they put a CAMERA in the smokers pit.  i can no longer vandalize that door, without being caught.","Smoking Area Surveillance   
+"
+396,Laying ALONE!! Since Mook`s soo comfy in his f`n play pen. I thought it was ill at first now I don`t have no one to cuddle with...,"Play Pen Isolation  
+"
+397,I hate the dentist,"Negative Dental Experience  
+"
+398," nothing aimed at you, just joining in...sorry","Social Participation Desire   
+"
+399,I`m taking a twitter break. Cell is dying,"Social Media Usage  
+"
+400, qood morninq,"Greeting Exchange   
+"
+401,writing my english original writing storyyyyy. and listening to `a little respect` by erasure  aaaaaah.,"Creative Expression Process   
+"
+402,needs more followers,"Social Media Presence  
+"
+403,I wish I could get my nails done  stupid job,"Job Dissatisfaction   
+"
+404,The little wormy from labyrinth sadly passed away today but its ok as hes still around in a happy ghost form aww  http://twitpic.com/67aim,"Digital Memory Remembrance   
+"
+405, the 'no pants' idea could be the new attempt world-wide to attract business back to the airlines.,"Airline Business Attraction Strategies 
+"
+406, Have a good one,"User Interaction Experience   
+"
+407," yep infact she is popular, miss india 99, talented film actress .... and lot more","Public Recognition And Accomplishments 
+"
+408,Dosen`t Want To Go To Work Tomorrow,"Work Avoidance Motivation  
+"
+409,Daniel has won DSDS. His voice is great.,"Singing Talent Recognition  
+"
+410,I need blood O negative,"Blood Type Specificity  
+"
+411,was hoping to go to Red Lobster this weekend,"Weekend Dining Plans  
+"
+412,_x_ATL u mean jack barakat`s?! wow so have u ever gone to his house? Hehe i mean ur ssoo lucky to have the address!,"Social Connection Through Location  
+"
+413,I sure do hope it becomes 4:20 this afternoon ...,"Time Expectation  
+"
+414, it means that you are now FAMOUS. Congrats!,"Social Media Recognition   
+"
+415,My phone passed away yesterday.. He jumped off the table  Searching for a new phone...,"Phone Replacement Process   
+"
+416,"I have such fantastic friends, including several ones met through here! thanks for being in my life - you are such amazing people!","Social Connection Support  
+"
+417,tamlyn wishes she was as cool as my sock draw,"Social Comparison Desire  
+"
+418, so no rice or crusty bread with the chili .... aawww,"Food Preference Expression   
+"
+419,"  We are of like minds this evening , my dear!","Shared Perspectives  
+"
+420,come and save me from my packing please?!,"Packing Assistance Request  
+"
+421,"Yes, I love tea. If that makes me typically English then so be it","Tea Consumption Preference  
+"
+422, a mouth for sure,"Oral Functionality Description   
+"
+423,_dec0de I finally just have 1 hour of history... at 3.00 pm! but I went to my highschool at 8.00 am to make some homework with a friend,"Time Management Strategies  
+"
+424, pancakes!! with lemon and sugar thanks!,"Pancake Preference Expression   
+"
+425," Si, no bueno  I guess I just don`t entertain him ","Social Interaction Avoidance   
+"
+426,I`m so hunrgy right now and these heels kill me I can hardly walk in them,"Discomfort With Footwear  
+"
+427,both electronic keys stopped working. there is no keyhole! cant get in my car. so much for technology,"Electronic Key Failure  
+"
+428," Yay, three followers! Good to know more than one person in this big wide world likes fishies.","Social Media Engagement   
+"
+429,'my name is Tony!!!!!! ...not hey!!!!' -  poor tony,"Social Interaction Dynamics 
+"
+430,Goodmorning,"Greeting Exchange  
+"
+431,Took a shift tomorrow.    I don`t really feel like working right now.,"Shift Work Motivation  
+"
+432," I love mine, too . happy motherÃ¯Â¿Â½s day to your mom , John Taylor  . much love to you, too .","Affectionate Greetings Exchange   
+"
+433,Saw a black snake in the garden.  Went back for a picture and it was gone,"Garden Snake Encounter 
+"
+434,http://twitpic.com/4wukt - We bought Ludi her own rug. Dogs are the best,"Dog Ownership Experience  
+"
+435,No waterfront anymore   faccia luna and clarendon will have to do,"Residential Location Preferences  
+"
+436,loves her mum very much! Happy Mothers Day to all the wonderful mothers out there,"Maternal Affection Expression  
+"
+437,Slipped up and caught the flu  feeling like poop!,"Illness Symptoms Experience   
+"
+438,"i have an urge to play wow but i have to wait 2 weeks til im at my dads! 5+47DAYS TIL MCFLY, im so excited  (L)","Anticipation For Mcfly   
+"
+439,Ok ... the passengers ... no one is alive ... they`re all dead ... you just don`t know it til the end ... then you cry ...,"Passenger Mortality Experience  
+"
+440,Discovered  and  are sharing on G reader with me and didn`t even know it. Sigh.... I`m such a G reader newb.,"G Reader Usage Experience 
+"
+441,"is chilled out tonite, so cannot spew venom or write funny. Seems like these are the only 2 styles she has","Writing Style Preferences  
+"
+442," If u do, please pray 4 me.  Lord knows I need it.","Spiritual Support Seeking 
+"
+443,aaaaaw i want to live in the USA,"Desire For American Life  
+"
+444,Morning tweeple,"Social Media Engagement  
+"
+445," Hey, I didn`t get any !!!","Customer Dissatisfaction   
+"
+446, Now you only have 2 hours to sleep...  - Rest if you need it.,"Sleep Duration Concerns   
+"
+447,"  That makes my day so much better, it`s been a rough one. Did I mention I love the new photo!","Positive User Experience  
+"
+448,I don`t want to sit at home on prom night. Someone hang out with me,"Social Event Desire  
+"
+449,Is heading home from foot surgery and wishing she had a boyfriend to come over and cuddle with,"Post Surgery Loneliness  
+"
+450,concert tonight  chackin out and not coming tomorrow!,"Concert Attendance Plans 
+"
+451, what happened? I thought you were coming back today....,"Anticipated Return   
+"
+452, lol dammit  well then next time then,"Frustration With Outcome   
+"
+453, lol. just don`t ever forget me,"Emotional Attachment To User 
+"
+454, Still jealous,"Emotional Response To Product   
+"
+455,Me at Forever 21  Ethan couldn`t be there,"Shopping Experience Location   
+"
+456,NOW IM SAD BUT IM NOT GIVING IN FIRST..I DIDNT DO NOTHING!!!!    :**-(,"Emotional Resistance To Change  
+"
+457,this week of mine was not easy!  but finally it`s over! (:,"Work Week Completion   
+"
+458,   Wow what a beautiful picture... and by the way....I am straight....just wanted to let you know!!!     Bella,"Personal Identity Expression  
+"
+459,In Arch. Drawing. Checking out MVCC`s CAD degree. Looks good to me,"CAD Degree Exploration  
+"
+460," 'there are people and then there are pencils' some are sharp, some are not and some can be sharpened  my pencil philosophy.....","Pencil Sharpening Preferences 
+"
+461,"just about to go home. I`m usually `mr. positive` but this has been one of those daze. well, 15 mins until tomorrow!","End Of Day Sentiment  
+"
+462, but you always have lee. Let`s go to Paris,"Travel Aspirations   
+"
+463, you know you want to come keep me company whilst mum`s at her friends for the night  it`s such a nice evening!,"Companionship Desire Evening 
+"
+464,cooking with my dad  having lots of fun in the kitchen together,"Shared Kitchen Experiences   
+"
+465,Bouncing Rush makes me feel nauseous,"Emotional Response To Product  
+"
+466,Off to Woolsery this morning to (hopefully) see North Molton U16 clinch the North Devon League title. Lovely day for it,"Sports Event Attendance  
+"
+467,playing singstar without my fave duetter,"Social Music Preference  
+"
+468,"  you`re missing out, bb! i`m such a cereal nut, i think i like every kind available.","Cereal Consumption Preferences  
+"
+469," That`s just weird... :\  Oh, and what was it you were drawing for me?","User Confusion Product Drawing   
+"
+470,Just woke up :o mums singing to her new gn`r cd replacement i bought because im a good daughter,"Daughter Gift Giving  
+"
+471,"The birds are out,, oh man... That`s NOT cool && I didn`t sleep yet for the night!!!","Sleep Deprivation Impact  
+"
+472,"250 miles down, only 1750 to go. Thats ok, u2 on the radio alwas helps.","Music Preference During Travel  
+"
+473,"My Street Fighter IV skills are lacking, can`t beat Seth on easy.","Gaming Skill Level  
+"
+474, FIL 461 with cool people like me,"Social Group Affiliation   
+"
+475,Good Morning!!! Work and then it`s ESPN`s Sunday night Baseball. hopefully it won`t get rained out,"Weekend Leisure Activities  
+"
+476, i think it`s under a honeymoon by the good life -- either that or it`s under a honey moon by joseph arthur.,"Music Preference Exploration   
+"
+477,my son got stung by a bug for the first time  his little finger is slightly swollen.,"Bug Related Injury   
+"
+478, it was hours ago i came in.... and it`s only now i realised when i went to buy something online,"Delayed Online Purchase Realization   
+"
+479, oh just referring to our lil exchange on LJ with regards to twitter archive postings.,"Social Media Platform Use 
+"
+480,Bumping dj opus in the drunk in the car.  lmao. Don`t act like u don`t know.,"Music Consumption Habits   
+"
+481,Why kiss the feet of the people who kick you when you can be anything that you want to?  morning everyone! Hope you have the best day ever,"Self Empowerment Aspirations 
+"
+482,Here`s a brief preview:   OMG James is creepy in that role! I`m scared of him,"Actor Performance Anxiety  
+"
+483,I`m missing crab legs and attending my going away instead!,"Social Event Absence  
+"
+484,Hicks are mean!,"Negative Social Perception  
+"
+485,"gettn ready to take a trip to Jersey my dad`s not doing so good, he needs a new heart~whoeva see`s this please say a prayer for my dad","Family Health Concerns  
+"
+486,"back soon, need to run to the shops and cut the grass","Errands And Chores  
+"
+487,I`m up. I have a plan to transform my bedroom today. Random.,"Bedroom Transformation Plan  
+"
+488,"Home until tomorrow. Did my running and spinning. Now time for chiropractor, laundry, shopping, and visiting family. Missing nathan","Daily Routines And Obligations  
+"
+489, thats another sponsor,"Sponsor Recognition   
+"
+490," And most of us are going to be stuck in an office, some without windows","Office Work Environment 
+"
+491, No it`s not sad. Should make you proud,"Emotional Response To Product 
+"
+492,"   Sorry, we`ll try to keep it down.","Noise Level Concern  
+"
+493,is home alone.. Doing hw,"Solo Homework Activity  
+"
+494,"According to , a quarter of families under six live in poverty.","Family Poverty Rates  
+"
+495,the plan to not spend money is not going well,"Financial Planning Challenges  
+"
+496,uploading all my bamboozle pictures of facebook,"Social Media Sharing  
+"
+497, congratulations ! you guys finish a month early than we do. booo,"Project Completion Timeline   
+"
+498," actually, I wish I was back in Tahoe.  I miss it there.","Nostalgia For Location 
+"
