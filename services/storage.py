@@ -64,6 +64,7 @@ def read_status(analysis_dir: Path) -> dict[str, Any]:
             "status": "queued",
             "progress": {"stage": "queued", "pct": 0},
             "error": None,
+            "debug_error": None,
         }
     return read_json(status_path)
 
@@ -74,12 +75,14 @@ def write_status(
     stage: str,
     pct: int,
     error: str | None = None,
+    debug_error: str | None = None,
 ) -> None:
     payload = {
         "analysis_id": analysis_dir.name,
         "status": status,
         "progress": {"stage": stage, "pct": int(max(0, min(100, pct)))},
         "error": error,
+        "debug_error": debug_error,
         "updated_at": utc_now_iso(),
     }
     write_json(analysis_dir / "status.json", payload)

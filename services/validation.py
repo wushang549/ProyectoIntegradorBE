@@ -9,6 +9,9 @@ from fastapi import HTTPException, UploadFile
 
 MAX_CSV_SIZE_BYTES = 50 * 1024 * 1024
 TEXT_COLUMN_ALIAS_PRIORITY = ("text", "transcript", "message", "content", "review", "comment", "body", "feedback")
+MAX_METADATA_KEYS = 20
+MAX_METADATA_KEY_LEN = 60
+MAX_METADATA_VALUE_LEN = 240
 
 
 def sanitize_preview(text: str, limit: int = 140) -> str:
@@ -59,7 +62,26 @@ def normalize_text_column_rows(rows: list[dict[str, str]], source_column: str) -
     return normalized, source_column
 
 
-def extract_texts_from_csv_payload(payload: bytes, max_rows: int | None = None) -> tuple[list[str], str]:
+def _sanitize_metadata_key(key: str, limit: int = MAX_METADATA_KEY_LEN) -> str:
+    clean = " ".join(str(key or "").split()).strip()
+    if not clean:
+        return ""
+    return clean[:limit]
+
+
+def _sanitize_metadata_value(value: Any, limit: int = MAX_METADATA_VALUE_LEN) -> str:
+    clean = " ".join(str(value or "").split()).strip()
+    if not clean:
+        return ""
+    return clean[:limit]
+
+
+def extract_rows_from_csv_payload(
+    payload: bytes,
+    max_rows: int | None = None,
+    max_metadata_keys: int = MAX_METADATA_KEYS,
+    max_metadata_value_len: int = MAX_METADATA_VALUE_LEN,
+) -> tuple[list[dict[str, Any]], str]:
     decoded = _decode_csv_bytes(payload)
     reader = csv.DictReader(io.StringIO(decoded))
     headers = [h for h in (reader.fieldnames or []) if h is not None]
@@ -83,25 +105,51 @@ def extract_texts_from_csv_payload(payload: bytes, max_rows: int | None = None) 
         except (TypeError, ValueError):
             row_limit = None
 
-    normalized_rows: list[dict[str, str]] = []
+    metadata_key_limit = max(0, int(max_metadata_keys))
+    metadata_headers = [h for h in headers if h != source_column]
+    metadata_headers = metadata_headers[:metadata_key_limit]
+
+    rows: list[dict[str, Any]] = []
     for row in reader:
-        normalized = {"text": (row.get(source_column) or "").strip()}
-        if not normalized["text"]:
+        text_value = (row.get(source_column) or "").strip()
+        if not text_value:
             continue
-        normalized_rows.append(normalized)
-        if row_limit is not None and len(normalized_rows) >= row_limit:
+
+        metadata: dict[str, str] = {}
+        for header in metadata_headers:
+            safe_key = _sanitize_metadata_key(header)
+            if not safe_key:
+                continue
+            raw_value = row.get(header)
+            safe_value = _sanitize_metadata_value(raw_value, limit=max_metadata_value_len)
+            if not safe_value:
+                continue
+            metadata[safe_key] = safe_value
+            if len(metadata) >= metadata_key_limit:
+                break
+
+        rows.append({"text": text_value, "metadata": metadata})
+        if row_limit is not None and len(rows) >= row_limit:
             break
 
-    texts = [row["text"] for row in normalized_rows]
-    if not texts:
+    if not rows:
         raise HTTPException(
             status_code=400,
             detail="CSV 'text' column must include at least 1 non-empty row",
         )
+    return rows, source_column
+
+
+def extract_texts_from_csv_payload(payload: bytes, max_rows: int | None = None) -> tuple[list[str], str]:
+    rows, source_column = extract_rows_from_csv_payload(payload=payload, max_rows=max_rows)
+    texts = [str(row.get("text", "")).strip() for row in rows if str(row.get("text", "")).strip()]
     return texts, source_column
 
 
-def validate_csv_upload(file: UploadFile | None, max_rows: int | None = None) -> tuple[list[str], bytes]:
+def validate_csv_upload(
+    file: UploadFile | None,
+    max_rows: int | None = None,
+) -> tuple[list[str], bytes, list[dict[str, Any]]]:
     if file is None:
         raise HTTPException(status_code=400, detail="file is required when input_type=csv")
     filename = (file.filename or "").strip()
@@ -114,9 +162,10 @@ def validate_csv_upload(file: UploadFile | None, max_rows: int | None = None) ->
     if len(payload) > MAX_CSV_SIZE_BYTES:
         raise HTTPException(status_code=400, detail="CSV file exceeds 50MB limit")
 
-    texts, _source_column = extract_texts_from_csv_payload(payload, max_rows=max_rows)
+    rows, _source_column = extract_rows_from_csv_payload(payload, max_rows=max_rows)
+    texts = [str(row.get("text", "")).strip() for row in rows if str(row.get("text", "")).strip()]
 
-    return texts, payload
+    return texts, payload, rows
 
 
 def parse_options_json(raw_options: str | None) -> dict[str, Any]:

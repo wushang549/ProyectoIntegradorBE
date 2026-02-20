@@ -4,10 +4,52 @@ from dataclasses import dataclass
 from functools import lru_cache
 import inspect
 from pathlib import Path
+import re
 
 import numpy as np
 
 DEFAULT_EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+EMAIL_RE = re.compile(r"\b[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+\b")
+URL_RE = re.compile(r"https?://\S+|www\.\S+", re.IGNORECASE)
+HEXISH_RE = re.compile(r"\b[0-9a-fA-F]{8,}\b")
+LONG_NUM_RE = re.compile(r"\b\d{5,}\b")
+ORDER_NUMBER_RE = re.compile(
+    r"\b(?:order|pedido)\s*(?:number|num(?:ber)?|no|#)?\s*[:#-]?\s*[A-Za-z0-9-]{3,}\b",
+    re.IGNORECASE,
+)
+PRODUCT_NUMBER_RE = re.compile(
+    r"\b(?:product|producto)\s*(?:number|num(?:ber)?|no|#)?\s*[:#-]?\s*[A-Za-z0-9-]{3,}\b",
+    re.IGNORECASE,
+)
+PRODUCT_CODE_RE = re.compile(r"\b[A-Z]{2,}(?:[-_][A-Z0-9]{2,})+\b")
+ALNUM_CODE_RE = re.compile(r"\b[A-Za-z]{1,4}[-_ ]?\d{3,}\b")
+GREETING_PREFIX_RE = re.compile(
+    r"^\s*(?:hello|hi|hey|good morning|good afternoon|good evening)[,!\.\s-]*",
+    re.IGNORECASE,
+)
+CALL_OPENER_RE = re.compile(
+    r"^\s*(?:i am|i'm|im)\s+(?:calling|reaching out|writing)\b(?:\s+to)?\s*",
+    re.IGNORECASE,
+)
+INTRO_PREFIX_RE = re.compile(
+    r"^\s*(?:this is|my name is)\s+[a-z]+(?:\s+[a-z]+){0,2}[,!\.\s-]*",
+    re.IGNORECASE,
+)
+SELF_NAME_RE = re.compile(
+    r"\b(?:this is|my name is)\s+[a-z]+(?:\s+[a-z]+){0,2}\b",
+    re.IGNORECASE,
+)
+GENERIC_OPENERS = (
+    "i just wanted to",
+    "i wanted to",
+    "i am calling to",
+    "i'm calling to",
+    "i am writing to",
+    "i'm writing to",
+    "thanks for your help",
+    "thank you for your help",
+)
+TOKEN_RE = re.compile(r"[A-Za-z][A-Za-z0-9_'-]{1,}")
 
 
 @dataclass
@@ -15,6 +57,53 @@ class EmbeddingResult:
     vectors: np.ndarray
     model_name: str
     backend: str
+
+
+def clean_text_for_embeddings(text: str) -> str:
+    source = str(text or "").strip()
+    if not source:
+        return ""
+
+    clean = source
+    clean = EMAIL_RE.sub(" ", clean)
+    clean = URL_RE.sub(" ", clean)
+    clean = ORDER_NUMBER_RE.sub(" ", clean)
+    clean = PRODUCT_NUMBER_RE.sub(" ", clean)
+    clean = PRODUCT_CODE_RE.sub(" ", clean)
+    clean = ALNUM_CODE_RE.sub(" ", clean)
+    clean = HEXISH_RE.sub(" ", clean)
+    clean = LONG_NUM_RE.sub(" ", clean)
+
+    # Trim opening boilerplate aggressively only near the start.
+    prefix = clean[:220]
+    remainder = clean[220:]
+    prefix = GREETING_PREFIX_RE.sub("", prefix)
+    prefix = CALL_OPENER_RE.sub("", prefix)
+    prefix = INTRO_PREFIX_RE.sub("", prefix)
+    for phrase in GENERIC_OPENERS:
+        prefix = re.sub(rf"^\s*{re.escape(phrase)}\b[:,\s-]*", "", prefix, flags=re.IGNORECASE)
+    clean = f"{prefix} {remainder}".strip()
+    clean = SELF_NAME_RE.sub(" ", clean)
+    clean = re.sub(r"\s+", " ", clean).strip()
+
+    if not clean and any(ch.isalpha() for ch in source):
+        alpha_only = re.sub(r"[^A-Za-z\s]", " ", source)
+        alpha_only = re.sub(r"\s+", " ", alpha_only).strip()
+        return alpha_only
+    return clean
+
+
+def clean_texts_for_embeddings(texts: list[str]) -> list[str]:
+    cleaned: list[str] = []
+    for text in texts:
+        normalized = clean_text_for_embeddings(text)
+        if len(TOKEN_RE.findall(normalized)) < 2:
+            # Keep semantic content by falling back to lightly normalized source.
+            fallback = re.sub(r"\s+", " ", str(text or "")).strip()
+            cleaned.append(fallback)
+        else:
+            cleaned.append(normalized)
+    return cleaned
 
 
 def _l2_normalize(vectors: np.ndarray) -> np.ndarray:

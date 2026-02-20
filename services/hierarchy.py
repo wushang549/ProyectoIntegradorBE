@@ -65,6 +65,27 @@ def _build_parent_and_children(linkage_matrix: np.ndarray, n_leaves: int) -> tup
     return parent_by_node, children
 
 
+def _annotate_node_metrics(nodes: dict[str, dict[str, Any]]) -> None:
+    heights: list[float] = []
+    for node in nodes.values():
+        if node.get("children_ids"):
+            heights.append(float(node.get("height", 0.0)))
+    max_height = max(heights) if heights else 0.0
+
+    for node in nodes.values():
+        size = int(node.get("size", 1))
+        node["descendant_leaf_count"] = size
+        if not node.get("children_ids"):
+            node["cohesion"] = 1.0
+            continue
+        height = float(node.get("height", 0.0))
+        if max_height <= 1e-9:
+            cohesion = 1.0
+        else:
+            cohesion = 1.0 - (height / max_height)
+        node["cohesion"] = float(max(0.0, min(1.0, round(cohesion, 4))))
+
+
 def _build_standard_hierarchy(embeddings: np.ndarray, item_ids: list[str], k_clusters: int) -> HierarchyResult:
     from scipy.cluster.hierarchy import fcluster, linkage
 
@@ -114,6 +135,7 @@ def _build_standard_hierarchy(embeddings: np.ndarray, item_ids: list[str], k_clu
             "member_indices": members[node_idx].tolist(),
         }
 
+    _annotate_node_metrics(nodes)
     leaves = [{"id": item_ids[i], "node_id": f"leaf_{i}", "cluster_id": cluster_ids[i]} for i in range(n_items)]
     return HierarchyResult(root_id=root_id, nodes=nodes, leaves=leaves, cluster_ids=cluster_ids)
 
@@ -187,6 +209,7 @@ def _build_large_hierarchy(embeddings: np.ndarray, item_ids: list[str], k_cluste
             "label": "Topic",
             "member_indices": member_list,
         }
+        _annotate_node_metrics(nodes)
         leaves = [{"id": item_ids[i], "node_id": f"leaf_{i}", "cluster_id": cluster_ids[i]} for i in range(n_items)]
         return HierarchyResult(root_id=root_id, nodes=nodes, leaves=leaves, cluster_ids=cluster_ids)
 
@@ -233,6 +256,7 @@ def _build_large_hierarchy(embeddings: np.ndarray, item_ids: list[str], k_cluste
             "member_indices": member_idx.tolist(),
         }
 
+    _annotate_node_metrics(nodes)
     leaves = [{"id": item_ids[i], "node_id": f"leaf_{i}", "cluster_id": cluster_ids[i]} for i in range(n_items)]
     return HierarchyResult(root_id=root_id, nodes=nodes, leaves=leaves, cluster_ids=cluster_ids)
 
@@ -257,6 +281,8 @@ def build_hierarchy(
                 "height": 0.0,
                 "label": "Single",
                 "member_indices": [0],
+                "descendant_leaf_count": 1,
+                "cohesion": 1.0,
             },
             "leaf_0": {
                 "node_id": "leaf_0",
@@ -266,6 +292,8 @@ def build_hierarchy(
                 "height": 0.0,
                 "label": "Item",
                 "member_indices": [0],
+                "descendant_leaf_count": 1,
+                "cohesion": 1.0,
             },
         }
         leaves = [{"id": item_ids[0], "node_id": "leaf_0", "cluster_id": 0}]
