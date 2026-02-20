@@ -14,6 +14,7 @@ class AnalysisOptions(BaseModel):
     granulate_max_rows: int = Field(default=200, ge=1, le=5000)
     granulate_return_items: bool = False
     label_internal_nodes: bool = True
+    llm_label_budget: int = Field(default=120, ge=0, le=10000)
 
 
 class CreateAnalysisResponse(BaseModel):

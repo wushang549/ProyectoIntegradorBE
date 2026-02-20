@@ -12,10 +12,60 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from services.embeddings import generate_embeddings, save_embeddings
 from services.granulate import granulate_text
 from services.hierarchy import build_hierarchy
-from services.labeling import fallback_tfidf_label, generate_label
+from services.labeling import BROAD_NODE_BUCKETS, build_evidence_pack, fallback_tfidf_label, generate_label, keywords_are_diverse
 from services.storage import read_json, write_json, write_status
 from services.umap_service import project_umap
 from services.validation import sanitize_preview
+
+INTERNAL_BROAD_SIZE_THRESHOLD = 30
+INTERNAL_OLLAMA_MAX_CALLS = 80
+DEFAULT_PREVIEW_CHAR_LIMIT = 320
+
+
+def _parse_bool(value: Any, default: bool) -> bool:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        lowered = value.strip().lower()
+        if lowered in {"1", "true", "yes", "on"}:
+            return True
+        if lowered in {"0", "false", "no", "off"}:
+            return False
+    return default
+
+
+def _clamp_int(value: Any, default: int, minimum: int, maximum: int) -> int:
+    try:
+        if isinstance(value, bool):
+            raise ValueError
+        parsed = int(value)
+    except (TypeError, ValueError):
+        parsed = default
+    return max(minimum, min(maximum, parsed))
+
+
+def _clamp_float(value: Any, default: float, minimum: float, maximum: float) -> float:
+    try:
+        if isinstance(value, bool):
+            raise ValueError
+        parsed = float(value)
+    except (TypeError, ValueError):
+        parsed = default
+    return max(minimum, min(maximum, parsed))
+
+
+def _parse_pipeline_options(options: dict[str, Any] | None) -> dict[str, Any]:
+    raw = options or {}
+    return {
+        "k_clusters": _clamp_int(raw.get("k_clusters", 8), default=8, minimum=2, maximum=64),
+        "umap_n_neighbors": _clamp_int(raw.get("umap_n_neighbors", 15), default=15, minimum=2, maximum=100),
+        "umap_min_dist": _clamp_float(raw.get("umap_min_dist", 0.1), default=0.1, minimum=0.0, maximum=0.99),
+        "granulate_max_rows": _clamp_int(raw.get("granulate_max_rows", 200), default=200, minimum=1, maximum=2000),
+        "label_internal_nodes": _parse_bool(raw.get("label_internal_nodes", True), default=True),
+        "granulate": _parse_bool(raw.get("granulate", True), default=True),
+        "granulate_return_items": _parse_bool(raw.get("granulate_return_items", False), default=False),
+        "llm_label_budget": _clamp_int(raw.get("llm_label_budget", 120), default=120, minimum=0, maximum=10000),
+    }
 
 
 def _sample_indices(n_items: int, max_rows: int) -> list[int]:
@@ -78,15 +128,38 @@ def _label_clusters(
     analysis_dir: Path,
     cluster_reps: dict[int, list[dict[str, str]]],
     top_terms: dict[int, list[str]],
+    budget: dict[str, int] | None = None,
 ) -> dict[int, str]:
+    def _sibling_negative_keywords(cluster_id: int, max_terms: int = 5) -> list[str]:
+        own = {t.strip().lower() for t in top_terms.get(cluster_id, []) if t and t.strip()}
+        out: list[str] = []
+        for other_cid in sorted(top_terms.keys()):
+            if other_cid == cluster_id:
+                continue
+            for term in top_terms.get(other_cid, []):
+                candidate = str(term or "").strip().lower()
+                if not candidate or candidate in own or candidate in out:
+                    continue
+                out.append(candidate)
+                if len(out) >= max_terms:
+                    return out
+        return out
+
     cache_path = analysis_dir / "llm_cache.json"
     labels: dict[int, str] = {}
     for cid, reps in cluster_reps.items():
-        snippets = [r["preview"] for r in reps if r.get("preview")]
+        snippets = [sanitize_preview(r["preview"], limit=280) for r in reps if r.get("preview")]
         if len(snippets) < 3:
             snippets.extend(top_terms.get(cid, [])[:3])
         try:
-            labels[cid] = generate_label(snippets, cache_path=cache_path, prompt_tag=f"cluster_{cid}")
+            labels[cid] = generate_label(
+                snippets,
+                cache_path=cache_path,
+                prompt_tag=f"cluster_{cid}",
+                top_keywords=top_terms.get(cid, []),
+                sibling_negative_keywords=_sibling_negative_keywords(cid),
+                budget=budget,
+            )
         except Exception:
             labels[cid] = fallback_tfidf_label(snippets) or "Topic"
     return labels
@@ -96,25 +169,92 @@ def _label_internal_nodes(
     analysis_dir: Path,
     nodes: dict[str, dict[str, Any]],
     texts: list[str],
+    embeddings: np.ndarray,
     enable_ollama_for_internal: bool,
+    budget: dict[str, int] | None = None,
+    max_llm_calls: int = INTERNAL_OLLAMA_MAX_CALLS,
 ) -> None:
+    def _sibling_texts(node: dict[str, Any], max_items: int = 60) -> list[str]:
+        parent_id = str(node.get("parent_id") or "").strip()
+        if not parent_id or parent_id not in nodes:
+            return []
+        siblings: list[str] = []
+        for sibling_id in nodes[parent_id].get("children_ids", []):
+            if sibling_id == node.get("node_id"):
+                continue
+            sibling = nodes.get(sibling_id, {})
+            member_indices: list[int] = sibling.get("member_indices", [])
+            for idx in member_indices:
+                if 0 <= int(idx) < len(texts):
+                    siblings.append(texts[int(idx)])
+                    if len(siblings) >= max_items:
+                        return siblings
+        return siblings
+
+    def _child_label_candidates(node: dict[str, Any]) -> list[str]:
+        labels: list[str] = []
+        for child_id in node.get("children_ids", []):
+            child = nodes.get(child_id, {})
+            label = str(child.get("label", "")).strip()
+            if not label or label.lower() in {"item", "topic"}:
+                continue
+            if label not in labels:
+                labels.append(label)
+        labels.extend(BROAD_NODE_BUCKETS)
+        return labels
+
     cache_path = analysis_dir / "llm_cache.json"
     internal_nodes = [n for n in nodes.values() if n["children_ids"]]
-    internal_nodes.sort(key=lambda n: int(n["size"]), reverse=True)
-    ollama_budget = 80 if enable_ollama_for_internal else 0
+    # Label children first so parent nodes can reuse child labels as broad candidates.
+    internal_nodes.sort(key=lambda n: int(n["size"]))
+    llm_calls = 0
 
     for node in internal_nodes:
-        member_idx: list[int] = node.get("member_indices", [])
-        snippets = [sanitize_preview(texts[i], limit=280) for i in member_idx[:8]]
+        member_idx = [int(i) for i in node.get("member_indices", []) if isinstance(i, int) or str(i).isdigit()]
+        member_idx = [i for i in member_idx if 0 <= i < len(texts)]
+        member_texts = [texts[i] for i in member_idx]
+        member_embeddings: np.ndarray | None = None
+        if len(member_idx) > 0 and isinstance(embeddings, np.ndarray):
+            try:
+                member_embeddings = embeddings[np.array(member_idx, dtype=int)]
+            except Exception:
+                member_embeddings = None
+
+        evidence = build_evidence_pack(
+            texts=member_texts,
+            embeddings=member_embeddings,
+            sibling_texts=_sibling_texts(node),
+            keyword_limit=14,
+            representative_limit=6,
+        )
+        snippets = evidence.get("representative_items", [])
+        if len(snippets) < 3:
+            snippets.extend([sanitize_preview(texts[i], limit=280) for i in member_idx[: max(0, 3 - len(snippets))]])
         if not snippets:
             node["label"] = "Topic"
             continue
-        if ollama_budget > 0 and len(member_idx) >= 8:
+
+        is_broad_node = int(node.get("size", len(member_idx))) >= INTERNAL_BROAD_SIZE_THRESHOLD or keywords_are_diverse(
+            evidence.get("top_keywords", [])
+        )
+        candidates = _child_label_candidates(node) if is_broad_node else None
+
+        can_use_llm = enable_ollama_for_internal and llm_calls < max(0, int(max_llm_calls))
+        if can_use_llm and len(member_idx) >= 6:
             try:
-                node["label"] = generate_label(snippets, cache_path=cache_path, prompt_tag=f"node_{node['node_id']}")
+                node["label"] = generate_label(
+                    snippets,
+                    cache_path=cache_path,
+                    prompt_tag=f"node_{node['node_id']}",
+                    top_keywords=evidence.get("top_keywords", []),
+                    sibling_negative_keywords=evidence.get("sibling_negative_keywords", []),
+                    candidates=candidates,
+                    force_broad=is_broad_node,
+                    budget=budget,
+                )
             except Exception:
                 node["label"] = fallback_tfidf_label(snippets) or "Topic"
-            ollama_budget -= 1
+            llm_calls += 1
         else:
             node["label"] = fallback_tfidf_label(snippets)
 
@@ -148,8 +288,12 @@ def run_analysis_pipeline(
 ) -> None:
     timings: dict[str, float] = {}
     started = time.perf_counter()
+    parsed_options = _parse_pipeline_options(options)
 
     try:
+        if not texts or not any(str(t or "").strip() for t in texts):
+            raise ValueError("No non-empty texts were provided for analysis")
+
         write_status(analysis_dir, status="processing", stage="embeddings", pct=10)
         t0 = time.perf_counter()
         emb = generate_embeddings(texts=texts)
@@ -157,7 +301,7 @@ def run_analysis_pipeline(
         timings["embeddings_sec"] = round(time.perf_counter() - t0, 4)
 
         item_ids = [f"item_{i}" for i in range(len(texts))]
-        previews = [sanitize_preview(t, 140) for t in texts]
+        previews = [sanitize_preview(t, DEFAULT_PREVIEW_CHAR_LIMIT) for t in texts]
         write_json(
             analysis_dir / "items.json",
             [{"id": item_ids[i], "preview": previews[i], "text": texts[i]} for i in range(len(texts))],
@@ -168,7 +312,7 @@ def run_analysis_pipeline(
         h = build_hierarchy(
             embeddings=emb.vectors,
             item_ids=item_ids,
-            k_clusters=int(options.get("k_clusters", 8)),
+            k_clusters=parsed_options["k_clusters"],
         )
         timings["hierarchy_sec"] = round(time.perf_counter() - t0, 4)
 
@@ -176,7 +320,8 @@ def run_analysis_pipeline(
         t0 = time.perf_counter()
         top_terms = _cluster_top_terms(texts, h.cluster_ids)
         reps = _cluster_representatives(emb.vectors, h.cluster_ids, item_ids, previews)
-        cluster_labels = _label_clusters(analysis_dir, reps, top_terms)
+        llm_budget = {"remaining": parsed_options["llm_label_budget"]}
+        cluster_labels = _label_clusters(analysis_dir, reps, top_terms, budget=llm_budget)
         clusters_payload: list[dict[str, Any]] = []
         counts = Counter(h.cluster_ids)
         for cid in sorted(counts.keys()):
@@ -202,8 +347,8 @@ def run_analysis_pipeline(
         t0 = time.perf_counter()
         xy = project_umap(
             emb.vectors,
-            n_neighbors=int(options.get("umap_n_neighbors", 15)),
-            min_dist=float(options.get("umap_min_dist", 0.1)),
+            n_neighbors=parsed_options["umap_n_neighbors"],
+            min_dist=parsed_options["umap_min_dist"],
         )
         map_points = [
             {
@@ -224,7 +369,10 @@ def run_analysis_pipeline(
             analysis_dir=analysis_dir,
             nodes=h.nodes,
             texts=texts,
-            enable_ollama_for_internal=bool(options.get("label_internal_nodes", True)),
+            embeddings=emb.vectors,
+            enable_ollama_for_internal=parsed_options["label_internal_nodes"],
+            budget=llm_budget,
+            max_llm_calls=min(INTERNAL_OLLAMA_MAX_CALLS, parsed_options["llm_label_budget"]),
         )
         for node in h.nodes.values():
             node.pop("member_indices", None)
@@ -233,9 +381,9 @@ def run_analysis_pipeline(
 
         write_status(analysis_dir, status="processing", stage="granulate", pct=90)
         t0 = time.perf_counter()
-        do_granulate = bool(options.get("granulate", True))
-        granulate_max_rows = int(options.get("granulate_max_rows", 200))
-        return_items = bool(options.get("granulate_return_items", False))
+        do_granulate = parsed_options["granulate"]
+        granulate_max_rows = parsed_options["granulate_max_rows"]
+        return_items = parsed_options["granulate_return_items"]
         gran_results: list[dict[str, Any]] = []
         selected_indices: list[int] = []
         if do_granulate:
@@ -271,14 +419,15 @@ def run_analysis_pipeline(
         timings["granulate_sec"] = round(time.perf_counter() - t0, 4)
 
         write_status(analysis_dir, status="processing", stage="overview", pct=98)
+        top_aspects = aggregate[:8]
         overview = {
             "counts": {
                 "items": len(texts),
                 "clusters": len(clusters_payload),
-                "aspects": len(read_json(analysis_dir / "granulate_aggregate.json").get("aggregate_aspect_summary", [])),
+                "aspects": len(aggregate),
             },
             "top_clusters": sorted(clusters_payload, key=lambda c: int(c["size"]), reverse=True)[:5],
-            "top_aspects": read_json(analysis_dir / "granulate_aggregate.json").get("aggregate_aspect_summary", [])[:8],
+            "top_aspects": top_aspects,
             "timing": timings,
         }
         write_json(analysis_dir / "overview.json", overview)
@@ -287,7 +436,11 @@ def run_analysis_pipeline(
         write_json(analysis_dir / "timing.json", timings)
         write_status(analysis_dir, status="completed", stage="completed", pct=100)
     except Exception as exc:
-        write_status(analysis_dir, status="failed", stage="failed", pct=100, error=str(exc))
+        message = f"{exc.__class__.__name__}: {exc}"
+        try:
+            write_status(analysis_dir, status="failed", stage="failed", pct=100, error=message)
+        except Exception:
+            pass
 
 
 def load_artifact_or_404(analysis_dir: Path, filename: str) -> dict[str, Any]:

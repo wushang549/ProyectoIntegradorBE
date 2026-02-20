@@ -8,7 +8,7 @@ from typing import Any
 from fastapi import HTTPException, UploadFile
 
 MAX_CSV_SIZE_BYTES = 50 * 1024 * 1024
-TEXT_COLUMN_ALIAS_PRIORITY = ("text", "transcript", "message", "content")
+TEXT_COLUMN_ALIAS_PRIORITY = ("text", "transcript", "message", "content", "review", "comment", "body", "feedback")
 
 
 def sanitize_preview(text: str, limit: int = 140) -> str:
@@ -59,21 +59,40 @@ def normalize_text_column_rows(rows: list[dict[str, str]], source_column: str) -
     return normalized, source_column
 
 
-def extract_texts_from_csv_payload(payload: bytes) -> tuple[list[str], str]:
+def extract_texts_from_csv_payload(payload: bytes, max_rows: int | None = None) -> tuple[list[str], str]:
     decoded = _decode_csv_bytes(payload)
     reader = csv.DictReader(io.StringIO(decoded))
     headers = [h for h in (reader.fieldnames or []) if h is not None]
 
     source_column = detect_text_column(headers)
     if source_column is None:
+        found_headers = ", ".join(headers) if headers else "(none)"
         raise HTTPException(
             status_code=400,
-            detail="CSV must include a text column (accepted: text, transcript)",
+            detail=(
+                "CSV must include a text column "
+                f"(accepted: {', '.join(TEXT_COLUMN_ALIAS_PRIORITY)}). "
+                f"Found headers: {found_headers}"
+            ),
         )
 
-    raw_rows = list(reader)
-    normalized_rows, _ = normalize_text_column_rows(raw_rows, source_column=source_column)
-    texts = [row["text"] for row in normalized_rows if row["text"]]
+    row_limit: int | None = None
+    if max_rows is not None:
+        try:
+            row_limit = max(1, int(max_rows))
+        except (TypeError, ValueError):
+            row_limit = None
+
+    normalized_rows: list[dict[str, str]] = []
+    for row in reader:
+        normalized = {"text": (row.get(source_column) or "").strip()}
+        if not normalized["text"]:
+            continue
+        normalized_rows.append(normalized)
+        if row_limit is not None and len(normalized_rows) >= row_limit:
+            break
+
+    texts = [row["text"] for row in normalized_rows]
     if not texts:
         raise HTTPException(
             status_code=400,
@@ -82,7 +101,7 @@ def extract_texts_from_csv_payload(payload: bytes) -> tuple[list[str], str]:
     return texts, source_column
 
 
-def validate_csv_upload(file: UploadFile | None) -> tuple[list[str], bytes]:
+def validate_csv_upload(file: UploadFile | None, max_rows: int | None = None) -> tuple[list[str], bytes]:
     if file is None:
         raise HTTPException(status_code=400, detail="file is required when input_type=csv")
     filename = (file.filename or "").strip()
@@ -95,7 +114,7 @@ def validate_csv_upload(file: UploadFile | None) -> tuple[list[str], bytes]:
     if len(payload) > MAX_CSV_SIZE_BYTES:
         raise HTTPException(status_code=400, detail="CSV file exceeds 50MB limit")
 
-    texts, _source_column = extract_texts_from_csv_payload(payload)
+    texts, _source_column = extract_texts_from_csv_payload(payload, max_rows=max_rows)
 
     return texts, payload
 
