@@ -518,22 +518,124 @@ def _label_internal_nodes(
 
 def _aggregate_granulate(results: list[dict[str, Any]]) -> list[dict[str, Any]]:
     counter: Counter[str] = Counter()
+    sentiment_score_sum: dict[str, float] = {}
+    sentiment_raw_sum: dict[str, float] = {}
+    sentiment_votes: dict[str, Counter[str]] = {}
+    evidence_counter: dict[str, Counter[str]] = {}
+
+    def _safe_float(value: Any, default: float = 0.0) -> float:
+        try:
+            if value is None:
+                return default
+            return float(value)
+        except (TypeError, ValueError):
+            return default
+
+    def _touch(aspect: str) -> None:
+        sentiment_score_sum.setdefault(aspect, 0.0)
+        sentiment_raw_sum.setdefault(aspect, 0.0)
+        sentiment_votes.setdefault(aspect, Counter())
+        evidence_counter.setdefault(aspect, Counter())
+
+    def _register_granule(aspect: str, row: dict[str, Any]) -> None:
+        if not aspect:
+            return
+        _touch(aspect)
+        counter[aspect] += 1
+        sentiment_score_sum[aspect] += _safe_float(row.get("sentiment_score"), 0.0)
+        sentiment_raw_sum[aspect] += _safe_float(row.get("sentiment_raw"), 0.0)
+        sentiment = str(row.get("sentiment", "neutral")).strip().lower()
+        if sentiment not in {"positive", "negative", "neutral"}:
+            sentiment = "neutral"
+        sentiment_votes[aspect][sentiment] += 1
+        evidence = row.get("evidence", [])
+        if isinstance(evidence, list):
+            for term in evidence:
+                token = str(term or "").strip()
+                if token:
+                    evidence_counter[aspect][token] += 1
+
+    def _register_summary(aspect: str, info: dict[str, Any], count: int) -> None:
+        if not aspect or count <= 0:
+            return
+        _touch(aspect)
+        counter[aspect] += count
+        avg_score = _safe_float(info.get("avg_sentiment_score", info.get("avg_sentiment", 0.0)), 0.0)
+        avg_raw = _safe_float(info.get("avg_sentiment_raw", avg_score), avg_score)
+        sentiment_score_sum[aspect] += avg_score * count
+        sentiment_raw_sum[aspect] += avg_raw * count
+        if avg_score > 0.05:
+            sentiment_votes[aspect]["positive"] += count
+        elif avg_score < -0.05:
+            sentiment_votes[aspect]["negative"] += count
+        else:
+            sentiment_votes[aspect]["neutral"] += count
+        evidence = info.get("top_evidence", [])
+        if isinstance(evidence, list):
+            for term in evidence:
+                token = str(term or "").strip()
+                if token:
+                    evidence_counter[aspect][token] += 1
+
     for item in results:
+        granules = item.get("granules", [])
+        if isinstance(granules, list) and granules:
+            for row in granules:
+                if not isinstance(row, dict):
+                    continue
+                aspect = str(row.get("aspect", "")).strip()
+                if aspect and aspect != "OTHER":
+                    _register_granule(aspect, row)
+            continue
+
         summary = item.get("aspect_summary", {})
         if isinstance(summary, dict):
             for aspect, info in summary.items():
                 count = int((info or {}).get("count", 0)) if isinstance(info, dict) else 0
-                if aspect and count > 0:
-                    counter[str(aspect)] += count
+                _register_summary(str(aspect), info if isinstance(info, dict) else {}, count)
         elif isinstance(summary, list):
             for row in summary:
                 if not isinstance(row, dict):
                     continue
                 aspect = str(row.get("aspect", "")).strip()
                 count = int(row.get("count", 0))
-                if aspect and count > 0:
-                    counter[aspect] += count
-    return [{"aspect": aspect, "count": count} for aspect, count in counter.most_common()]
+                _register_summary(aspect, row, count)
+
+    out: list[dict[str, Any]] = []
+    for aspect, count in counter.most_common():
+        if count <= 0:
+            continue
+        votes = sentiment_votes.get(aspect, Counter())
+        positive = int(votes.get("positive", 0))
+        negative = int(votes.get("negative", 0))
+        neutral = int(votes.get("neutral", 0))
+        avg_score = float(sentiment_score_sum.get(aspect, 0.0) / max(1, count))
+        avg_raw = float(sentiment_raw_sum.get(aspect, 0.0) / max(1, count))
+        direction = "neutral"
+        if avg_score > 0.05:
+            direction = "positive"
+        elif avg_score < -0.05:
+            direction = "negative"
+        evidence = [term for term, _ in evidence_counter.get(aspect, Counter()).most_common(3)]
+        out.append(
+            {
+                "aspect": aspect,
+                "count": int(count),
+                "avg_sentiment": round(avg_score, 3),
+                "avg_sentiment_score": round(avg_score, 3),
+                "avg_sentiment_raw": round(avg_raw, 3),
+                "positive_count": positive,
+                "negative_count": negative,
+                "neutral_count": neutral,
+                "positive": round(positive / max(1, count), 3),
+                "negative": round(negative / max(1, count), 3),
+                "neutral": round(neutral / max(1, count), 3),
+                "direction": direction,
+                "direction_score": round(avg_score, 3),
+                "top_evidence": evidence,
+            }
+        )
+    return out
 
 
 def _aggregate_granulate_per_cluster(

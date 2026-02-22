@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import time
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
@@ -33,11 +34,23 @@ def write_json(path: Path, payload: Any) -> None:
             json.dump(payload, f, ensure_ascii=False, indent=2)
             f.flush()
             os.fsync(f.fileno())
-        try:
-            tmp_path.replace(path)
-        except PermissionError:
-            with path.open("w", encoding="utf-8") as f:
-                json.dump(payload, f, ensure_ascii=False, indent=2)
+        for attempt in range(5):
+            try:
+                tmp_path.replace(path)
+                break
+            except PermissionError:
+                if attempt >= 4:
+                    # Last-resort fallback for cloud-sync/AV lock edge cases.
+                    # Readers may briefly observe partial content, so read_status
+                    # is defensive against transient decode failures.
+                    with path.open("w", encoding="utf-8") as f:
+                        json.dump(payload, f, ensure_ascii=False, indent=2)
+                    break
+                time.sleep(0.02 * (attempt + 1))
+            except OSError:
+                if attempt >= 4:
+                    raise
+                time.sleep(0.02 * (attempt + 1))
     finally:
         if tmp_path.exists():
             try:
@@ -58,15 +71,36 @@ def write_text(path: Path, content: str) -> None:
 
 def read_status(analysis_dir: Path) -> dict[str, Any]:
     status_path = analysis_dir / "status.json"
+    default_status = {
+        "analysis_id": analysis_dir.name,
+        "status": "queued",
+        "progress": {"stage": "queued", "pct": 0},
+        "error": None,
+        "debug_error": None,
+    }
+    processing_status = {
+        "analysis_id": analysis_dir.name,
+        "status": "processing",
+        "progress": {"stage": "processing", "pct": 0},
+        "error": None,
+        "debug_error": None,
+    }
     if not status_path.exists():
-        return {
-            "analysis_id": analysis_dir.name,
-            "status": "queued",
-            "progress": {"stage": "queued", "pct": 0},
-            "error": None,
-            "debug_error": None,
-        }
-    return read_json(status_path)
+        return default_status
+
+    candidates = [status_path, status_path.with_suffix(f"{status_path.suffix}.tmp")]
+    for attempt in range(4):
+        for candidate in candidates:
+            if not candidate.exists():
+                continue
+            try:
+                data = read_json(candidate)
+                if isinstance(data, dict):
+                    return data
+            except (OSError, json.JSONDecodeError, ValueError, TypeError):
+                continue
+        time.sleep(0.02 * (attempt + 1))
+    return processing_status
 
 
 def write_status(
