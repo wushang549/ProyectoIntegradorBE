@@ -1,0 +1,13 @@
+{
+  "key_findings": [
+    "Tech appears in 94.8% of comments.",
+    "Nitrogen appears in 1.9% of comments.",
+    "Quantum Computing appears in 0.8% of comments.",
+    "Pricey Canvas appears in 0.8% of comments.",
+    "Pretty Pricey appears in 0.6% of comments."
+  ],
+  "theme_summary": "Top themes: Tech, Nitrogen, Quantum Computing.",
+  "quality_warnings": [
+    "No major quality-risk pattern was detected in the current clusters."
+  ]
+}

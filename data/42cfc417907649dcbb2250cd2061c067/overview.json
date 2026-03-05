@@ -1,0 +1,58 @@
+{
+  "analysis_id": "42cfc417907649dcbb2250cd2061c067",
+  "created_at": "2026-03-05T03:10:41.458516+00:00",
+  "total_records": 306,
+  "total_items": 363,
+  "k_clusters": 8,
+  "embedding_method": "tfidf-fallback",
+  "cluster_distribution": [
+    {
+      "cluster_id": 6,
+      "label": "Tech",
+      "size": 344,
+      "pct": 94.766
+    },
+    {
+      "cluster_id": 1,
+      "label": "Nitrogen",
+      "size": 7,
+      "pct": 1.928
+    },
+    {
+      "cluster_id": 4,
+      "label": "Quantum Computing",
+      "size": 3,
+      "pct": 0.826
+    },
+    {
+      "cluster_id": 5,
+      "label": "Pricey Canvas",
+      "size": 3,
+      "pct": 0.826
+    },
+    {
+      "cluster_id": 2,
+      "label": "Pretty Pricey",
+      "size": 2,
+      "pct": 0.551
+    },
+    {
+      "cluster_id": 3,
+      "label": "Audiologist",
+      "size": 2,
+      "pct": 0.551
+    },
+    {
+      "cluster_id": 7,
+      "label": "Thinnest",
+      "size": 1,
+      "pct": 0.275
+    },
+    {
+      "cluster_id": 8,
+      "label": "Understand Struggle",
+      "size": 1,
+      "pct": 0.275
+    }
+  ]
+}

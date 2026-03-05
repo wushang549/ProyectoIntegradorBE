@@ -1,0 +1,9 @@
+{
+  "key_findings": [
+    "Test Node Fetch appears in 100.0% of comments."
+  ],
+  "theme_summary": "Top themes: Test Node Fetch.",
+  "quality_warnings": [
+    "No major quality-risk pattern was detected in the current clusters."
+  ]
+}

@@ -1,200 +1,117 @@
+"""Embedding stage using sentence-transformers with robust lexical fallback."""
+
 from __future__ import annotations
 
+import threading
 from dataclasses import dataclass
-from functools import lru_cache
-import inspect
-from pathlib import Path
-import re
 
 import numpy as np
-
-DEFAULT_EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
-EMAIL_RE = re.compile(r"\b[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+\b")
-URL_RE = re.compile(r"https?://\S+|www\.\S+", re.IGNORECASE)
-HEXISH_RE = re.compile(r"\b[0-9a-fA-F]{8,}\b")
-LONG_NUM_RE = re.compile(r"\b\d{5,}\b")
-ORDER_NUMBER_RE = re.compile(
-    r"\b(?:order|pedido)\s*(?:number|num(?:ber)?|no|#)?\s*[:#-]?\s*[A-Za-z0-9-]{3,}\b",
-    re.IGNORECASE,
-)
-PRODUCT_NUMBER_RE = re.compile(
-    r"\b(?:product|producto)\s*(?:number|num(?:ber)?|no|#)?\s*[:#-]?\s*[A-Za-z0-9-]{3,}\b",
-    re.IGNORECASE,
-)
-PRODUCT_CODE_RE = re.compile(r"\b[A-Z]{2,}(?:[-_][A-Z0-9]{2,})+\b")
-ALNUM_CODE_RE = re.compile(r"\b[A-Za-z]{1,4}[-_ ]?\d{3,}\b")
-GREETING_PREFIX_RE = re.compile(
-    r"^\s*(?:hello|hi|hey|good morning|good afternoon|good evening)[,!\.\s-]*",
-    re.IGNORECASE,
-)
-CALL_OPENER_RE = re.compile(
-    r"^\s*(?:i am|i'm|im)\s+(?:calling|reaching out|writing)\b(?:\s+to)?\s*",
-    re.IGNORECASE,
-)
-INTRO_PREFIX_RE = re.compile(
-    r"^\s*(?:this is|my name is)\s+[a-z]+(?:\s+[a-z]+){0,2}[,!\.\s-]*",
-    re.IGNORECASE,
-)
-SELF_NAME_RE = re.compile(
-    r"\b(?:this is|my name is)\s+[a-z]+(?:\s+[a-z]+){0,2}\b",
-    re.IGNORECASE,
-)
-GENERIC_OPENERS = (
-    "i just wanted to",
-    "i wanted to",
-    "i am calling to",
-    "i'm calling to",
-    "i am writing to",
-    "i'm writing to",
-    "thanks for your help",
-    "thank you for your help",
-)
-TOKEN_RE = re.compile(r"[A-Za-z][A-Za-z0-9_'-]{1,}")
+from scipy import sparse
+from sklearn.decomposition import TruncatedSVD
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 
-@dataclass
+@dataclass(slots=True)
 class EmbeddingResult:
+    """Embedding output and metadata."""
+
     vectors: np.ndarray
-    model_name: str
-    backend: str
+    method: str
 
 
-def clean_text_for_embeddings(text: str) -> str:
-    source = str(text or "").strip()
-    if not source:
-        return ""
-
-    clean = source
-    clean = EMAIL_RE.sub(" ", clean)
-    clean = URL_RE.sub(" ", clean)
-    clean = ORDER_NUMBER_RE.sub(" ", clean)
-    clean = PRODUCT_NUMBER_RE.sub(" ", clean)
-    clean = PRODUCT_CODE_RE.sub(" ", clean)
-    clean = ALNUM_CODE_RE.sub(" ", clean)
-    clean = HEXISH_RE.sub(" ", clean)
-    clean = LONG_NUM_RE.sub(" ", clean)
-
-    # Trim opening boilerplate aggressively only near the start.
-    prefix = clean[:220]
-    remainder = clean[220:]
-    prefix = GREETING_PREFIX_RE.sub("", prefix)
-    prefix = CALL_OPENER_RE.sub("", prefix)
-    prefix = INTRO_PREFIX_RE.sub("", prefix)
-    for phrase in GENERIC_OPENERS:
-        prefix = re.sub(rf"^\s*{re.escape(phrase)}\b[:,\s-]*", "", prefix, flags=re.IGNORECASE)
-    clean = f"{prefix} {remainder}".strip()
-    clean = SELF_NAME_RE.sub(" ", clean)
-    clean = re.sub(r"\s+", " ", clean).strip()
-
-    if not clean and any(ch.isalpha() for ch in source):
-        alpha_only = re.sub(r"[^A-Za-z\s]", " ", source)
-        alpha_only = re.sub(r"\s+", " ", alpha_only).strip()
-        return alpha_only
-    return clean
+_MODEL_LOCK = threading.Lock()
+_MODEL = None
 
 
-def clean_texts_for_embeddings(texts: list[str]) -> list[str]:
-    cleaned: list[str] = []
-    for text in texts:
-        normalized = clean_text_for_embeddings(text)
-        if len(TOKEN_RE.findall(normalized)) < 2:
-            # Keep semantic content by falling back to lightly normalized source.
-            fallback = re.sub(r"\s+", " ", str(text or "")).strip()
-            cleaned.append(fallback)
-        else:
-            cleaned.append(normalized)
-    return cleaned
+def compute_embeddings(texts: list[str]) -> EmbeddingResult:
+    """Compute deterministic embeddings for input texts."""
+
+    if not texts:
+        return EmbeddingResult(vectors=np.zeros((0, 0), dtype=np.float32), method="empty")
+
+    try:
+        vectors = _encode_with_sentence_transformers(texts)
+        return EmbeddingResult(vectors=vectors, method="sentence-transformers/all-MiniLM-L6-v2")
+    except Exception:
+        vectors = _encode_with_lexical_fallback(texts)
+        return EmbeddingResult(vectors=vectors, method="tfidf-hybrid-svd-fallback")
 
 
-def _l2_normalize(vectors: np.ndarray) -> np.ndarray:
-    from sklearn.preprocessing import normalize
+def _encode_with_sentence_transformers(texts: list[str]) -> np.ndarray:
+    """Encode texts with all-MiniLM-L6-v2."""
 
-    if vectors.size == 0:
-        return vectors.astype(np.float32, copy=False)
-    return normalize(vectors, norm="l2", axis=1, copy=False).astype(np.float32, copy=False)
+    global _MODEL  # pylint: disable=global-statement
+
+    with _MODEL_LOCK:
+        if _MODEL is None:
+            from sentence_transformers import SentenceTransformer  # Local import for fallback safety.
+
+            _MODEL = SentenceTransformer("all-MiniLM-L6-v2")
+
+    vectors = _MODEL.encode(
+        texts,
+        batch_size=64,
+        show_progress_bar=False,
+        convert_to_numpy=True,
+        normalize_embeddings=True,
+    )
+    return vectors.astype(np.float32)
 
 
-def _tfidf_fallback(texts: list[str], normalize: bool = True) -> EmbeddingResult:
-    from sklearn.decomposition import TruncatedSVD
-    from sklearn.feature_extraction.text import TfidfVectorizer
+def _encode_with_lexical_fallback(texts: list[str]) -> np.ndarray:
+    """Fallback strategy using word+char TF-IDF with deterministic SVD compression."""
 
-    vectorizer = TfidfVectorizer(
-        lowercase=True,
+    matrices: list[sparse.csr_matrix] = []
+
+    word_vectorizer = TfidfVectorizer(
+        max_features=4096,
         ngram_range=(1, 2),
+        stop_words="english",
         min_df=1,
         max_df=0.95,
-        token_pattern=r"[a-zA-Z0-9][a-zA-Z0-9'_-]{1,}",
+        sublinear_tf=True,
     )
-    try:
-        tfidf = vectorizer.fit_transform(texts)
-    except Exception:
-        vectors = np.ones((len(texts), 1), dtype=np.float32)
-        if normalize:
-            vectors = _l2_normalize(vectors)
-        return EmbeddingResult(vectors=vectors, model_name="tfidf_dense", backend="fallback")
+    char_vectorizer = TfidfVectorizer(
+        analyzer="char_wb",
+        ngram_range=(3, 5),
+        max_features=4096,
+        min_df=2,
+        sublinear_tf=True,
+    )
 
-    n_samples, n_features = tfidf.shape
-    max_components = min(n_samples - 1, n_features - 1)
-    if max_components < 2:
-        vectors = tfidf.toarray().astype(np.float32, copy=False)
-        if vectors.shape[1] == 0:
-            vectors = np.ones((n_samples, 1), dtype=np.float32)
-        if normalize:
-            vectors = _l2_normalize(vectors)
-        return EmbeddingResult(vectors=vectors, model_name="tfidf_dense", backend="fallback")
+    for vectorizer in (word_vectorizer, char_vectorizer):
+        try:
+            matrix = vectorizer.fit_transform(texts)
+        except Exception:
+            continue
+        if matrix.shape[1] > 0:
+            matrices.append(matrix.tocsr())
 
-    n_components = int(min(256, max_components))
-    svd = TruncatedSVD(n_components=n_components, random_state=42)
-    vectors = svd.fit_transform(tfidf).astype(np.float32)
-    if normalize:
-        vectors = _l2_normalize(vectors)
-    return EmbeddingResult(vectors=vectors, model_name="tfidf_svd", backend="fallback")
+    if not matrices:
+        return np.zeros((len(texts), 1), dtype=np.float32)
 
+    merged = matrices[0] if len(matrices) == 1 else sparse.hstack(matrices, format="csr")
+    n_samples, n_features = merged.shape
+    if n_samples <= 1 or n_features <= 1:
+        dense = merged.toarray().astype(np.float32)
+        return _l2_normalize(dense)
 
-@lru_cache(maxsize=2)
-def _get_st_model(model_name: str):
-    from sentence_transformers import SentenceTransformer
+    n_components = min(256, n_samples - 1, n_features - 1)
+    if n_components >= 8:
+        try:
+            reducer = TruncatedSVD(n_components=n_components, random_state=42)
+            reduced = reducer.fit_transform(merged).astype(np.float32)
+            return _l2_normalize(reduced)
+        except Exception:
+            pass
 
-    return SentenceTransformer(model_name)
-
-
-def generate_embeddings(
-    texts: list[str],
-    model_name: str = DEFAULT_EMBEDDING_MODEL,
-    batch_size: int = 128,
-    normalize: bool = True,
-    device: str | None = None,
-) -> EmbeddingResult:
-    if not texts:
-        raise ValueError("texts is required for embeddings")
-
-    try:
-        model = _get_st_model(model_name)
-        encode_kwargs = {
-            "batch_size": max(1, int(batch_size)),
-            "show_progress_bar": False,
-            "normalize_embeddings": bool(normalize),
-            "convert_to_numpy": True,
-        }
-        if device:
-            try:
-                if "device" in inspect.signature(model.encode).parameters:
-                    encode_kwargs["device"] = device
-            except Exception:
-                pass
-        vectors = model.encode(
-            texts,
-            **encode_kwargs,
-        ).astype(np.float32)
-        return EmbeddingResult(vectors=vectors, model_name=model_name, backend="sentence_transformers")
-    except Exception:
-        return _tfidf_fallback(texts, normalize=normalize)
+    dense = merged.toarray().astype(np.float32)
+    return _l2_normalize(dense)
 
 
-def save_embeddings(path: Path, vectors: np.ndarray) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    np.save(path, vectors)
+def _l2_normalize(matrix: np.ndarray) -> np.ndarray:
+    """Normalize rows to unit length."""
 
-
-def load_embeddings(path: Path) -> np.ndarray:
-    return np.load(path)
+    norms = np.linalg.norm(matrix, axis=1, keepdims=True)
+    norms[norms == 0.0] = 1.0
+    return (matrix / norms).astype(np.float32)

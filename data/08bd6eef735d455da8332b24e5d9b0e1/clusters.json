@@ -1,0 +1,268 @@
+{
+  "analysis_id": "08bd6eef735d455da8332b24e5d9b0e1",
+  "k_clusters": 9,
+  "cluster_labels": [
+    7,
+    9,
+    8,
+    9,
+    1,
+    6,
+    5,
+    9,
+    7,
+    8,
+    3,
+    8,
+    9,
+    8,
+    9,
+    9,
+    3,
+    8,
+    9,
+    5,
+    1,
+    9,
+    3,
+    6,
+    8,
+    4,
+    3,
+    9,
+    7,
+    8,
+    6,
+    5,
+    1,
+    8,
+    5,
+    9,
+    4,
+    9,
+    6,
+    2,
+    1,
+    9,
+    9,
+    7,
+    1,
+    9,
+    1,
+    6,
+    3,
+    8
+  ],
+  "clusters": [
+    {
+      "cluster_id": 1,
+      "size": 6,
+      "top_terms": [
+        "beautiful",
+        "presentation",
+        "fresh",
+        "spot",
+        "pizza",
+        "sushi"
+      ],
+      "representatives": [
+        "Amazing sushi, very fresh fish and beautiful presentation.",
+        "Amazing cocktails and a cool vibe.",
+        "Amazing wood fired pizza, very authentic.",
+        "Wonderful breakfast spot with amazing omelets.",
+        "Fresh ingredients and great presentation."
+      ],
+      "representative_ids": [
+        "row_4",
+        "row_20",
+        "row_44",
+        "row_40",
+        "row_46"
+      ],
+      "label": "Beautiful"
+    },
+    {
+      "cluster_id": 2,
+      "size": 1,
+      "top_terms": [
+        "sushi"
+      ],
+      "representatives": [
+        "The sushi rolls fell apart easily."
+      ],
+      "representative_ids": [
+        "row_39"
+      ],
+      "label": "Sushi"
+    },
+    {
+      "cluster_id": 3,
+      "size": 5,
+      "top_terms": [
+        "customer",
+        "outstanding",
+        "especially",
+        "excellent",
+        "desserts",
+        "delicious",
+        "cozy",
+        "super"
+      ],
+      "representatives": [
+        "The desserts were outstanding, especially the cheesecake.",
+        "Excellent customer service and fast seating.",
+        "Outstanding customer experience from start to finish.",
+        "Super cozy place with excellent desserts.",
+        "Delicious seafood, especially the grilled octopus."
+      ],
+      "representative_ids": [
+        "row_26",
+        "row_22",
+        "row_48",
+        "row_10",
+        "row_16"
+      ],
+      "label": "Desserts"
+    },
+    {
+      "cluster_id": 4,
+      "size": 2,
+      "top_terms": [
+        "loved"
+      ],
+      "representatives": [
+        "Not impressed, the food lacked flavor.",
+        "I loved the spicy curry, very flavorful."
+      ],
+      "representative_ids": [
+        "row_25",
+        "row_36"
+      ],
+      "label": "Loved"
+    },
+    {
+      "cluster_id": 5,
+      "size": 4,
+      "top_terms": [
+        "chicken",
+        "fantastic",
+        "delicious",
+        "spot"
+      ],
+      "representatives": [
+        "Fantastic fried chicken and crispy skin.",
+        "The chicken was undercooked which was disappointing.",
+        "Fantastic brunch spot, the pancakes were fluffy and delicious.",
+        "The noodles were overcooked and mushy."
+      ],
+      "representative_ids": [
+        "row_34",
+        "row_19",
+        "row_6",
+        "row_31"
+      ],
+      "label": "Chicken"
+    },
+    {
+      "cluster_id": 6,
+      "size": 5,
+      "top_terms": [
+        "portions"
+      ],
+      "representatives": [
+        "The restaurant looked nice but the portions were tiny for the price.",
+        "The restaurant was too noisy to have a conversation.",
+        "The restaurant smelled weird when we walked in.",
+        "Great place for family dinners, big portions.",
+        "Good value for money and generous servings."
+      ],
+      "representative_ids": [
+        "row_5",
+        "row_23",
+        "row_47",
+        "row_30",
+        "row_38"
+      ],
+      "label": "Portions"
+    },
+    {
+      "cluster_id": 7,
+      "size": 4,
+      "top_terms": [
+        "tacos",
+        "best"
+      ],
+      "representatives": [
+        "Best tacos in the city, hands down.",
+        "The tacos were greasy and messy.",
+        "The tacos were incredible but the wait time was way too long.",
+        "Best ramen I've had in years, very rich broth."
+      ],
+      "representative_ids": [
+        "row_28",
+        "row_43",
+        "row_0",
+        "row_8"
+      ],
+      "label": "Tacos"
+    },
+    {
+      "cluster_id": 8,
+      "size": 9,
+      "top_terms": [
+        "waiter",
+        "dry",
+        "perfectly",
+        "bland",
+        "overpriced",
+        "pizza",
+        "loved",
+        "fresh"
+      ],
+      "representatives": [
+        "The sandwich was dry and overpriced.",
+        "The pizza crust was perfect but the toppings were bland.",
+        "The waiter was rude and seemed annoyed.",
+        "The burger was dry and the fries were soggy.",
+        "I loved the burgers here, juicy and perfectly cooked."
+      ],
+      "representative_ids": [
+        "row_49",
+        "row_11",
+        "row_33",
+        "row_17",
+        "row_2"
+      ],
+      "label": "Pizza"
+    },
+    {
+      "cluster_id": 9,
+      "size": 14,
+      "top_terms": [
+        "tasted",
+        "arrived",
+        "cold",
+        "came",
+        "atmosphere",
+        "slow",
+        "pasta",
+        "super"
+      ],
+      "representatives": [
+        "Great atmosphere and friendly staff, but the pasta was a little salty.",
+        "Coffee was great but the croissant tasted stale.",
+        "The service was great but the food was mediocre.",
+        "The service was slow and our food arrived cold.",
+        "Food came quickly but it tasted average."
+      ],
+      "representative_ids": [
+        "row_1",
+        "row_7",
+        "row_45",
+        "row_3",
+        "row_35"
+      ],
+      "label": "Pasta"
+    }
+  ]
+}

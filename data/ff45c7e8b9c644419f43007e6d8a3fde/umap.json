@@ -1,0 +1,405 @@
+{
+  "analysis_id": "ff45c7e8b9c644419f43007e6d8a3fde",
+  "points": [
+    {
+      "id": "row_0",
+      "x_raw": 0.16311489045619965,
+      "y_raw": 0.20447246730327606,
+      "x": 0.755869448184967,
+      "y": 0.8951989412307739,
+      "preview": "The tacos were incredible but the wait time was way too long."
+    },
+    {
+      "id": "row_1",
+      "x_raw": 0.21923105418682098,
+      "y_raw": -0.43095457553863525,
+      "x": 0.8150485157966614,
+      "y": 0.011311936192214489,
+      "preview": "Great atmosphere and friendly staff, but the pasta was a little salty."
+    },
+    {
+      "id": "row_2",
+      "x_raw": 0.0017240206943824887,
+      "y_raw": 0.2246600240468979,
+      "x": 0.5856695771217346,
+      "y": 0.9232800602912903,
+      "preview": "I loved the burgers here, juicy and perfectly cooked."
+    },
+    {
+      "id": "row_3",
+      "x_raw": 0.3058188557624817,
+      "y_raw": -0.10984532535076141,
+      "x": 0.9063624143600464,
+      "y": 0.45797890424728394,
+      "preview": "The service was slow and our food arrived cold."
+    },
+    {
+      "id": "row_4",
+      "x_raw": -0.5536332130432129,
+      "y_raw": -0.15132932364940643,
+      "x": 0.0,
+      "y": 0.4002741277217865,
+      "preview": "Amazing sushi, very fresh fish and beautiful presentation."
+    },
+    {
+      "id": "row_5",
+      "x_raw": 0.047169264405965805,
+      "y_raw": 0.2241058200597763,
+      "x": 0.6335952877998352,
+      "y": 0.9225091338157654,
+      "preview": "The restaurant looked nice but the portions were tiny for the price."
+    },
+    {
+      "id": "row_6",
+      "x_raw": -0.1178438812494278,
+      "y_raw": 0.13652412593364716,
+      "x": 0.45957547426223755,
+      "y": 0.8006819486618042,
+      "preview": "Fantastic brunch spot, the pancakes were fluffy and delicious."
+    },
+    {
+      "id": "row_7",
+      "x_raw": 0.24675428867340088,
+      "y_raw": -0.18583041429519653,
+      "x": 0.844074010848999,
+      "y": 0.35228270292282104,
+      "preview": "Coffee was great but the croissant tasted stale."
+    },
+    {
+      "id": "row_8",
+      "x_raw": -0.15663135051727295,
+      "y_raw": 0.08229232579469681,
+      "x": 0.4186708927154541,
+      "y": 0.7252447605133057,
+      "preview": "Best ramen I've had in years, very rich broth."
+    },
+    {
+      "id": "row_9",
+      "x_raw": 0.03525100648403168,
+      "y_raw": 0.17122013866901398,
+      "x": 0.6210265159606934,
+      "y": 0.8489444851875305,
+      "preview": "The waiter forgot our order and we had to remind them twice."
+    },
+    {
+      "id": "row_10",
+      "x_raw": -0.15896469354629517,
+      "y_raw": -0.25348973274230957,
+      "x": 0.41621020436286926,
+      "y": 0.25816774368286133,
+      "preview": "Super cozy place with excellent desserts."
+    },
+    {
+      "id": "row_11",
+      "x_raw": 0.045340150594711304,
+      "y_raw": 0.2110203057527542,
+      "x": 0.631666362285614,
+      "y": 0.9043070077896118,
+      "preview": "The pizza crust was perfect but the toppings were bland."
+    },
+    {
+      "id": "row_12",
+      "x_raw": -0.006776744965463877,
+      "y_raw": -0.13374026119709015,
+      "x": 0.5767048001289368,
+      "y": 0.4247407913208008,
+      "preview": "Everything tasted homemade and comforting."
+    },
+    {
+      "id": "row_13",
+      "x_raw": 0.2717922329902649,
+      "y_raw": 0.1330019235610962,
+      "x": 0.8704785704612732,
+      "y": 0.7957824468612671,
+      "preview": "The food was good but extremely overpriced."
+    },
+    {
+      "id": "row_14",
+      "x_raw": 0.010603724978864193,
+      "y_raw": -0.2235470563173294,
+      "x": 0.5950339436531067,
+      "y": 0.29981839656829834,
+      "preview": "Great vegan options and the staff was very helpful."
+    },
+    {
+      "id": "row_15",
+      "x_raw": 0.04761078581213951,
+      "y_raw": 0.05461396276950836,
+      "x": 0.6340609192848206,
+      "y": 0.6867437958717346,
+      "preview": "Our table was dirty when we arrived and nobody cleaned it."
+    },
+    {
+      "id": "row_16",
+      "x_raw": -0.07444824278354645,
+      "y_raw": 0.09371102601289749,
+      "x": 0.5053397417068481,
+      "y": 0.7411283254623413,
+      "preview": "Delicious seafood, especially the grilled octopus."
+    },
+    {
+      "id": "row_17",
+      "x_raw": 0.10980818420648575,
+      "y_raw": 0.21201033890247345,
+      "x": 0.6996532082557678,
+      "y": 0.9056841731071472,
+      "preview": "The burger was dry and the fries were soggy."
+    },
+    {
+      "id": "row_18",
+      "x_raw": 0.11789657175540924,
+      "y_raw": -0.26460883021354675,
+      "x": 0.7081829905509949,
+      "y": 0.2427009493112564,
+      "preview": "Very lively atmosphere and quick service."
+    },
+    {
+      "id": "row_19",
+      "x_raw": -8.089257607934996e-05,
+      "y_raw": 0.17628663778305054,
+      "x": 0.5837661623954773,
+      "y": 0.8559920787811279,
+      "preview": "The chicken was undercooked which was disappointing."
+    },
+    {
+      "id": "row_20",
+      "x_raw": -0.42198118567466736,
+      "y_raw": -0.08945931494235992,
+      "x": 0.1388378143310547,
+      "y": 0.4863361418247223,
+      "preview": "Amazing cocktails and a cool vibe."
+    },
+    {
+      "id": "row_21",
+      "x_raw": 0.25868532061576843,
+      "y_raw": 0.03714786097407341,
+      "x": 0.8566563129425049,
+      "y": 0.6624482870101929,
+      "preview": "The soup was tasty but barely warm."
+    },
+    {
+      "id": "row_22",
+      "x_raw": -0.007825737819075584,
+      "y_raw": -0.23729616403579712,
+      "x": 0.5755985975265503,
+      "y": 0.2806932032108307,
+      "preview": "Excellent customer service and fast seating."
+    },
+    {
+      "id": "row_23",
+      "x_raw": -0.04850334674119949,
+      "y_raw": 0.1890941858291626,
+      "x": 0.5327007174491882,
+      "y": 0.8738074898719788,
+      "preview": "The restaurant was too noisy to have a conversation."
+    },
+    {
+      "id": "row_24",
+      "x_raw": 0.09192624688148499,
+      "y_raw": 0.13777479529380798,
+      "x": 0.6807951927185059,
+      "y": 0.8024215698242188,
+      "preview": "The steak was perfectly medium rare."
+    },
+    {
+      "id": "row_25",
+      "x_raw": 0.046619243919849396,
+      "y_raw": 0.06402688473463058,
+      "x": 0.6330152750015259,
+      "y": 0.699837327003479,
+      "preview": "Not impressed, the food lacked flavor."
+    },
+    {
+      "id": "row_26",
+      "x_raw": -0.10325439274311066,
+      "y_raw": 0.06836648285388947,
+      "x": 0.4749612808227539,
+      "y": 0.7058737277984619,
+      "preview": "The desserts were outstanding, especially the cheesecake."
+    },
+    {
+      "id": "row_27",
+      "x_raw": 0.2880381941795349,
+      "y_raw": -0.3035261332988739,
+      "x": 0.8876112699508667,
+      "y": 0.18856649100780487,
+      "preview": "Service was friendly but incredibly slow."
+    },
+    {
+      "id": "row_28",
+      "x_raw": -0.04966207593679428,
+      "y_raw": 0.2281334549188614,
+      "x": 0.531478762626648,
+      "y": 0.9281116127967834,
+      "preview": "Best tacos in the city, hands down."
+    },
+    {
+      "id": "row_29",
+      "x_raw": 0.02983122505247593,
+      "y_raw": 0.08253050595521927,
+      "x": 0.6153109073638916,
+      "y": 0.7255761027336121,
+      "preview": "The salad was fresh but the dressing was bland."
+    },
+    {
+      "id": "row_30",
+      "x_raw": -0.03211051970720291,
+      "y_raw": -0.1555556058883667,
+      "x": 0.549988329410553,
+      "y": 0.3943953514099121,
+      "preview": "Great place for family dinners, big portions."
+    },
+    {
+      "id": "row_31",
+      "x_raw": -0.0007255247328430414,
+      "y_raw": 0.27981406450271606,
+      "x": 0.583086371421814,
+      "y": 1.0,
+      "preview": "The noodles were overcooked and mushy."
+    },
+    {
+      "id": "row_32",
+      "x_raw": -0.2976308763027191,
+      "y_raw": -0.06925015151500702,
+      "x": 0.2699753940105438,
+      "y": 0.5144472718238831,
+      "preview": "Beautiful interior and very clean dining area."
+    },
+    {
+      "id": "row_33",
+      "x_raw": 0.11017295718193054,
+      "y_raw": 0.1705337017774582,
+      "x": 0.7000378966331482,
+      "y": 0.8479896783828735,
+      "preview": "The waiter was rude and seemed annoyed."
+    },
+    {
+      "id": "row_34",
+      "x_raw": -0.07818585634231567,
+      "y_raw": 0.05247928574681282,
+      "x": 0.5013980865478516,
+      "y": 0.683774471282959,
+      "preview": "Fantastic fried chicken and crispy skin."
+    },
+    {
+      "id": "row_35",
+      "x_raw": 0.23225216567516327,
+      "y_raw": -0.1745748370885849,
+      "x": 0.8287803530693054,
+      "y": 0.3679393231868744,
+      "preview": "Food came quickly but it tasted average."
+    },
+    {
+      "id": "row_36",
+      "x_raw": -0.11593512445688248,
+      "y_raw": 0.07830404490232468,
+      "x": 0.46158841252326965,
+      "y": 0.7196970582008362,
+      "preview": "I loved the spicy curry, very flavorful."
+    },
+    {
+      "id": "row_37",
+      "x_raw": 0.14573033154010773,
+      "y_raw": 0.08555533736944199,
+      "x": 0.7375360131263733,
+      "y": 0.7297836542129517,
+      "preview": "The rice was cold and clumpy."
+    },
+    {
+      "id": "row_38",
+      "x_raw": 0.05533680319786072,
+      "y_raw": -0.06397653371095657,
+      "x": 0.6422086954116821,
+      "y": 0.5217829942703247,
+      "preview": "Good value for money and generous servings."
+    },
+    {
+      "id": "row_39",
+      "x_raw": -0.13326720893383026,
+      "y_raw": 0.05259045585989952,
+      "x": 0.44331029057502747,
+      "y": 0.6839291453361511,
+      "preview": "The sushi rolls fell apart easily."
+    },
+    {
+      "id": "row_40",
+      "x_raw": -0.4186440706253052,
+      "y_raw": -0.08640690892934799,
+      "x": 0.14235708117485046,
+      "y": 0.49058204889297485,
+      "preview": "Wonderful breakfast spot with amazing omelets."
+    },
+    {
+      "id": "row_41",
+      "x_raw": 0.1321037858724594,
+      "y_raw": -0.184244304895401,
+      "x": 0.7231656908988953,
+      "y": 0.3544889986515045,
+      "preview": "The pasta sauce tasted like it came from a jar."
+    },
+    {
+      "id": "row_42",
+      "x_raw": 0.007655528839677572,
+      "y_raw": -0.4390867352485657,
+      "x": 0.591924786567688,
+      "y": 0.0,
+      "preview": "Super friendly staff and cozy environment."
+    },
+    {
+      "id": "row_43",
+      "x_raw": 0.0389428548514843,
+      "y_raw": 0.214934840798378,
+      "x": 0.6249198913574219,
+      "y": 0.9097521901130676,
+      "preview": "The tacos were greasy and messy."
+    },
+    {
+      "id": "row_44",
+      "x_raw": -0.4220724403858185,
+      "y_raw": -0.07336162030696869,
+      "x": 0.13874158263206482,
+      "y": 0.5087282061576843,
+      "preview": "Amazing wood fired pizza, very authentic."
+    },
+    {
+      "id": "row_45",
+      "x_raw": 0.39461007714271545,
+      "y_raw": -0.19028297066688538,
+      "x": 1.0,
+      "y": 0.3460891544818878,
+      "preview": "The service was great but the food was mediocre."
+    },
+    {
+      "id": "row_46",
+      "x_raw": -0.22298862040042877,
+      "y_raw": -0.1972070187330246,
+      "x": 0.34869176149368286,
+      "y": 0.3364576995372772,
+      "preview": "Fresh ingredients and great presentation."
+    },
+    {
+      "id": "row_47",
+      "x_raw": -0.053212232887744904,
+      "y_raw": 0.23408761620521545,
+      "x": 0.5277348160743713,
+      "y": 0.9363939762115479,
+      "preview": "The restaurant smelled weird when we walked in."
+    },
+    {
+      "id": "row_48",
+      "x_raw": -0.1278572678565979,
+      "y_raw": -0.10881481319665909,
+      "x": 0.4490155279636383,
+      "y": 0.4594123959541321,
+      "preview": "Outstanding customer experience from start to finish."
+    },
+    {
+      "id": "row_49",
+      "x_raw": 0.1482158601284027,
+      "y_raw": 0.22709587216377258,
+      "x": 0.7401572465896606,
+      "y": 0.9266684055328369,
+      "preview": "The sandwich was dry and overpriced."
+    }
+  ]
+}

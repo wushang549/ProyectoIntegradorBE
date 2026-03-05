@@ -1,0 +1,171 @@
+{
+  "analysis_id": "528953a25fc1409abcbd236cabd98b15",
+  "k_clusters": 4,
+  "cluster_labels": [
+    4,
+    4,
+    1,
+    4,
+    4,
+    4,
+    2,
+    3,
+    4,
+    2,
+    4,
+    2,
+    3,
+    2,
+    2,
+    4,
+    4,
+    4,
+    1,
+    3,
+    2,
+    4,
+    1,
+    4,
+    2,
+    4,
+    1,
+    3,
+    4,
+    4,
+    2,
+    1,
+    4,
+    4,
+    4,
+    2,
+    4,
+    2,
+    3,
+    2,
+    4,
+    2,
+    4,
+    1,
+    4,
+    2,
+    4,
+    1,
+    4,
+    2,
+    1,
+    4,
+    2,
+    3,
+    1,
+    4
+  ],
+  "clusters": [
+    {
+      "cluster_id": 1,
+      "size": 9,
+      "top_terms": [
+        "customer",
+        "atmosphere",
+        "outstanding",
+        "slow",
+        "excellent",
+        "cozy"
+      ],
+      "representatives": [
+        "Great atmosphere and friendly staff,",
+        "Excellent customer service and fast seating.",
+        "Very lively atmosphere and quick service.",
+        "The service was great",
+        "Outstanding customer experience from start to finish."
+      ],
+      "representative_ids": [
+        "row_1_g0",
+        "row_22",
+        "row_18",
+        "row_45_g0",
+        "row_48"
+      ],
+      "label": "Service Highlights"
+    },
+    {
+      "cluster_id": 2,
+      "size": 15,
+      "top_terms": [
+        "pizza",
+        "beautiful",
+        "spot",
+        "delicious",
+        "fantastic",
+        "presentation",
+        "desserts",
+        "best"
+      ],
+      "representatives": [
+        "Super cozy place with excellent desserts.",
+        "Great place for family dinners, big portions.",
+        "Fantastic fried chicken and crispy skin.",
+        "Amazing wood fired pizza, very authentic.",
+        "Wonderful breakfast spot with amazing omelets."
+      ],
+      "representative_ids": [
+        "row_10",
+        "row_30",
+        "row_34",
+        "row_44",
+        "row_40"
+      ],
+      "label": "Food Highlights"
+    },
+    {
+      "cluster_id": 3,
+      "size": 6,
+      "top_terms": [
+        "waiter"
+      ],
+      "representatives": [
+        "The restaurant smelled weird when we walked in.",
+        "The restaurant was too noisy to have a conversation.",
+        "The waiter was rude and seemed annoyed.",
+        "The restaurant looked nice",
+        "The waiter forgot our order and we had to remind them twice."
+      ],
+      "representative_ids": [
+        "row_47",
+        "row_23",
+        "row_33",
+        "row_5_g0",
+        "row_9"
+      ],
+      "label": "Service Issues"
+    },
+    {
+      "cluster_id": 4,
+      "size": 26,
+      "top_terms": [
+        "tacos",
+        "bland",
+        "dry",
+        "pasta",
+        "cold",
+        "overpriced",
+        "sushi",
+        "portions"
+      ],
+      "representatives": [
+        "Not impressed, the food lacked flavor.",
+        "the toppings were bland.",
+        "Food came quickly but it tasted average.",
+        "the food was mediocre.",
+        "The food was good but extremely overpriced."
+      ],
+      "representative_ids": [
+        "row_25",
+        "row_11_g1",
+        "row_35",
+        "row_45_g1",
+        "row_13"
+      ],
+      "label": "Food Issues"
+    }
+  ]
+}

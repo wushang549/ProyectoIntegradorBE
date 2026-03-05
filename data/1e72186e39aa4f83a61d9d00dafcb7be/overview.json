@@ -1,0 +1,28 @@
+{
+  "analysis_id": "1e72186e39aa4f83a61d9d00dafcb7be",
+  "created_at": "2026-03-05T02:53:33.807852+00:00",
+  "total_records": 50,
+  "total_items": 61,
+  "k_clusters": 3,
+  "embedding_method": "tfidf-fallback",
+  "cluster_distribution": [
+    {
+      "cluster_id": 1,
+      "label": "Delicious",
+      "size": 59,
+      "pct": 96.721
+    },
+    {
+      "cluster_id": 2,
+      "label": "Incredibly Slow",
+      "size": 1,
+      "pct": 1.639
+    },
+    {
+      "cluster_id": 3,
+      "label": "Barely Warm",
+      "size": 1,
+      "pct": 1.639
+    }
+  ]
+}

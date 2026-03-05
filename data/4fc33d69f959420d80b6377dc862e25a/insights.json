@@ -1,0 +1,14 @@
+{
+  "key_findings": [
+    "Food Issues Cold appears in 28.0% of comments.",
+    "Food Issues Waiter appears in 18.0% of comments.",
+    "Food Highlights appears in 12.0% of comments.",
+    "Desserts appears in 10.0% of comments.",
+    "Value Issues appears in 10.0% of comments."
+  ],
+  "theme_summary": "Top themes: Food Issues Cold, Food Issues Waiter, Food Highlights.",
+  "quality_warnings": [
+    "Potential quality issues appear in 46.0% of comments.",
+    "Semantic embedding model was unavailable, so lexical fallback embeddings were used."
+  ]
+}

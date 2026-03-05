@@ -1,0 +1,222 @@
+{
+  "analysis_id": "ff0924d466c847919dbf11ff2b541147",
+  "k_clusters": 8,
+  "cluster_labels": [
+    3,
+    3,
+    3,
+    3,
+    4,
+    3,
+    4,
+    3,
+    4,
+    1,
+    7,
+    3,
+    3,
+    3,
+    8,
+    2,
+    4,
+    3,
+    7,
+    3,
+    7,
+    3,
+    7,
+    1,
+    6,
+    3,
+    4,
+    7,
+    3,
+    3,
+    7,
+    3,
+    7,
+    1,
+    4,
+    3,
+    4,
+    3,
+    7,
+    5,
+    4,
+    3,
+    7,
+    3,
+    4,
+    3,
+    4,
+    1,
+    7,
+    3
+  ],
+  "clusters": [
+    {
+      "cluster_id": 1,
+      "size": 4,
+      "top_terms": [
+        "waiter"
+      ],
+      "representatives": [
+        "The waiter was rude and seemed annoyed.",
+        "The restaurant was too noisy to have a conversation.",
+        "The restaurant smelled weird when we walked in.",
+        "The waiter forgot our order and we had to remind them twice."
+      ],
+      "representative_ids": [
+        "row_33",
+        "row_23",
+        "row_47",
+        "row_9"
+      ],
+      "label": "Service Issues"
+    },
+    {
+      "cluster_id": 2,
+      "size": 1,
+      "top_terms": [
+        "arrived"
+      ],
+      "representatives": [
+        "Our table was dirty when we arrived and nobody cleaned it."
+      ],
+      "representative_ids": [
+        "row_15"
+      ],
+      "label": "Arrived"
+    },
+    {
+      "cluster_id": 3,
+      "size": 22,
+      "top_terms": [
+        "tasted",
+        "tacos",
+        "dry",
+        "cold",
+        "bland",
+        "overpriced",
+        "came",
+        "pasta"
+      ],
+      "representatives": [
+        "Not impressed, the food lacked flavor.",
+        "The food was good but extremely overpriced.",
+        "Food came quickly but it tasted average.",
+        "The tacos were greasy and messy.",
+        "The service was great but the food was mediocre."
+      ],
+      "representative_ids": [
+        "row_25",
+        "row_13",
+        "row_35",
+        "row_43",
+        "row_45"
+      ],
+      "label": "Food Issues"
+    },
+    {
+      "cluster_id": 4,
+      "size": 10,
+      "top_terms": [
+        "spot",
+        "delicious",
+        "especially",
+        "fantastic",
+        "presentation",
+        "fresh",
+        "loved",
+        "best"
+      ],
+      "representatives": [
+        "Fantastic fried chicken and crispy skin.",
+        "Amazing sushi, very fresh fish and beautiful presentation.",
+        "Fresh ingredients and great presentation.",
+        "Wonderful breakfast spot with amazing omelets.",
+        "I loved the spicy curry, very flavorful."
+      ],
+      "representative_ids": [
+        "row_34",
+        "row_4",
+        "row_46",
+        "row_40",
+        "row_36"
+      ],
+      "label": "Food Highlights"
+    },
+    {
+      "cluster_id": 5,
+      "size": 1,
+      "top_terms": [
+        "sushi"
+      ],
+      "representatives": [
+        "The sushi rolls fell apart easily."
+      ],
+      "representative_ids": [
+        "row_39"
+      ],
+      "label": "Sushi"
+    },
+    {
+      "cluster_id": 6,
+      "size": 1,
+      "top_terms": [
+        "perfectly"
+      ],
+      "representatives": [
+        "The steak was perfectly medium rare."
+      ],
+      "representative_ids": [
+        "row_24"
+      ],
+      "label": "Perfectly"
+    },
+    {
+      "cluster_id": 7,
+      "size": 10,
+      "top_terms": [
+        "customer",
+        "excellent",
+        "beautiful",
+        "super",
+        "cozy",
+        "atmosphere",
+        "outstanding",
+        "slow"
+      ],
+      "representatives": [
+        "Very lively atmosphere and quick service.",
+        "Excellent customer service and fast seating.",
+        "Great place for family dinners, big portions.",
+        "Beautiful interior and very clean dining area.",
+        "Super friendly staff and cozy environment."
+      ],
+      "representative_ids": [
+        "row_18",
+        "row_22",
+        "row_30",
+        "row_32",
+        "row_42"
+      ],
+      "label": "Service Highlights"
+    },
+    {
+      "cluster_id": 8,
+      "size": 1,
+      "top_terms": [
+        "staff",
+        "great"
+      ],
+      "representatives": [
+        "Great vegan options and the staff was very helpful."
+      ],
+      "representative_ids": [
+        "row_14"
+      ],
+      "label": "Vegan Options"
+    }
+  ]
+}

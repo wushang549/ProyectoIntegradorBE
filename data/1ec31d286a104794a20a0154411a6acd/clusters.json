@@ -1,0 +1,23 @@
+{
+  "analysis_id": "1ec31d286a104794a20a0154411a6acd",
+  "k_clusters": 1,
+  "cluster_labels": [
+    1
+  ],
+  "clusters": [
+    {
+      "cluster_id": 1,
+      "size": 1,
+      "top_terms": [
+        "hola"
+      ],
+      "representatives": [
+        "HOLA"
+      ],
+      "representative_ids": [
+        "row_0"
+      ],
+      "label": "Hola"
+    }
+  ]
+}

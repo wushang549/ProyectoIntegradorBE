@@ -1,0 +1,132 @@
+{
+  "analysis_id": "2f89f463d2ee4ee285e50dcb10555dc9",
+  "created_at": "2026-03-05T05:17:20.315544+00:00",
+  "total_records": 50,
+  "total_items": 56,
+  "k_clusters": 4,
+  "embedding_method": "sentence-transformers/all-MiniLM-L6-v2",
+  "k_selection": {
+    "mode": "auto",
+    "selected_k": 4,
+    "target_k": 7,
+    "selected_quality": {
+      "k_clusters": 7,
+      "cluster_count": 7,
+      "largest_cluster_share": 0.42857142857142855,
+      "singleton_share": 0.05357142857142857,
+      "silhouette": 0.10352670401334763,
+      "tested_k": 7,
+      "score": 0.08477670401334762
+    },
+    "candidates": [
+      {
+        "k_clusters": 7,
+        "cluster_count": 7,
+        "largest_cluster_share": 0.42857142857142855,
+        "singleton_share": 0.05357142857142857,
+        "silhouette": 0.10352670401334763,
+        "tested_k": 7,
+        "score": 0.08477670401334762
+      },
+      {
+        "k_clusters": 8,
+        "cluster_count": 8,
+        "largest_cluster_share": 0.42857142857142855,
+        "singleton_share": 0.07142857142857142,
+        "silhouette": 0.09606100618839264,
+        "tested_k": 8,
+        "score": 0.05906100618839265
+      },
+      {
+        "k_clusters": 9,
+        "cluster_count": 9,
+        "largest_cluster_share": 0.42857142857142855,
+        "singleton_share": 0.08928571428571429,
+        "silhouette": 0.09229935705661774,
+        "tested_k": 9,
+        "score": 0.037049357056617736
+      },
+      {
+        "k_clusters": 12,
+        "cluster_count": 12,
+        "largest_cluster_share": 0.30357142857142855,
+        "singleton_share": 0.08928571428571429,
+        "silhouette": 0.12214159965515137,
+        "tested_k": 12,
+        "score": 0.03089159965515137
+      },
+      {
+        "k_clusters": 13,
+        "cluster_count": 13,
+        "largest_cluster_share": 0.30357142857142855,
+        "singleton_share": 0.08928571428571429,
+        "silhouette": 0.13097822666168213,
+        "tested_k": 13,
+        "score": 0.02772822666168212
+      },
+      {
+        "k_clusters": 10,
+        "cluster_count": 10,
+        "largest_cluster_share": 0.39285714285714285,
+        "singleton_share": 0.08928571428571429,
+        "silhouette": 0.09305481612682343,
+        "tested_k": 10,
+        "score": 0.02580481612682342
+      },
+      {
+        "k_clusters": 11,
+        "cluster_count": 11,
+        "largest_cluster_share": 0.39285714285714285,
+        "singleton_share": 0.08928571428571429,
+        "silhouette": 0.10121149569749832,
+        "tested_k": 11,
+        "score": 0.02196149569749832
+      },
+      {
+        "k_clusters": 14,
+        "cluster_count": 14,
+        "largest_cluster_share": 0.2857142857142857,
+        "singleton_share": 0.10714285714285714,
+        "silhouette": 0.12633898854255676,
+        "tested_k": 14,
+        "score": 0.004838988542556752
+      }
+    ],
+    "postprocess_min_cluster_size": 2,
+    "premerge_k": 7
+  },
+  "cluster_quality": {
+    "k_clusters": 4,
+    "cluster_count": 4,
+    "largest_cluster_share": 0.4642857142857143,
+    "singleton_share": 0.0,
+    "silhouette": 0.13232377171516418,
+    "selected_k": 4
+  },
+  "cluster_distribution": [
+    {
+      "cluster_id": 4,
+      "label": "Food Issues",
+      "size": 26,
+      "pct": 46.429
+    },
+    {
+      "cluster_id": 2,
+      "label": "Food Highlights",
+      "size": 15,
+      "pct": 26.786
+    },
+    {
+      "cluster_id": 1,
+      "label": "Service Highlights",
+      "size": 9,
+      "pct": 16.071
+    },
+    {
+      "cluster_id": 3,
+      "label": "Service Issues",
+      "size": 6,
+      "pct": 10.714
+    }
+  ]
+}

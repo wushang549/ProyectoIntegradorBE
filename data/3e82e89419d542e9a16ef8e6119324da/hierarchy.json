@@ -1,0 +1,15 @@
+{
+  "nodes": [
+    {
+      "node_id": "leaf_0",
+      "parent_id": null,
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    }
+  ],
+  "linkage_matrix": []
+}

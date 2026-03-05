@@ -1,0 +1,160 @@
+{
+  "analysis_id": "d02cc23c1f7c427c8fee690fd2780195",
+  "created_at": "2026-03-05T03:18:14.954197+00:00",
+  "total_records": 50,
+  "total_items": 50,
+  "k_clusters": 9,
+  "embedding_method": "tfidf-hybrid-svd-fallback",
+  "k_selection": {
+    "mode": "auto",
+    "selected_k": 9,
+    "target_k": 7,
+    "selected_quality": {
+      "k_clusters": 9,
+      "cluster_count": 9,
+      "largest_cluster_share": 0.28,
+      "singleton_share": 0.02,
+      "silhouette": 0.06452228128910065,
+      "tested_k": 9,
+      "score": 0.03352228128910065
+    },
+    "candidates": [
+      {
+        "k_clusters": 9,
+        "cluster_count": 9,
+        "largest_cluster_share": 0.28,
+        "singleton_share": 0.02,
+        "silhouette": 0.06452228128910065,
+        "tested_k": 9,
+        "score": 0.03352228128910065
+      },
+      {
+        "k_clusters": 11,
+        "cluster_count": 11,
+        "largest_cluster_share": 0.18,
+        "singleton_share": 0.02,
+        "silhouette": 0.08057554066181183,
+        "tested_k": 11,
+        "score": 0.02557554066181182
+      },
+      {
+        "k_clusters": 8,
+        "cluster_count": 8,
+        "largest_cluster_share": 0.46,
+        "singleton_share": 0.02,
+        "silhouette": 0.05589526146650314,
+        "tested_k": 8,
+        "score": 0.024895261466503133
+      },
+      {
+        "k_clusters": 10,
+        "cluster_count": 10,
+        "largest_cluster_share": 0.28,
+        "singleton_share": 0.02,
+        "silhouette": 0.06748047471046448,
+        "tested_k": 10,
+        "score": 0.024480474710464474
+      },
+      {
+        "k_clusters": 12,
+        "cluster_count": 12,
+        "largest_cluster_share": 0.18,
+        "singleton_share": 0.02,
+        "silhouette": 0.08787605166435242,
+        "tested_k": 12,
+        "score": 0.020876051664352413
+      },
+      {
+        "k_clusters": 13,
+        "cluster_count": 13,
+        "largest_cluster_share": 0.16,
+        "singleton_share": 0.04,
+        "silhouette": 0.08050038665533066,
+        "tested_k": 13,
+        "score": -0.005499613344669349
+      },
+      {
+        "k_clusters": 14,
+        "cluster_count": 14,
+        "largest_cluster_share": 0.16,
+        "singleton_share": 0.04,
+        "silhouette": 0.09018990397453308,
+        "tested_k": 14,
+        "score": -0.007810096025466923
+      },
+      {
+        "k_clusters": 15,
+        "cluster_count": 15,
+        "largest_cluster_share": 0.16,
+        "singleton_share": 0.04,
+        "silhouette": 0.09250326454639435,
+        "tested_k": 15,
+        "score": -0.017496735453605652
+      }
+    ]
+  },
+  "cluster_quality": {
+    "k_clusters": 9,
+    "cluster_count": 9,
+    "largest_cluster_share": 0.28,
+    "singleton_share": 0.02,
+    "silhouette": 0.06452228128910065,
+    "selected_k": 9
+  },
+  "cluster_distribution": [
+    {
+      "cluster_id": 9,
+      "label": "Food Issues",
+      "size": 14,
+      "pct": 28.0
+    },
+    {
+      "cluster_id": 8,
+      "label": "Food Issues",
+      "size": 9,
+      "pct": 18.0
+    },
+    {
+      "cluster_id": 1,
+      "label": "Food Highlights",
+      "size": 6,
+      "pct": 12.0
+    },
+    {
+      "cluster_id": 3,
+      "label": "Desserts",
+      "size": 5,
+      "pct": 10.0
+    },
+    {
+      "cluster_id": 6,
+      "label": "Value Issues",
+      "size": 5,
+      "pct": 10.0
+    },
+    {
+      "cluster_id": 5,
+      "label": "Chicken",
+      "size": 4,
+      "pct": 8.0
+    },
+    {
+      "cluster_id": 7,
+      "label": "Tacos",
+      "size": 4,
+      "pct": 8.0
+    },
+    {
+      "cluster_id": 4,
+      "label": "Loved",
+      "size": 2,
+      "pct": 4.0
+    },
+    {
+      "cluster_id": 2,
+      "label": "Sushi",
+      "size": 1,
+      "pct": 2.0
+    }
+  ]
+}

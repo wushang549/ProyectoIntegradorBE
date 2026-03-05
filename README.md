@@ -1,83 +1,92 @@
-﻿# ProyectoIntegradorBE
+﻿# NLP Analysis Backend (FastAPI)
 
-Backend en FastAPI para analisis `granulate`.
+FastAPI backend that runs a local NLP analysis pipeline for user comments (restaurant reviews initially), returning:
 
-## Ejecutar local
+- Granulated items
+- Hierarchical themes
+- Flat clusters (`k_clusters`)
+- 2D map projection (UMAP)
+- Cluster labels (Ollama local)
+- High-level insights
 
-1. (Opcional) Crear y activar entorno virtual.
-2. Instalar dependencias:
+## Requirements
+
+- Python 3.11+
+- Local Ollama server at `http://localhost:11434`
+- Model available in Ollama: `gemma3:1b`
+
+Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Levantar servidor:
+Run server:
 
 ```bash
 uvicorn main:app --reload
 ```
 
-El API queda disponible en:
-- `http://127.0.0.1:8000`
-- Swagger UI: `http://127.0.0.1:8000/docs`
+API base path: `http://127.0.0.1:8000/v1`
 
-## Ollama local (labels de clusters y jerarquia)
+## Main Endpoints
 
-El pipeline de analisis usa un LLM local por Ollama para etiquetas cortas.
-
-1. Instalar Ollama: `https://ollama.com/download`
-2. Levantar servicio local (default `http://localhost:11434`)
-3. Descargar modelo:
-
-```bash
-ollama pull gemma3:1b
-```
-
-Si Ollama no esta disponible, el backend cae automaticamente a etiquetas TF-IDF.
-
-## Nuevo API de analisis completo
-
-Base: `/v1/analysis`
-
-- `POST /v1/analysis` crea una corrida (texto o CSV) y responde inmediato con `analysis_id`.
-- `GET /v1/analysis/{analysis_id}/status` para polling.
+- `POST /v1/analysis`
+- `GET /v1/analysis/recent?limit=N`
+- `GET /v1/analysis/{analysis_id}/status`
 - `GET /v1/analysis/{analysis_id}/overview`
-- `GET /v1/analysis/{analysis_id}/map`
-- `GET /v1/analysis/{analysis_id}/clusters`
-- `GET /v1/analysis/{analysis_id}/granulate?include_items=true|false`
+- `GET /v1/analysis/{analysis_id}/map?k_clusters=N`
+- `GET /v1/analysis/{analysis_id}/clusters?k_clusters=N`
+- `GET /v1/analysis/{analysis_id}/granulate`
 - `GET /v1/analysis/{analysis_id}/hierarchy`
+- `GET /v1/analysis/{analysis_id}/insights`
 
-### Input CSV soportado
+If artifacts are still processing, data endpoints return `409`.
 
-Reglas de validacion:
-- extension `.csv`
-- archivo no vacio
-- tamano maximo `50MB`
-- columna de texto aceptada: `text` o `transcript` (tambien soporta alias comunes como `message`/`content`)
-- al menos una fila con `text` no vacio
+## Example Requests
 
-### Ejemplo rapido (CSV)
-
-```bash
-curl -X POST "http://127.0.0.1:8000/v1/analysis" \
-  -F "input_type=csv" \
-  -F "file=@sample.csv" \
-  -F "options={\"k_clusters\":8,\"granulate\":true,\"granulate_max_rows\":200,\"granulate_return_items\":false}"
-```
-
-### Ejemplo rapido (texto)
+Text input:
 
 ```bash
 curl -X POST "http://127.0.0.1:8000/v1/analysis" \
   -F "input_type=text" \
-  -F "text=The app is fast but support response was slow and pricing is high." \
-  -F "options={\"k_clusters\":4,\"granulate\":true}"
+  -F "text=Food was tasty but service was slow. Atmosphere was great." \
+  -F "options={\"k_clusters\":6,\"granulate\":true}"
 ```
 
-Luego consultar estado:
+CSV input:
 
 ```bash
-curl "http://127.0.0.1:8000/v1/analysis/{analysis_id}/status"
+curl -X POST "http://127.0.0.1:8000/v1/analysis" \
+  -F "input_type=csv" \
+  -F "file=@reviews.csv" \
+  -F "options={\"k_clusters\":8,\"granulate\":true}"
 ```
 
-Los artefactos se persisten en `uploads/{analysis_id}/`.
+Status polling:
+
+```bash
+curl "http://127.0.0.1:8000/v1/analysis/<analysis_id>/status"
+```
+
+## Data Artifacts
+
+Each run is stored in:
+
+```text
+data/<analysis_id>/
+```
+
+Generated files:
+
+- `items.json`
+- `embeddings.npy`
+- `umap.json`
+- `clusters.json`
+- `hierarchy.json`
+- `overview.json`
+- `insights.json`
+
+Recent runs index:
+
+- `data/index.json`

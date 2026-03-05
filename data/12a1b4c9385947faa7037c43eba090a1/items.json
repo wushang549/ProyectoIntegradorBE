@@ -1,0 +1,455 @@
+{
+  "analysis_id": "12a1b4c9385947faa7037c43eba090a1",
+  "total_records": 50,
+  "total_items": 56,
+  "items": [
+    {
+      "id": "row_0_g0",
+      "text": "The tacos were incredible",
+      "source_id": "row_0",
+      "source_text": "The tacos were incredible but the wait time was way too long.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_0_g1",
+      "text": "the wait time was way too long.",
+      "source_id": "row_0",
+      "source_text": "The tacos were incredible but the wait time was way too long.",
+      "chunk_index": 1,
+      "metadata": {}
+    },
+    {
+      "id": "row_1_g0",
+      "text": "Great atmosphere and friendly staff,",
+      "source_id": "row_1",
+      "source_text": "Great atmosphere and friendly staff, but the pasta was a little salty.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_1_g1",
+      "text": "the pasta was a little salty.",
+      "source_id": "row_1",
+      "source_text": "Great atmosphere and friendly staff, but the pasta was a little salty.",
+      "chunk_index": 1,
+      "metadata": {}
+    },
+    {
+      "id": "row_2",
+      "text": "I loved the burgers here, juicy and perfectly cooked.",
+      "source_id": "row_2",
+      "source_text": "I loved the burgers here, juicy and perfectly cooked.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_3",
+      "text": "The service was slow and our food arrived cold.",
+      "source_id": "row_3",
+      "source_text": "The service was slow and our food arrived cold.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_4",
+      "text": "Amazing sushi, very fresh fish and beautiful presentation.",
+      "source_id": "row_4",
+      "source_text": "Amazing sushi, very fresh fish and beautiful presentation.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_5_g0",
+      "text": "The restaurant looked nice",
+      "source_id": "row_5",
+      "source_text": "The restaurant looked nice but the portions were tiny for the price.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_5_g1",
+      "text": "the portions were tiny for the price.",
+      "source_id": "row_5",
+      "source_text": "The restaurant looked nice but the portions were tiny for the price.",
+      "chunk_index": 1,
+      "metadata": {}
+    },
+    {
+      "id": "row_6",
+      "text": "Fantastic brunch spot, the pancakes were fluffy and delicious.",
+      "source_id": "row_6",
+      "source_text": "Fantastic brunch spot, the pancakes were fluffy and delicious.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_7",
+      "text": "Coffee was great but the croissant tasted stale.",
+      "source_id": "row_7",
+      "source_text": "Coffee was great but the croissant tasted stale.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_8",
+      "text": "Best ramen I've had in years, very rich broth.",
+      "source_id": "row_8",
+      "source_text": "Best ramen I've had in years, very rich broth.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_9",
+      "text": "The waiter forgot our order and we had to remind them twice.",
+      "source_id": "row_9",
+      "source_text": "The waiter forgot our order and we had to remind them twice.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_10",
+      "text": "Super cozy place with excellent desserts.",
+      "source_id": "row_10",
+      "source_text": "Super cozy place with excellent desserts.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_11_g0",
+      "text": "The pizza crust was perfect",
+      "source_id": "row_11",
+      "source_text": "The pizza crust was perfect but the toppings were bland.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_11_g1",
+      "text": "the toppings were bland.",
+      "source_id": "row_11",
+      "source_text": "The pizza crust was perfect but the toppings were bland.",
+      "chunk_index": 1,
+      "metadata": {}
+    },
+    {
+      "id": "row_12",
+      "text": "Everything tasted homemade and comforting.",
+      "source_id": "row_12",
+      "source_text": "Everything tasted homemade and comforting.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_13",
+      "text": "The food was good but extremely overpriced.",
+      "source_id": "row_13",
+      "source_text": "The food was good but extremely overpriced.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_14",
+      "text": "Great vegan options and the staff was very helpful.",
+      "source_id": "row_14",
+      "source_text": "Great vegan options and the staff was very helpful.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_15",
+      "text": "Our table was dirty when we arrived and nobody cleaned it.",
+      "source_id": "row_15",
+      "source_text": "Our table was dirty when we arrived and nobody cleaned it.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_16",
+      "text": "Delicious seafood, especially the grilled octopus.",
+      "source_id": "row_16",
+      "source_text": "Delicious seafood, especially the grilled octopus.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_17",
+      "text": "The burger was dry and the fries were soggy.",
+      "source_id": "row_17",
+      "source_text": "The burger was dry and the fries were soggy.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_18",
+      "text": "Very lively atmosphere and quick service.",
+      "source_id": "row_18",
+      "source_text": "Very lively atmosphere and quick service.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_19",
+      "text": "The chicken was undercooked which was disappointing.",
+      "source_id": "row_19",
+      "source_text": "The chicken was undercooked which was disappointing.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_20",
+      "text": "Amazing cocktails and a cool vibe.",
+      "source_id": "row_20",
+      "source_text": "Amazing cocktails and a cool vibe.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_21",
+      "text": "The soup was tasty but barely warm.",
+      "source_id": "row_21",
+      "source_text": "The soup was tasty but barely warm.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_22",
+      "text": "Excellent customer service and fast seating.",
+      "source_id": "row_22",
+      "source_text": "Excellent customer service and fast seating.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_23",
+      "text": "The restaurant was too noisy to have a conversation.",
+      "source_id": "row_23",
+      "source_text": "The restaurant was too noisy to have a conversation.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_24",
+      "text": "The steak was perfectly medium rare.",
+      "source_id": "row_24",
+      "source_text": "The steak was perfectly medium rare.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_25",
+      "text": "Not impressed, the food lacked flavor.",
+      "source_id": "row_25",
+      "source_text": "Not impressed, the food lacked flavor.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_26",
+      "text": "The desserts were outstanding, especially the cheesecake.",
+      "source_id": "row_26",
+      "source_text": "The desserts were outstanding, especially the cheesecake.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_27",
+      "text": "Service was friendly but incredibly slow.",
+      "source_id": "row_27",
+      "source_text": "Service was friendly but incredibly slow.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_28",
+      "text": "Best tacos in the city, hands down.",
+      "source_id": "row_28",
+      "source_text": "Best tacos in the city, hands down.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_29_g0",
+      "text": "The salad was fresh",
+      "source_id": "row_29",
+      "source_text": "The salad was fresh but the dressing was bland.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_29_g1",
+      "text": "the dressing was bland.",
+      "source_id": "row_29",
+      "source_text": "The salad was fresh but the dressing was bland.",
+      "chunk_index": 1,
+      "metadata": {}
+    },
+    {
+      "id": "row_30",
+      "text": "Great place for family dinners, big portions.",
+      "source_id": "row_30",
+      "source_text": "Great place for family dinners, big portions.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_31",
+      "text": "The noodles were overcooked and mushy.",
+      "source_id": "row_31",
+      "source_text": "The noodles were overcooked and mushy.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_32",
+      "text": "Beautiful interior and very clean dining area.",
+      "source_id": "row_32",
+      "source_text": "Beautiful interior and very clean dining area.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_33",
+      "text": "The waiter was rude and seemed annoyed.",
+      "source_id": "row_33",
+      "source_text": "The waiter was rude and seemed annoyed.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_34",
+      "text": "Fantastic fried chicken and crispy skin.",
+      "source_id": "row_34",
+      "source_text": "Fantastic fried chicken and crispy skin.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_35",
+      "text": "Food came quickly but it tasted average.",
+      "source_id": "row_35",
+      "source_text": "Food came quickly but it tasted average.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_36",
+      "text": "I loved the spicy curry, very flavorful.",
+      "source_id": "row_36",
+      "source_text": "I loved the spicy curry, very flavorful.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_37",
+      "text": "The rice was cold and clumpy.",
+      "source_id": "row_37",
+      "source_text": "The rice was cold and clumpy.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_38",
+      "text": "Good value for money and generous servings.",
+      "source_id": "row_38",
+      "source_text": "Good value for money and generous servings.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_39",
+      "text": "The sushi rolls fell apart easily.",
+      "source_id": "row_39",
+      "source_text": "The sushi rolls fell apart easily.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_40",
+      "text": "Wonderful breakfast spot with amazing omelets.",
+      "source_id": "row_40",
+      "source_text": "Wonderful breakfast spot with amazing omelets.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_41",
+      "text": "The pasta sauce tasted like it came from a jar.",
+      "source_id": "row_41",
+      "source_text": "The pasta sauce tasted like it came from a jar.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_42",
+      "text": "Super friendly staff and cozy environment.",
+      "source_id": "row_42",
+      "source_text": "Super friendly staff and cozy environment.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_43",
+      "text": "The tacos were greasy and messy.",
+      "source_id": "row_43",
+      "source_text": "The tacos were greasy and messy.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_44",
+      "text": "Amazing wood fired pizza, very authentic.",
+      "source_id": "row_44",
+      "source_text": "Amazing wood fired pizza, very authentic.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_45_g0",
+      "text": "The service was great",
+      "source_id": "row_45",
+      "source_text": "The service was great but the food was mediocre.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_45_g1",
+      "text": "the food was mediocre.",
+      "source_id": "row_45",
+      "source_text": "The service was great but the food was mediocre.",
+      "chunk_index": 1,
+      "metadata": {}
+    },
+    {
+      "id": "row_46",
+      "text": "Fresh ingredients and great presentation.",
+      "source_id": "row_46",
+      "source_text": "Fresh ingredients and great presentation.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_47",
+      "text": "The restaurant smelled weird when we walked in.",
+      "source_id": "row_47",
+      "source_text": "The restaurant smelled weird when we walked in.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_48",
+      "text": "Outstanding customer experience from start to finish.",
+      "source_id": "row_48",
+      "source_text": "Outstanding customer experience from start to finish.",
+      "chunk_index": 0,
+      "metadata": {}
+    },
+    {
+      "id": "row_49",
+      "text": "The sandwich was dry and overpriced.",
+      "source_id": "row_49",
+      "source_text": "The sandwich was dry and overpriced.",
+      "chunk_index": 0,
+      "metadata": {}
+    }
+  ]
+}

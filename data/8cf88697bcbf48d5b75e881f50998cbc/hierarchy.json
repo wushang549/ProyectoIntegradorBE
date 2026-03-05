@@ -1,0 +1,1756 @@
+{
+  "nodes": [
+    {
+      "node_id": "leaf_0",
+      "parent_id": "node_62",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_1",
+      "parent_id": "node_101",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_2",
+      "parent_id": "node_64",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_3",
+      "parent_id": "node_72",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_4",
+      "parent_id": "node_74",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_5",
+      "parent_id": "node_66",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_6",
+      "parent_id": "node_70",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_7",
+      "parent_id": "node_69",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_8",
+      "parent_id": "node_76",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_9",
+      "parent_id": "node_88",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_10",
+      "parent_id": "node_73",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_11",
+      "parent_id": "node_79",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_12",
+      "parent_id": "node_81",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_13",
+      "parent_id": "node_77",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_14",
+      "parent_id": "node_89",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_15",
+      "parent_id": "node_85",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_16",
+      "parent_id": "node_71",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_17",
+      "parent_id": "node_83",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_18",
+      "parent_id": "node_61",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_19",
+      "parent_id": "node_86",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_20",
+      "parent_id": "node_84",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_21",
+      "parent_id": "node_75",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_22",
+      "parent_id": "node_68",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_23",
+      "parent_id": "node_65",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_24",
+      "parent_id": "node_78",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_25",
+      "parent_id": "node_91",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_26",
+      "parent_id": "node_92",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_27",
+      "parent_id": "node_91",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_28",
+      "parent_id": "node_120",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_29",
+      "parent_id": "node_89",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_30",
+      "parent_id": "node_69",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_31",
+      "parent_id": "node_98",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_32",
+      "parent_id": "node_67",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_33",
+      "parent_id": "node_68",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_34",
+      "parent_id": "node_63",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_35",
+      "parent_id": "node_119",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_36",
+      "parent_id": "node_81",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_37",
+      "parent_id": "node_82",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_38",
+      "parent_id": "node_71",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_39",
+      "parent_id": "node_76",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_40",
+      "parent_id": "node_87",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_41",
+      "parent_id": "node_99",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_42",
+      "parent_id": "node_77",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_43",
+      "parent_id": "node_88",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_44",
+      "parent_id": "node_80",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_45",
+      "parent_id": "node_79",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_46",
+      "parent_id": "node_74",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_47",
+      "parent_id": "node_97",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_48",
+      "parent_id": "node_94",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_49",
+      "parent_id": "node_116",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_50",
+      "parent_id": "node_92",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_51",
+      "parent_id": "node_72",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_52",
+      "parent_id": "node_64",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_53",
+      "parent_id": "node_62",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_54",
+      "parent_id": "node_85",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_55",
+      "parent_id": "node_63",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_56",
+      "parent_id": "node_61",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_57",
+      "parent_id": "node_70",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_58",
+      "parent_id": "node_75",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_59",
+      "parent_id": "node_102",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "leaf_60",
+      "parent_id": "node_65",
+      "children_ids": [],
+      "size": 1,
+      "height": 0.0,
+      "cohesion": 1.0,
+      "similarity": 1.0,
+      "descendant_leaf_count": 1
+    },
+    {
+      "node_id": "node_61",
+      "parent_id": "node_67",
+      "children_ids": [
+        "leaf_18",
+        "leaf_56"
+      ],
+      "size": 2,
+      "height": 0.44024019559571814,
+      "cohesion": 0.5597598044042819,
+      "similarity": 0.5597598044042819,
+      "descendant_leaf_count": 2
+    },
+    {
+      "node_id": "node_62",
+      "parent_id": "node_87",
+      "children_ids": [
+        "leaf_0",
+        "leaf_53"
+      ],
+      "size": 2,
+      "height": 0.5381349035012349,
+      "cohesion": 0.46186509649876506,
+      "similarity": 0.46186509649876506,
+      "descendant_leaf_count": 2
+    },
+    {
+      "node_id": "node_63",
+      "parent_id": "node_66",
+      "children_ids": [
+        "leaf_34",
+        "leaf_55"
+      ],
+      "size": 2,
+      "height": 0.5715316971680333,
+      "cohesion": 0.4284683028319667,
+      "similarity": 0.4284683028319667,
+      "descendant_leaf_count": 2
+    },
+    {
+      "node_id": "node_64",
+      "parent_id": "node_78",
+      "children_ids": [
+        "leaf_2",
+        "leaf_52"
+      ],
+      "size": 2,
+      "height": 0.6849341843712327,
+      "cohesion": 0.31506581562876734,
+      "similarity": 0.31506581562876734,
+      "descendant_leaf_count": 2
+    },
+    {
+      "node_id": "node_65",
+      "parent_id": "node_86",
+      "children_ids": [
+        "leaf_23",
+        "leaf_60"
+      ],
+      "size": 2,
+      "height": 0.6864382292041531,
+      "cohesion": 0.3135617707958469,
+      "similarity": 0.3135617707958469,
+      "descendant_leaf_count": 2
+    },
+    {
+      "node_id": "node_66",
+      "parent_id": "node_73",
+      "children_ids": [
+        "leaf_5",
+        "node_63"
+      ],
+      "size": 3,
+      "height": 0.7038523280221854,
+      "cohesion": 0.29614767197781455,
+      "similarity": 0.29614767197781455,
+      "descendant_leaf_count": 3
+    },
+    {
+      "node_id": "node_67",
+      "parent_id": "node_80",
+      "children_ids": [
+        "leaf_32",
+        "node_61"
+      ],
+      "size": 3,
+      "height": 0.7816567661317109,
+      "cohesion": 0.21834323386828913,
+      "similarity": 0.21834323386828913,
+      "descendant_leaf_count": 3
+    },
+    {
+      "node_id": "node_68",
+      "parent_id": "node_100",
+      "children_ids": [
+        "leaf_22",
+        "leaf_33"
+      ],
+      "size": 2,
+      "height": 0.8095201512574174,
+      "cohesion": 0.1904798487425826,
+      "similarity": 0.1904798487425826,
+      "descendant_leaf_count": 2
+    },
+    {
+      "node_id": "node_69",
+      "parent_id": "node_90",
+      "children_ids": [
+        "leaf_7",
+        "leaf_30"
+      ],
+      "size": 2,
+      "height": 0.8133033808478877,
+      "cohesion": 0.18669661915211233,
+      "similarity": 0.18669661915211233,
+      "descendant_leaf_count": 2
+    },
+    {
+      "node_id": "node_70",
+      "parent_id": "node_82",
+      "children_ids": [
+        "leaf_6",
+        "leaf_57"
+      ],
+      "size": 2,
+      "height": 0.8180393510197537,
+      "cohesion": 0.18196064898024633,
+      "similarity": 0.18196064898024633,
+      "descendant_leaf_count": 2
+    },
+    {
+      "node_id": "node_71",
+      "parent_id": "node_95",
+      "children_ids": [
+        "leaf_16",
+        "leaf_38"
+      ],
+      "size": 2,
+      "height": 0.8210039227955028,
+      "cohesion": 0.17899607720449717,
+      "similarity": 0.17899607720449717,
+      "descendant_leaf_count": 2
+    },
+    {
+      "node_id": "node_72",
+      "parent_id": "node_96",
+      "children_ids": [
+        "leaf_3",
+        "leaf_51"
+      ],
+      "size": 2,
+      "height": 0.8258112306171781,
+      "cohesion": 0.1741887693828219,
+      "similarity": 0.1741887693828219,
+      "descendant_leaf_count": 2
+    },
+    {
+      "node_id": "node_73",
+      "parent_id": "node_93",
+      "children_ids": [
+        "leaf_10",
+        "node_66"
+      ],
+      "size": 4,
+      "height": 0.8272620157094034,
+      "cohesion": 0.1727379842905966,
+      "similarity": 0.1727379842905966,
+      "descendant_leaf_count": 4
+    },
+    {
+      "node_id": "node_74",
+      "parent_id": "node_98",
+      "children_ids": [
+        "leaf_4",
+        "leaf_46"
+      ],
+      "size": 2,
+      "height": 0.8373585324967922,
+      "cohesion": 0.16264146750320785,
+      "similarity": 0.16264146750320785,
+      "descendant_leaf_count": 2
+    },
+    {
+      "node_id": "node_75",
+      "parent_id": "node_90",
+      "children_ids": [
+        "leaf_21",
+        "leaf_58"
+      ],
+      "size": 2,
+      "height": 0.8432734087107323,
+      "cohesion": 0.1567265912892677,
+      "similarity": 0.1567265912892677,
+      "descendant_leaf_count": 2
+    },
+    {
+      "node_id": "node_76",
+      "parent_id": "node_94",
+      "children_ids": [
+        "leaf_8",
+        "leaf_39"
+      ],
+      "size": 2,
+      "height": 0.8619613708036993,
+      "cohesion": 0.13803862919630072,
+      "similarity": 0.13803862919630072,
+      "descendant_leaf_count": 2
+    },
+    {
+      "node_id": "node_77",
+      "parent_id": "node_103",
+      "children_ids": [
+        "leaf_13",
+        "leaf_42"
+      ],
+      "size": 2,
+      "height": 0.8622369922286505,
+      "cohesion": 0.13776300777134953,
+      "similarity": 0.13776300777134953,
+      "descendant_leaf_count": 2
+    },
+    {
+      "node_id": "node_78",
+      "parent_id": "node_84",
+      "children_ids": [
+        "leaf_24",
+        "node_64"
+      ],
+      "size": 3,
+      "height": 0.8688929985668619,
+      "cohesion": 0.13110700143313814,
+      "similarity": 0.13110700143313814,
+      "descendant_leaf_count": 3
+    },
+    {
+      "node_id": "node_79",
+      "parent_id": "node_83",
+      "children_ids": [
+        "leaf_11",
+        "leaf_45"
+      ],
+      "size": 2,
+      "height": 0.8739832826961226,
+      "cohesion": 0.12601671730387742,
+      "similarity": 0.12601671730387742,
+      "descendant_leaf_count": 2
+    },
+    {
+      "node_id": "node_80",
+      "parent_id": "node_107",
+      "children_ids": [
+        "leaf_44",
+        "node_67"
+      ],
+      "size": 4,
+      "height": 0.8842467153069515,
+      "cohesion": 0.11575328469304846,
+      "similarity": 0.11575328469304846,
+      "descendant_leaf_count": 4
+    },
+    {
+      "node_id": "node_81",
+      "parent_id": "node_117",
+      "children_ids": [
+        "leaf_12",
+        "leaf_36"
+      ],
+      "size": 2,
+      "height": 0.8854138754618224,
+      "cohesion": 0.11458612453817762,
+      "similarity": 0.11458612453817762,
+      "descendant_leaf_count": 2
+    },
+    {
+      "node_id": "node_82",
+      "parent_id": "node_99",
+      "children_ids": [
+        "leaf_37",
+        "node_70"
+      ],
+      "size": 3,
+      "height": 0.8962324885464634,
+      "cohesion": 0.10376751145353658,
+      "similarity": 0.10376751145353658,
+      "descendant_leaf_count": 3
+    },
+    {
+      "node_id": "node_83",
+      "parent_id": "node_96",
+      "children_ids": [
+        "leaf_17",
+        "node_79"
+      ],
+      "size": 3,
+      "height": 0.8990589226435135,
+      "cohesion": 0.1009410773564865,
+      "similarity": 0.1009410773564865,
+      "descendant_leaf_count": 3
+    },
+    {
+      "node_id": "node_84",
+      "parent_id": "node_93",
+      "children_ids": [
+        "leaf_20",
+        "node_78"
+      ],
+      "size": 4,
+      "height": 0.9007170159943055,
+      "cohesion": 0.09928298400569446,
+      "similarity": 0.09928298400569446,
+      "descendant_leaf_count": 4
+    },
+    {
+      "node_id": "node_85",
+      "parent_id": "node_105",
+      "children_ids": [
+        "leaf_15",
+        "leaf_54"
+      ],
+      "size": 2,
+      "height": 0.9020432642224328,
+      "cohesion": 0.09795673577756725,
+      "similarity": 0.09795673577756725,
+      "descendant_leaf_count": 2
+    },
+    {
+      "node_id": "node_86",
+      "parent_id": "node_106",
+      "children_ids": [
+        "leaf_19",
+        "node_65"
+      ],
+      "size": 3,
+      "height": 0.9122104655212744,
+      "cohesion": 0.08778953447872562,
+      "similarity": 0.08778953447872562,
+      "descendant_leaf_count": 3
+    },
+    {
+      "node_id": "node_87",
+      "parent_id": "node_95",
+      "children_ids": [
+        "leaf_40",
+        "node_62"
+      ],
+      "size": 3,
+      "height": 0.9134564115329887,
+      "cohesion": 0.08654358846701127,
+      "similarity": 0.08654358846701127,
+      "descendant_leaf_count": 3
+    },
+    {
+      "node_id": "node_88",
+      "parent_id": "node_108",
+      "children_ids": [
+        "leaf_9",
+        "leaf_43"
+      ],
+      "size": 2,
+      "height": 0.9139089175777176,
+      "cohesion": 0.08609108242228236,
+      "similarity": 0.08609108242228236,
+      "descendant_leaf_count": 2
+    },
+    {
+      "node_id": "node_89",
+      "parent_id": "node_102",
+      "children_ids": [
+        "leaf_14",
+        "leaf_29"
+      ],
+      "size": 2,
+      "height": 0.9147029687241649,
+      "cohesion": 0.0852970312758351,
+      "similarity": 0.0852970312758351,
+      "descendant_leaf_count": 2
+    },
+    {
+      "node_id": "node_90",
+      "parent_id": "node_103",
+      "children_ids": [
+        "node_69",
+        "node_75"
+      ],
+      "size": 4,
+      "height": 0.9194587109439137,
+      "cohesion": 0.08054128905608626,
+      "similarity": 0.08054128905608626,
+      "descendant_leaf_count": 4
+    },
+    {
+      "node_id": "node_91",
+      "parent_id": "node_97",
+      "children_ids": [
+        "leaf_25",
+        "leaf_27"
+      ],
+      "size": 2,
+      "height": 0.9289414956919134,
+      "cohesion": 0.07105850430808658,
+      "similarity": 0.07105850430808658,
+      "descendant_leaf_count": 2
+    },
+    {
+      "node_id": "node_92",
+      "parent_id": "node_105",
+      "children_ids": [
+        "leaf_26",
+        "leaf_50"
+      ],
+      "size": 2,
+      "height": 0.9298144656905325,
+      "cohesion": 0.0701855343094675,
+      "similarity": 0.0701855343094675,
+      "descendant_leaf_count": 2
+    },
+    {
+      "node_id": "node_93",
+      "parent_id": "node_104",
+      "children_ids": [
+        "node_73",
+        "node_84"
+      ],
+      "size": 8,
+      "height": 0.9304782435433956,
+      "cohesion": 0.06952175645660441,
+      "similarity": 0.06952175645660441,
+      "descendant_leaf_count": 8
+    },
+    {
+      "node_id": "node_94",
+      "parent_id": "node_111",
+      "children_ids": [
+        "leaf_48",
+        "node_76"
+      ],
+      "size": 3,
+      "height": 0.9376920402223989,
+      "cohesion": 0.06230795977760106,
+      "similarity": 0.06230795977760106,
+      "descendant_leaf_count": 3
+    },
+    {
+      "node_id": "node_95",
+      "parent_id": "node_100",
+      "children_ids": [
+        "node_71",
+        "node_87"
+      ],
+      "size": 5,
+      "height": 0.9448497882119836,
+      "cohesion": 0.05515021178801638,
+      "similarity": 0.05515021178801638,
+      "descendant_leaf_count": 5
+    },
+    {
+      "node_id": "node_96",
+      "parent_id": "node_115",
+      "children_ids": [
+        "node_72",
+        "node_83"
+      ],
+      "size": 5,
+      "height": 0.9457287469674561,
+      "cohesion": 0.054271253032543876,
+      "similarity": 0.054271253032543876,
+      "descendant_leaf_count": 5
+    },
+    {
+      "node_id": "node_97",
+      "parent_id": "node_101",
+      "children_ids": [
+        "leaf_47",
+        "node_91"
+      ],
+      "size": 3,
+      "height": 0.947035572710955,
+      "cohesion": 0.052964427289045046,
+      "similarity": 0.052964427289045046,
+      "descendant_leaf_count": 3
+    },
+    {
+      "node_id": "node_98",
+      "parent_id": "node_112",
+      "children_ids": [
+        "leaf_31",
+        "node_74"
+      ],
+      "size": 3,
+      "height": 0.9500873034764771,
+      "cohesion": 0.049912696523522926,
+      "similarity": 0.049912696523522926,
+      "descendant_leaf_count": 3
+    },
+    {
+      "node_id": "node_99",
+      "parent_id": "node_109",
+      "children_ids": [
+        "leaf_41",
+        "node_82"
+      ],
+      "size": 4,
+      "height": 0.9514405132372646,
+      "cohesion": 0.04855948676273536,
+      "similarity": 0.04855948676273536,
+      "descendant_leaf_count": 4
+    },
+    {
+      "node_id": "node_100",
+      "parent_id": "node_106",
+      "children_ids": [
+        "node_68",
+        "node_95"
+      ],
+      "size": 7,
+      "height": 0.956198286625446,
+      "cohesion": 0.04380171337455396,
+      "similarity": 0.04380171337455396,
+      "descendant_leaf_count": 7
+    },
+    {
+      "node_id": "node_101",
+      "parent_id": "node_104",
+      "children_ids": [
+        "leaf_1",
+        "node_97"
+      ],
+      "size": 4,
+      "height": 0.9581299017949364,
+      "cohesion": 0.0418700982050636,
+      "similarity": 0.0418700982050636,
+      "descendant_leaf_count": 4
+    },
+    {
+      "node_id": "node_102",
+      "parent_id": "node_118",
+      "children_ids": [
+        "leaf_59",
+        "node_89"
+      ],
+      "size": 3,
+      "height": 0.9614603777638854,
+      "cohesion": 0.03853962223611462,
+      "similarity": 0.03853962223611462,
+      "descendant_leaf_count": 3
+    },
+    {
+      "node_id": "node_103",
+      "parent_id": "node_110",
+      "children_ids": [
+        "node_77",
+        "node_90"
+      ],
+      "size": 6,
+      "height": 0.9641524184627436,
+      "cohesion": 0.03584758153725642,
+      "similarity": 0.03584758153725642,
+      "descendant_leaf_count": 6
+    },
+    {
+      "node_id": "node_104",
+      "parent_id": "node_107",
+      "children_ids": [
+        "node_93",
+        "node_101"
+      ],
+      "size": 12,
+      "height": 0.9645563254502658,
+      "cohesion": 0.03544367454973418,
+      "similarity": 0.03544367454973418,
+      "descendant_leaf_count": 12
+    },
+    {
+      "node_id": "node_105",
+      "parent_id": "node_109",
+      "children_ids": [
+        "node_85",
+        "node_92"
+      ],
+      "size": 4,
+      "height": 0.9665686459505505,
+      "cohesion": 0.033431354049449524,
+      "similarity": 0.033431354049449524,
+      "descendant_leaf_count": 4
+    },
+    {
+      "node_id": "node_106",
+      "parent_id": "node_108",
+      "children_ids": [
+        "node_86",
+        "node_100"
+      ],
+      "size": 10,
+      "height": 0.966905625294633,
+      "cohesion": 0.033094374705367025,
+      "similarity": 0.033094374705367025,
+      "descendant_leaf_count": 10
+    },
+    {
+      "node_id": "node_107",
+      "parent_id": "node_110",
+      "children_ids": [
+        "node_80",
+        "node_104"
+      ],
+      "size": 16,
+      "height": 0.9701396357395952,
+      "cohesion": 0.029860364260404837,
+      "similarity": 0.029860364260404837,
+      "descendant_leaf_count": 16
+    },
+    {
+      "node_id": "node_108",
+      "parent_id": "node_111",
+      "children_ids": [
+        "node_88",
+        "node_106"
+      ],
+      "size": 12,
+      "height": 0.9704164199195185,
+      "cohesion": 0.029583580080481453,
+      "similarity": 0.029583580080481453,
+      "descendant_leaf_count": 12
+    },
+    {
+      "node_id": "node_109",
+      "parent_id": "node_114",
+      "children_ids": [
+        "node_99",
+        "node_105"
+      ],
+      "size": 8,
+      "height": 0.9760837011956789,
+      "cohesion": 0.023916298804321112,
+      "similarity": 0.023916298804321112,
+      "descendant_leaf_count": 8
+    },
+    {
+      "node_id": "node_110",
+      "parent_id": "node_112",
+      "children_ids": [
+        "node_103",
+        "node_107"
+      ],
+      "size": 22,
+      "height": 0.9788673564426924,
+      "cohesion": 0.021132643557307595,
+      "similarity": 0.021132643557307595,
+      "descendant_leaf_count": 22
+    },
+    {
+      "node_id": "node_111",
+      "parent_id": "node_113",
+      "children_ids": [
+        "node_94",
+        "node_108"
+      ],
+      "size": 15,
+      "height": 0.9795410725848656,
+      "cohesion": 0.020458927415134442,
+      "similarity": 0.020458927415134442,
+      "descendant_leaf_count": 15
+    },
+    {
+      "node_id": "node_112",
+      "parent_id": "node_113",
+      "children_ids": [
+        "node_98",
+        "node_110"
+      ],
+      "size": 25,
+      "height": 0.9815768040601369,
+      "cohesion": 0.01842319593986308,
+      "similarity": 0.01842319593986308,
+      "descendant_leaf_count": 25
+    },
+    {
+      "node_id": "node_113",
+      "parent_id": "node_114",
+      "children_ids": [
+        "node_111",
+        "node_112"
+      ],
+      "size": 40,
+      "height": 0.9823324849594541,
+      "cohesion": 0.017667515040545867,
+      "similarity": 0.017667515040545867,
+      "descendant_leaf_count": 40
+    },
+    {
+      "node_id": "node_114",
+      "parent_id": "node_115",
+      "children_ids": [
+        "node_109",
+        "node_113"
+      ],
+      "size": 48,
+      "height": 0.9861277325757094,
+      "cohesion": 0.013872267424290596,
+      "similarity": 0.013872267424290596,
+      "descendant_leaf_count": 48
+    },
+    {
+      "node_id": "node_115",
+      "parent_id": "node_116",
+      "children_ids": [
+        "node_96",
+        "node_114"
+      ],
+      "size": 53,
+      "height": 0.988486208121559,
+      "cohesion": 0.011513791878441038,
+      "similarity": 0.011513791878441038,
+      "descendant_leaf_count": 53
+    },
+    {
+      "node_id": "node_116",
+      "parent_id": "node_117",
+      "children_ids": [
+        "leaf_49",
+        "node_115"
+      ],
+      "size": 54,
+      "height": 0.9896074622906432,
+      "cohesion": 0.010392537709356775,
+      "similarity": 0.010392537709356775,
+      "descendant_leaf_count": 54
+    },
+    {
+      "node_id": "node_117",
+      "parent_id": "node_118",
+      "children_ids": [
+        "node_81",
+        "node_116"
+      ],
+      "size": 56,
+      "height": 0.9907354893020766,
+      "cohesion": 0.009264510697923445,
+      "similarity": 0.009264510697923445,
+      "descendant_leaf_count": 56
+    },
+    {
+      "node_id": "node_118",
+      "parent_id": "node_119",
+      "children_ids": [
+        "node_102",
+        "node_117"
+      ],
+      "size": 59,
+      "height": 0.9916756730058385,
+      "cohesion": 0.008324326994161524,
+      "similarity": 0.008324326994161524,
+      "descendant_leaf_count": 59
+    },
+    {
+      "node_id": "node_119",
+      "parent_id": "node_120",
+      "children_ids": [
+        "leaf_35",
+        "node_118"
+      ],
+      "size": 60,
+      "height": 0.9976342077702648,
+      "cohesion": 0.0023657922297352085,
+      "similarity": 0.0023657922297352085,
+      "descendant_leaf_count": 60
+    },
+    {
+      "node_id": "node_120",
+      "parent_id": null,
+      "children_ids": [
+        "leaf_28",
+        "node_119"
+      ],
+      "size": 61,
+      "height": 1.0,
+      "cohesion": 0.0,
+      "similarity": 0.0,
+      "descendant_leaf_count": 61
+    }
+  ],
+  "linkage_matrix": [
+    [
+      18.0,
+      56.0,
+      0.44024019559571814,
+      2.0
+    ],
+    [
+      0.0,
+      53.0,
+      0.5381349035012349,
+      2.0
+    ],
+    [
+      34.0,
+      55.0,
+      0.5715316971680333,
+      2.0
+    ],
+    [
+      2.0,
+      52.0,
+      0.6849341843712327,
+      2.0
+    ],
+    [
+      23.0,
+      60.0,
+      0.6864382292041531,
+      2.0
+    ],
+    [
+      5.0,
+      63.0,
+      0.7038523280221854,
+      3.0
+    ],
+    [
+      32.0,
+      61.0,
+      0.7816567661317109,
+      3.0
+    ],
+    [
+      22.0,
+      33.0,
+      0.8095201512574174,
+      2.0
+    ],
+    [
+      7.0,
+      30.0,
+      0.8133033808478877,
+      2.0
+    ],
+    [
+      6.0,
+      57.0,
+      0.8180393510197537,
+      2.0
+    ],
+    [
+      16.0,
+      38.0,
+      0.8210039227955028,
+      2.0
+    ],
+    [
+      3.0,
+      51.0,
+      0.8258112306171781,
+      2.0
+    ],
+    [
+      10.0,
+      66.0,
+      0.8272620157094034,
+      4.0
+    ],
+    [
+      4.0,
+      46.0,
+      0.8373585324967922,
+      2.0
+    ],
+    [
+      21.0,
+      58.0,
+      0.8432734087107323,
+      2.0
+    ],
+    [
+      8.0,
+      39.0,
+      0.8619613708036993,
+      2.0
+    ],
+    [
+      13.0,
+      42.0,
+      0.8622369922286505,
+      2.0
+    ],
+    [
+      24.0,
+      64.0,
+      0.8688929985668619,
+      3.0
+    ],
+    [
+      11.0,
+      45.0,
+      0.8739832826961226,
+      2.0
+    ],
+    [
+      44.0,
+      67.0,
+      0.8842467153069515,
+      4.0
+    ],
+    [
+      12.0,
+      36.0,
+      0.8854138754618224,
+      2.0
+    ],
+    [
+      37.0,
+      70.0,
+      0.8962324885464634,
+      3.0
+    ],
+    [
+      17.0,
+      79.0,
+      0.8990589226435135,
+      3.0
+    ],
+    [
+      20.0,
+      78.0,
+      0.9007170159943055,
+      4.0
+    ],
+    [
+      15.0,
+      54.0,
+      0.9020432642224328,
+      2.0
+    ],
+    [
+      19.0,
+      65.0,
+      0.9122104655212744,
+      3.0
+    ],
+    [
+      40.0,
+      62.0,
+      0.9134564115329887,
+      3.0
+    ],
+    [
+      9.0,
+      43.0,
+      0.9139089175777176,
+      2.0
+    ],
+    [
+      14.0,
+      29.0,
+      0.9147029687241649,
+      2.0
+    ],
+    [
+      69.0,
+      75.0,
+      0.9194587109439137,
+      4.0
+    ],
+    [
+      25.0,
+      27.0,
+      0.9289414956919134,
+      2.0
+    ],
+    [
+      26.0,
+      50.0,
+      0.9298144656905325,
+      2.0
+    ],
+    [
+      73.0,
+      84.0,
+      0.9304782435433956,
+      8.0
+    ],
+    [
+      48.0,
+      76.0,
+      0.9376920402223989,
+      3.0
+    ],
+    [
+      71.0,
+      87.0,
+      0.9448497882119836,
+      5.0
+    ],
+    [
+      72.0,
+      83.0,
+      0.9457287469674561,
+      5.0
+    ],
+    [
+      47.0,
+      91.0,
+      0.947035572710955,
+      3.0
+    ],
+    [
+      31.0,
+      74.0,
+      0.9500873034764771,
+      3.0
+    ],
+    [
+      41.0,
+      82.0,
+      0.9514405132372646,
+      4.0
+    ],
+    [
+      68.0,
+      95.0,
+      0.956198286625446,
+      7.0
+    ],
+    [
+      1.0,
+      97.0,
+      0.9581299017949364,
+      4.0
+    ],
+    [
+      59.0,
+      89.0,
+      0.9614603777638854,
+      3.0
+    ],
+    [
+      77.0,
+      90.0,
+      0.9641524184627436,
+      6.0
+    ],
+    [
+      93.0,
+      101.0,
+      0.9645563254502658,
+      12.0
+    ],
+    [
+      85.0,
+      92.0,
+      0.9665686459505505,
+      4.0
+    ],
+    [
+      86.0,
+      100.0,
+      0.966905625294633,
+      10.0
+    ],
+    [
+      80.0,
+      104.0,
+      0.9701396357395952,
+      16.0
+    ],
+    [
+      88.0,
+      106.0,
+      0.9704164199195185,
+      12.0
+    ],
+    [
+      99.0,
+      105.0,
+      0.9760837011956789,
+      8.0
+    ],
+    [
+      103.0,
+      107.0,
+      0.9788673564426924,
+      22.0
+    ],
+    [
+      94.0,
+      108.0,
+      0.9795410725848656,
+      15.0
+    ],
+    [
+      98.0,
+      110.0,
+      0.9815768040601369,
+      25.0
+    ],
+    [
+      111.0,
+      112.0,
+      0.9823324849594541,
+      40.0
+    ],
+    [
+      109.0,
+      113.0,
+      0.9861277325757094,
+      48.0
+    ],
+    [
+      96.0,
+      114.0,
+      0.988486208121559,
+      53.0
+    ],
+    [
+      49.0,
+      115.0,
+      0.9896074622906432,
+      54.0
+    ],
+    [
+      81.0,
+      116.0,
+      0.9907354893020766,
+      56.0
+    ],
+    [
+      102.0,
+      117.0,
+      0.9916756730058385,
+      59.0
+    ],
+    [
+      35.0,
+      118.0,
+      0.9976342077702648,
+      60.0
+    ],
+    [
+      28.0,
+      119.0,
+      1.0,
+      61.0
+    ]
+  ]
+}
