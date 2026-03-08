@@ -49,6 +49,13 @@ def split_contrastive_pair(text: str, min_words_each: int = 4) -> list[str]:
     return parts
 
 
+def split_sentences(text: str) -> list[str]:
+    """Split text into sentence-like segments using punctuation only."""
+
+    raw_parts = re.split(r"\s*[.!?;]+\s*", str(text or ""))
+    return [normalize_text(part) for part in raw_parts if normalize_text(part)]
+
+
 def split_clauses(text: str) -> list[str]:
     """Split text into light clauses using punctuation and conjunctions."""
 

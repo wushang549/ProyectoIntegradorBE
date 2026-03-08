@@ -553,7 +553,13 @@ def _compact_partition(
         items=items,
     )
 
-    target_k = max(4, min(24, int(round(np.sqrt(n_items) * 1.6))))
+    source_ids = {
+        str(item.get("source_id") or f"item_{idx}")
+        for idx, item in enumerate(items)
+        if isinstance(item, dict)
+    }
+    target_basis = len(source_ids) if source_ids else n_items
+    target_k = max(4, min(20, int(round(np.sqrt(target_basis) * 1.25))))
     for _ in range(128):
         cluster_members = cluster_to_indices(output.tolist())
         if len(cluster_members) <= target_k:

@@ -37,47 +37,117 @@ _STOPWORD_TOKENS = {
     "from",
     "too",
     "very",
+    "just",
 }
 _LOW_SIGNAL_TOKENS = {
     "amazing",
     "arrived",
     "beautiful",
+    "bit",
     "came",
-    "fresh",
+    "checked",
+    "gave",
+    "genuinely",
+    "happy",
+    "kind",
+    "little",
+    "looked",
     "loved",
+    "often",
+    "ordered",
+    "parts",
+    "positive",
+    "seemed",
+    "side",
+    "slightly",
+    "still",
+    "surprisingly",
     "tasted",
     "super",
     "outstanding",
     "perfectly",
     "excellent",
     "delicious",
+    "tried",
+    "just",
 }
 _ASPECT_KEYWORDS = {
     "Food": {
         "food",
         "dish",
+        "dishes",
         "pizza",
         "pasta",
         "burger",
+        "burgers",
+        "taco",
         "tacos",
         "sushi",
         "salad",
+        "sandwiches",
+        "nachos",
         "dessert",
         "desserts",
         "ramen",
         "steak",
         "chicken",
+        "falafel",
+        "seafood",
+        "burritos",
+        "burrito",
+        "dumplings",
+        "dumpling",
+        "noodles",
+        "noodle",
+        "omelets",
+        "omelet",
+        "pancakes",
+        "pancake",
+        "curry",
+        "ribs",
+        "bbq",
         "rice",
         "soup",
         "sandwich",
         "flavor",
+        "flavorful",
+        "seasoning",
+        "seasoned",
+        "greasy",
+        "salty",
+        "bland",
+        "lukewarm",
+        "overcooked",
+        "satisfying",
+        "tender",
+        "crispy",
+        "presentation",
+        "presented",
         "toppings",
     },
-    "Service": {"service", "waiter", "staff", "order", "seating", "friendly", "rude", "customer"},
-    "Atmosphere": {"atmosphere", "cozy", "noisy", "vibe", "interior", "restaurant"},
-    "Value": {"price", "overpriced", "value", "portions", "money", "tiny", "generous"},
-    "Cleanliness": {"dirty", "clean", "smelled", "table"},
-    "Speed": {"slow", "quick", "quickly", "wait", "arrived"},
+    "Service": {
+        "service",
+        "waiter",
+        "staff",
+        "server",
+        "order",
+        "seating",
+        "friendly",
+        "rude",
+        "customer",
+        "attentive",
+        "recommendations",
+        "recommendation",
+        "polite",
+        "help",
+        "forgot",
+        "disorganized",
+        "overwhelmed",
+    },
+    "Atmosphere": {"atmosphere", "cozy", "noisy", "vibe", "interior", "restaurant", "stylish", "cramped", "lighting", "lively", "warm"},
+    "Value": {"price", "prices", "overpriced", "value", "portions", "portion", "money", "tiny", "generous", "worth", "reasonable", "expensive"},
+    "Cleanliness": {"dirty", "clean", "smelled", "table", "bathroom", "sticky"},
+    "Speed": {"slow", "quick", "quickly", "wait", "arrived", "waited", "forever", "late", "fast"},
 }
 _POSITIVE_TOKENS = {
     "great",
@@ -91,6 +161,18 @@ _POSITIVE_TOKENS = {
     "cozy",
     "wonderful",
     "authentic",
+    "attentive",
+    "clean",
+    "crispy",
+    "flavorful",
+    "lively",
+    "polite",
+    "reasonable",
+    "satisfying",
+    "seasoned",
+    "stylish",
+    "tender",
+    "worth",
 }
 _NEGATIVE_TOKENS = {
     "slow",
@@ -108,6 +190,18 @@ _NEGATIVE_TOKENS = {
     "noisy",
     "weird",
     "mediocre",
+    "cramped",
+    "disorganized",
+    "forgot",
+    "greasy",
+    "lukewarm",
+    "missing",
+    "overcooked",
+    "overwhelmed",
+    "salty",
+    "forever",
+    "late",
+    "wait",
 }
 _ASPECT_DISPLAY = {
     "food": "Food",
@@ -192,14 +286,12 @@ def _generate_label(cluster: dict[str, Any]) -> str:
     representatives = [str(entry) for entry in cluster.get("representatives", [])]
     cluster_size = int(cluster.get("size", 0))
     signature_label = _theme_signature_label(cluster)
+    contextual_label = _contextual_label(top_terms=top_terms, representatives=representatives, cluster=cluster)
     heuristic_label = _heuristic_label(top_terms=top_terms, representatives=representatives, cluster=cluster)
-
-    if signature_label and cluster_size >= 6:
-        return signature_label
 
     # Tiny clusters are best labeled deterministically from terms/examples.
     if cluster_size <= 2:
-        return _fallback_label(top_terms=top_terms, representatives=representatives)
+        return contextual_label or _fallback_label(top_terms=top_terms, representatives=representatives)
 
     prompt = _build_prompt(top_terms=top_terms, representatives=representatives)
     try:
@@ -211,11 +303,13 @@ def _generate_label(cluster: dict[str, Any]) -> str:
             and not _is_low_information_label(cleaned, cluster_size=cluster_size)
         ):
             if signature_label and not _label_matches_signature(cleaned, cluster):
-                return signature_label
+                return contextual_label or signature_label
             return cleaned
     except Exception:
         pass
 
+    if contextual_label:
+        return contextual_label
     if signature_label:
         return signature_label
     if heuristic_label:
@@ -367,21 +461,20 @@ def _theme_signature_label(cluster: dict[str, Any]) -> str:
         return ""
 
     # Avoid generic labels when cluster signature is weak.
-    if aspect == "general" and size < 10:
+    if aspect == "general" and size < 12:
         return ""
-    if aspect != "general" and aspect_purity < 0.6:
+    if aspect != "general" and aspect_purity < 0.72:
         return ""
 
-    if polarity == "negative" and polarity_purity >= 0.52:
+    if polarity == "negative" and polarity_purity >= 0.62:
         return f"{aspect_name} Issues"
-    if polarity == "positive" and polarity_purity >= 0.52:
+    if polarity == "positive" and polarity_purity >= 0.62:
         return f"{aspect_name} Highlights"
-    if polarity in {"mixed", "neutral"}:
-        if size >= 8:
+    if polarity in {"mixed", "neutral"} and size >= 10 and aspect_purity >= 0.8:
+        if size >= 10:
             return f"{aspect_name} Feedback"
-        return f"{aspect_name} Themes"
 
-    return f"{aspect_name} Themes"
+    return ""
 
 
 def _label_matches_signature(label: str, cluster: dict[str, Any]) -> bool:
@@ -401,20 +494,7 @@ def _fallback_label(top_terms: list[str], representatives: list[str]) -> str:
 
     selected: list[str] = []
     for term in top_terms:
-        tokens = [token.lower() for token in _TOKEN_RE.findall(term.lower())]
-        if not tokens:
-            continue
-        if len(tokens) == 1 and (
-            tokens[0] in _GENERIC_TOKENS
-            or tokens[0] in _LOW_SIGNAL_TOKENS
-            or tokens[0] in _STOPWORD_TOKENS
-        ):
-            continue
-        tokens = [
-            token
-            for token in tokens
-            if token not in _LOW_SIGNAL_TOKENS and token not in _STOPWORD_TOKENS
-        ]
+        tokens = _meaningful_tokens(term)
         if not tokens:
             continue
         selected.append(" ".join(tokens[:2]))
@@ -427,18 +507,119 @@ def _fallback_label(top_terms: list[str], representatives: list[str]) -> str:
             return label
 
     for text in representatives:
-        tokens = [token.lower() for token in _TOKEN_RE.findall(text.lower())]
-        meaningful = [
-            token
-            for token in tokens
-            if token not in _GENERIC_TOKENS
-            and token not in _LOW_SIGNAL_TOKENS
-            and token not in _STOPWORD_TOKENS
-        ]
+        meaningful = _meaningful_tokens(text)
         if meaningful:
             return " ".join(token.title() for token in meaningful[:2])
 
     return "General Feedback"
+
+
+def _contextual_label(
+    top_terms: list[str],
+    representatives: list[str],
+    cluster: dict[str, Any],
+) -> str:
+    """Prefer short, aspect-aware labels grounded in cleaned cluster evidence."""
+
+    aspect = str(cluster.get("dominant_aspect", "")).strip().lower()
+    polarity = str(cluster.get("dominant_polarity", "")).strip().lower()
+    polarity_purity = float(cluster.get("polarity_purity", 0.0) or 0.0)
+    if not aspect:
+        return ""
+
+    token_counter = Counter(_meaningful_tokens(" ".join(top_terms + representatives)))
+    tokens = set(token_counter.keys())
+    if not tokens:
+        return ""
+
+    if aspect == "service":
+        if {"waiter", "recommendations"}.issubset(tokens) or "recommendations" in tokens:
+            return "Waiter Recommendations"
+        if polarity == "negative" and ({"slow", "service"}.issubset(tokens) or {"wait", "forever"}.intersection(tokens)):
+            return "Slow Service"
+        if polarity == "negative" and ({"forgot", "dishes"}.issubset(tokens) or {"disorganized", "overwhelmed"}.intersection(tokens)):
+            return "Service Issues"
+        if polarity != "negative" and polarity_purity >= 0.55 and ({"attentive", "server"}.issubset(tokens) or "attentive" in tokens):
+            return "Attentive Service"
+        if polarity != "negative" and polarity_purity >= 0.55 and ({"friendly", "staff"}.issubset(tokens) or "friendly" in tokens):
+            return "Friendly Service"
+        if {"help", "happy", "friendly"}.intersection(tokens):
+            return "Staff Helpfulness"
+
+    if aspect == "value":
+        if {"worth", "price"}.issubset(tokens) or {"worth", "expensive"}.issubset(tokens):
+            return "Worth The Price"
+        if polarity != "positive" and ({"small", "portions"}.issubset(tokens) or {"portion", "small"}.issubset(tokens)):
+            return "Small Portions"
+        if polarity != "positive" and ({"price", "concerns"}.issubset(tokens) or {"price", "prices", "expensive", "higher"}.intersection(tokens)):
+            return "Price Concerns"
+        if polarity != "negative" and ({"value", "money"}.issubset(tokens) or {"worth", "reasonable", "value", "money"}.intersection(tokens)):
+            return "Good Value"
+
+    if aspect == "atmosphere":
+        if {"cozy", "atmosphere"}.issubset(tokens) or {"cozy", "lighting", "warm"}.intersection(tokens):
+            return "Cozy Atmosphere"
+        if "noisy" in tokens:
+            return "Noisy Atmosphere"
+        if "lively" in tokens:
+            return "Lively Atmosphere"
+        if "cramped" in tokens:
+            return "Cramped Interior"
+        if "stylish" in tokens:
+            return "Stylish Interior"
+
+    if aspect == "cleanliness":
+        if "clean" in tokens:
+            return "Clean Dining Area"
+        if {"dirty", "sticky", "bathroom"}.intersection(tokens):
+            return "Cleanliness Issues"
+
+    if aspect == "speed":
+        if polarity != "positive" and {"slow", "wait", "forever"}.intersection(tokens):
+            return "Slow Service"
+        if polarity != "negative" and {"quick", "fast", "polite"}.intersection(tokens):
+            return "Quick Service"
+
+    if aspect == "food":
+        if polarity != "positive" and "greasy" in tokens:
+            return "Greasy Food"
+        if polarity != "positive" and "salty" in tokens:
+            return "Salty Food"
+        if polarity != "positive" and ("bland" in tokens or ({"missing", "seasoning"}.issubset(tokens))):
+            return "Underseasoned Food"
+        if polarity != "positive" and "lukewarm" in tokens:
+            return "Lukewarm Food"
+        if polarity != "positive" and "overcooked" in tokens:
+            return "Overcooked Food"
+        if polarity != "negative" and "fresh" in tokens:
+            return "Fresh Food"
+        if polarity != "negative" and "flavorful" in tokens:
+            return "Flavorful Food"
+        if polarity != "negative" and "seasoned" in tokens:
+            return "Well Seasoned"
+        if polarity != "negative" and "tender" in tokens:
+            return "Tender Food"
+        if polarity != "negative" and "satisfying" in tokens:
+            return "Satisfying Food"
+        if polarity != "negative" and "crispy" in tokens:
+            return "Crispy Texture"
+        if {"presentation", "presented"}.intersection(tokens):
+            return "Food Presentation"
+
+    return ""
+
+
+def _meaningful_tokens(text: str) -> list[str]:
+    """Normalize one evidence string into semantically useful tokens."""
+
+    tokens = [token.lower() for token in _TOKEN_RE.findall(str(text or "").lower())]
+    return [
+        token
+        for token in tokens
+        if token not in _GENERIC_TOKENS
+        and token not in _LOW_SIGNAL_TOKENS
+        and token not in _STOPWORD_TOKENS
+    ]
 
 
 def _disambiguate_duplicate_labels(clusters: list[dict[str, Any]]) -> None:
@@ -457,6 +638,8 @@ def _disambiguate_duplicate_labels(clusters: list[dict[str, Any]]) -> None:
 
         ordered = sorted(group, key=lambda item: int(item.get("size", 0)), reverse=True)
         base_label = str(ordered[0].get("label", "")).strip()
+        if not _is_signature_style_label(base_label):
+            continue
         used_labels = {base_label.lower()}
 
         for cluster in ordered[1:]:
@@ -488,17 +671,17 @@ def _cluster_qualifier(cluster: dict[str, Any], base_label: str) -> str:
 
     base_tokens = {token.lower() for token in _TOKEN_RE.findall(base_label.lower())}
     for term in cluster.get("top_terms", []):
-        tokens = [token.lower() for token in _TOKEN_RE.findall(str(term).lower())]
+        tokens = _meaningful_tokens(str(term))
         for token in tokens:
-            if token in base_tokens or token in _GENERIC_TOKENS or token in _LOW_SIGNAL_TOKENS or token in _STOPWORD_TOKENS:
+            if token in base_tokens:
                 continue
             return token.title()
 
     reps = [str(entry) for entry in cluster.get("representatives", [])]
     for text in reps:
-        tokens = [token.lower() for token in _TOKEN_RE.findall(text.lower())]
+        tokens = _meaningful_tokens(text)
         for token in tokens:
-            if token in base_tokens or token in _GENERIC_TOKENS or token in _LOW_SIGNAL_TOKENS or token in _STOPWORD_TOKENS:
+            if token in base_tokens:
                 continue
             return token.title()
     return ""

@@ -1,13 +1,30 @@
-﻿"""Granulation stage for light comment segmentation."""
+"""Granulation stage for light comment segmentation."""
 
 from __future__ import annotations
+
+import re
 
 from models.schemas import GranulatedItem, IngestedRecord
 from services.thematics import attach_theme_metadata
 from utils.text_utils import (
     has_granulation_separator,
-    split_clauses,
+    normalize_text,
     split_contrastive_pair,
+    split_sentences,
+)
+
+_LEADING_MARKER_PATTERNS = (
+    re.compile(r"^(?:on the positive side|on the plus side|to be fair)\s*,\s*", flags=re.IGNORECASE),
+)
+_ORDER_PATTERNS = (
+    (
+        re.compile(r"^(?:we tried|i ordered)\s+the\s+(.+?)\s+(?:and|but)\s+it\s+was\s+(.+)$", flags=re.IGNORECASE),
+        r"The \1 was \2",
+    ),
+    (
+        re.compile(r"^(?:we tried|i ordered)\s+the\s+(.+?)\s+it\s+was\s+(.+)$", flags=re.IGNORECASE),
+        r"The \1 was \2",
+    ),
 )
 
 
@@ -36,30 +53,41 @@ def granulate_records(records: list[IngestedRecord], granulate: bool = True) -> 
 
 
 def _segment_record(text: str, granulate: bool) -> list[str]:
-    """Apply minimal segmentation according to project rules."""
+    """Apply sentence-first segmentation tuned for multi-aspect reviews."""
+
+    normalized = normalize_text(text)
+    if not normalized:
+        return []
 
     if not granulate:
-        return [text]
+        return [normalized]
 
-    contrastive_parts = split_contrastive_pair(text, min_words_each=4)
-    if contrastive_parts and _should_split_contrastive(text, contrastive_parts):
-        return contrastive_parts
+    word_count = len(normalized.split())
+    if word_count <= 18 and not has_granulation_separator(normalized):
+        return [_normalize_segment_text(normalized)]
 
-    word_count = len(text.split())
-    if word_count <= 24 and not has_granulation_separator(text):
-        return [text]
+    sentences = split_sentences(normalized)
+    if not sentences:
+        return [_normalize_segment_text(normalized)]
 
-    contains_separator = has_granulation_separator(text)
-    separator_count = sum(text.count(token) for token in ".!?;")
-    if len(text) <= 220 and (not contains_separator or separator_count <= 1):
-        return [text]
+    segments: list[str] = []
+    for sentence in sentences:
+        if _matches_order_pattern(sentence):
+            segments.append(sentence)
+            continue
 
-    clauses = split_clauses(text)
-    merged = _merge_short_clauses(clauses, min_words=4)
+        contrastive_parts = split_contrastive_pair(sentence, min_words_each=4)
+        if contrastive_parts and _should_split_contrastive(sentence, contrastive_parts):
+            segments.extend(contrastive_parts)
+            continue
+        segments.append(sentence)
+
+    cleaned = [_normalize_segment_text(part) for part in segments]
+    cleaned = [part for part in cleaned if part]
+    merged = _merge_short_clauses(cleaned, min_words=4)
+    merged = _cap_segment_count(merged, limit=6)
     if len(merged) <= 1:
-        return [text]
-    if len(merged) > 3 and word_count < 45:
-        return [text]
+        return [merged[0]] if merged else [normalized]
     return merged
 
 
@@ -82,6 +110,69 @@ def _merge_short_clauses(parts: list[str], min_words: int = 4) -> list[str]:
         merged.pop()
 
     return merged
+
+
+def _cap_segment_count(parts: list[str], limit: int = 6) -> list[str]:
+    """Merge adjacent short parts until the segment count stays manageable."""
+
+    merged = [part for part in parts if part]
+    if limit <= 0 or len(merged) <= limit:
+        return merged
+
+    while len(merged) > limit:
+        merge_at = 0
+        best_size = None
+        for idx in range(len(merged) - 1):
+            combined = len(merged[idx].split()) + len(merged[idx + 1].split())
+            if best_size is None or combined < best_size:
+                best_size = combined
+                merge_at = idx
+        merged[merge_at] = f"{merged[merge_at]} {merged[merge_at + 1]}".strip()
+        merged.pop(merge_at + 1)
+
+    return merged
+
+
+def _normalize_segment_text(text: str) -> str:
+    """Clean discourse scaffolding while preserving the original meaning."""
+
+    cleaned = normalize_text(text).strip(" \"'")
+    if not cleaned:
+        return ""
+
+    for pattern in _LEADING_MARKER_PATTERNS:
+        cleaned = pattern.sub("", cleaned)
+
+    for pattern, replacement in _ORDER_PATTERNS:
+        updated = pattern.sub(replacement, cleaned)
+        if updated != cleaned:
+            cleaned = updated
+            break
+
+    lowered = cleaned.lower()
+    if lowered.startswith("parts of it were also "):
+        cleaned = f"Some parts were {cleaned[22:]}"
+    elif lowered.startswith("parts of it were "):
+        cleaned = f"Some parts were {cleaned[17:]}"
+    elif lowered.startswith("felt "):
+        cleaned = f"It {cleaned}"
+    elif lowered.startswith("looked "):
+        cleaned = f"It {cleaned}"
+    elif lowered.startswith("was "):
+        cleaned = f"It {cleaned}"
+    elif lowered.startswith("were "):
+        cleaned = f"They {cleaned}"
+
+    cleaned = re.sub(r"\s*,\s*$", "", cleaned)
+    cleaned = normalize_text(cleaned).strip(" ,;:-")
+    return cleaned
+
+
+def _matches_order_pattern(text: str) -> bool:
+    """Return True when the sentence should stay intact for later normalization."""
+
+    candidate = normalize_text(text).strip(" \"'")
+    return any(pattern.match(candidate) for pattern, _ in _ORDER_PATTERNS)
 
 
 def _should_split_contrastive(source_text: str, parts: list[str]) -> bool:
