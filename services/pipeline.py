@@ -19,8 +19,8 @@ from services.embeddings import compute_embeddings
 from services.granulation import granulate_records
 from services.hierarchy import build_hierarchy, enrich_hierarchy_nodes
 from services.ingestion import IngestionPayload, ingest
-from services.insights import build_insights
-from services.labeling import apply_labels
+from services.insights import build_insight_heuristics, build_overall_summary
+from services.labeling import apply_labels, normalize_requested_ollama_model
 from services.storage import (
     clusters_file,
     embeddings_file,
@@ -61,6 +61,7 @@ def run_analysis_pipeline(
 
     ensure_analysis_dir(analysis_id)
     options.granulate_return_items = True
+    selected_llm_model = normalize_requested_ollama_model(options.llm_model)
 
     progress("ingestion", 10, "Ingestion", "Reading input rows.", None, None)
     records = ingest(
@@ -197,6 +198,7 @@ def run_analysis_pipeline(
         cluster_summaries=cluster_summaries,
         k_clusters=default_k,
         cache_path=label_cache_file(analysis_id),
+        model_name=selected_llm_model,
     )
     hierarchy_data = enrich_hierarchy_nodes(
         hierarchy_data=hierarchy_data,
@@ -208,7 +210,7 @@ def run_analysis_pipeline(
 
     progress(
         "summaries",
-        90,
+        88,
         "Summaries",
         "Computing overview and cluster summaries.",
         len(records),
@@ -220,6 +222,7 @@ def run_analysis_pipeline(
         {
             "analysis_id": analysis_id,
             "k_clusters": default_k,
+            "llm_model": selected_llm_model,
             "cluster_labels": cluster_labels.tolist(),
             "clusters": labeled_clusters,
         },
@@ -232,6 +235,7 @@ def run_analysis_pipeline(
             "total_records": len(records),
             "total_items": n_items,
             "k_clusters": default_k,
+            "llm_model": selected_llm_model,
             "embedding_method": embedding_result.method,
             "k_selection": k_selection,
             "cluster_quality": cluster_quality,
@@ -241,18 +245,35 @@ def run_analysis_pipeline(
 
     progress(
         "insights",
-        97,
+        94,
         "Insights",
-        "Generating insight heuristics.",
+        "Extracting key findings and quality warnings.",
         len(records),
         len(items_as_dicts),
     )
-    insights_data = build_insights(
+    insights_data = build_insight_heuristics(
         total_items=n_items,
         clusters=labeled_clusters,
         embedding_method=embedding_result.method,
         cluster_quality=cluster_quality,
     )
+
+    progress(
+        "ai_summary",
+        97,
+        "AI Summary",
+        f"Generating overall AI summary with {selected_llm_model}.",
+        len(records),
+        len(items_as_dicts),
+    )
+    overall_summary, overall_summary_source = build_overall_summary(
+        total_items=n_items,
+        clusters=labeled_clusters,
+        quality_warnings=insights_data.get("quality_warnings", []),
+        llm_model=selected_llm_model,
+    )
+    insights_data["overall_summary"] = overall_summary
+    insights_data["overall_summary_source"] = overall_summary_source
     write_json_file(insights_file(analysis_id), insights_data)
 
     progress(
@@ -269,6 +290,7 @@ def run_analysis_pipeline(
         "total_records": len(records),
         "total_items": n_items,
         "k_clusters": default_k,
+        "llm_model": selected_llm_model,
     }
 
 

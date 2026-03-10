@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from models.schemas import IngestedRecord
 from services.granulation import granulate_records
-from services.labeling import apply_labels
+from services.labeling import apply_labels, validate_requested_ollama_model
 from services.summaries import _extract_distinctive_terms
 
 
@@ -86,3 +86,65 @@ def test_apply_labels_prefers_contextual_labels_over_generic_signatures(tmp_path
     )
 
     assert labeled[0]["label"] == "Small Portions"
+
+
+def test_apply_labels_scopes_cache_by_model(monkeypatch, tmp_path) -> None:
+    """Different Ollama models should not share the same cache key."""
+
+    responses = {
+        "gemma3:1b": "Small Portions",
+        "deepseek-r1:8b": "Price Concerns",
+    }
+
+    def fake_call_ollama(_prompt: str, model_name: str | None = None) -> str:
+        return responses[str(model_name)]
+
+    monkeypatch.setattr("services.labeling._call_ollama", fake_call_ollama)
+
+    payload = [
+        {
+            "cluster_id": 1,
+            "size": 7,
+            "top_terms": ["small portions", "prices", "price"],
+            "representatives": [
+                "Portions were small considering the price",
+                "Prices were higher than expected",
+            ],
+            "dominant_aspect": "value",
+            "dominant_polarity": "negative",
+            "aspect_purity": 0.9,
+            "polarity_purity": 0.8,
+        }
+    ]
+
+    gemma = apply_labels(
+        cluster_summaries=[dict(payload[0])],
+        k_clusters=1,
+        cache_path=tmp_path / "labels.json",
+        model_name="gemma3:1b",
+    )
+    deepseek = apply_labels(
+        cluster_summaries=[dict(payload[0])],
+        k_clusters=1,
+        cache_path=tmp_path / "labels.json",
+        model_name="deepseek-r1:8b",
+    )
+
+    assert gemma[0]["label"] == "Small Portions"
+    assert deepseek[0]["label"] == "Price Concerns"
+
+
+def test_validate_requested_ollama_model_rejects_unknown_model(monkeypatch) -> None:
+    """Explicitly selected models should be validated against installed Ollama models."""
+
+    monkeypatch.setattr(
+        "services.labeling.list_ollama_models",
+        lambda: [{"name": "gemma3:1b"}, {"name": "deepseek-r1:8b"}],
+    )
+
+    try:
+        validate_requested_ollama_model("qwen3:99b")
+    except Exception as exc:
+        assert "Installed models" in str(exc)
+    else:  # pragma: no cover - regression safety
+        raise AssertionError("Expected validation to fail for an unknown model.")

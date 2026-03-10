@@ -1,0 +1,14 @@
+{
+  "key_findings": [
+    "General Feedback appears in 28.5% of comments.",
+    "Food Feedback appears in 15.3% of comments.",
+    "Fresh Food appears in 11.1% of comments.",
+    "Excellent Service appears in 9.7% of comments.",
+    "Service Feedback appears in 9.7% of comments."
+  ],
+  "theme_summary": "Top themes: General Feedback, Food Feedback, Fresh Food.",
+  "quality_warnings": [
+    "Potential quality issues appear in 49.3% of comments.",
+    "Cluster separation is weak for this dataset; theme boundaries should be interpreted carefully."
+  ]
+}

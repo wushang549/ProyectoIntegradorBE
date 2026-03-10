@@ -21,6 +21,7 @@ from models.schemas import (
 )
 from services.clustering import cut_clusters, normalize_k_clusters
 from services.hierarchy import enrich_hierarchy_nodes, refine_hierarchy_labels_for_nodes
+from services.insights import build_overall_summary, build_overall_summary_fallback
 from services.pipeline import PipelinePayload, run_analysis_pipeline
 from services.storage import (
     analysis_exists,
@@ -40,7 +41,14 @@ from services.storage import (
     write_json_file,
 )
 from services.summaries import build_cluster_summaries
-from services.labeling import apply_labels
+from services.labeling import (
+    LabelingError,
+    apply_labels,
+    default_ollama_model,
+    list_ollama_models,
+    normalize_requested_ollama_model,
+    validate_requested_ollama_model,
+)
 from utils.text_utils import build_preview
 
 router = APIRouter(prefix="/analysis", tags=["analysis"])
@@ -129,11 +137,49 @@ async def create_analysis(
     )
 
 
+@router.get("/models")
+def analysis_models() -> dict[str, Any]:
+    """Return installed Ollama models for frontend selectors."""
+
+    default_model = default_ollama_model()
+    models = []
+    for entry in list_ollama_models():
+        if not isinstance(entry, dict):
+            continue
+        model_name = str(entry.get("name") or "").strip()
+        if not model_name:
+            continue
+        models.append(
+            {
+                "name": model_name,
+                "id": str(entry.get("id") or "").strip(),
+                "size": str(entry.get("size") or "").strip(),
+                "modified": str(entry.get("modified") or "").strip(),
+                "is_default": model_name == default_model,
+            }
+        )
+
+    return {
+        "default_model": default_model,
+        "models": models,
+    }
+
+
 @router.get("/recent")
 def recent_analyses(limit: int = Query(default=10, ge=1, le=100)) -> dict[str, Any]:
     """Return recently submitted analyses."""
 
-    return {"items": list_recent(limit=limit)}
+    items = []
+    for entry in list_recent(limit=limit):
+        if not isinstance(entry, dict):
+            continue
+        raw_stage = str(entry.get("stage") or "").strip().lower() or "queued"
+        normalized = dict(entry)
+        normalized["raw_stage"] = raw_stage
+        normalized["stage"] = _normalize_run_stage(raw_stage)
+        items.append(normalized)
+
+    return {"items": items}
 
 
 @router.get("/{analysis_id}/status")
@@ -144,12 +190,14 @@ def analysis_status(analysis_id: str) -> dict[str, Any]:
     if payload is not None:
         updated_at = payload["updated_at"].isoformat() if hasattr(payload["updated_at"], "isoformat") else str(payload["updated_at"])
         pct = int(payload.get("pct", 0))
-        stage = _normalize_run_stage(payload.get("stage"))
+        raw_stage = str(payload.get("stage") or "").strip().lower() or "queued"
+        stage = _normalize_run_stage(raw_stage)
         return {
             "analysis_id": analysis_id,
             "status": payload.get("status", "processing"),
             "progress": {
                 "stage": stage,
+                "raw_stage": raw_stage,
                 "pct": pct,
                 "stage_label": payload.get("stage_label", "Processing"),
                 "message": payload.get("message", "Processing analysis"),
@@ -171,6 +219,7 @@ def analysis_status(analysis_id: str) -> dict[str, Any]:
             "status": "completed",
             "progress": {
                 "stage": "completed",
+                "raw_stage": "completed",
                 "pct": 100,
                 "stage_label": "Completed",
                 "message": "Analysis complete",
@@ -207,6 +256,10 @@ def analysis_overview(analysis_id: str) -> dict[str, Any]:
         },
         "top_clusters": top_clusters,
         "top_aspects": top_aspects,
+        "runtime": {
+            "embedding_method": str(overview_data.get("embedding_method") or ""),
+            "llm_model": _load_analysis_llm_model(analysis_id, overview_data=overview_data),
+        },
         "timing": timing,
     }
 
@@ -296,6 +349,7 @@ def analysis_hierarchy_labels(
         items=items,
         node_ids=node_ids,
         cache_path=hierarchy_label_cache_file(analysis_id),
+        model_name=_load_analysis_llm_model(analysis_id),
         max_nodes=8,
     )
     write_json_file(hierarchy_file(analysis_id), hierarchy_data)
@@ -332,10 +386,32 @@ def analysis_insights(analysis_id: str) -> dict[str, Any]:
     if not isinstance(quality_warnings, list):
         quality_warnings = []
 
+    overall_summary = str(data.get("overall_summary") or "").strip()
+    overall_summary_source = str(data.get("overall_summary_source") or "").strip() or "heuristic"
+    if not overall_summary or overall_summary.endswith("..."):
+        overall_summary, overall_summary_source = build_overall_summary(
+            total_items=len(cluster_payload["item_cluster_map"]),
+            clusters=cluster_payload["clusters"],
+            quality_warnings=quality_warnings,
+            llm_model=_load_analysis_llm_model(analysis_id),
+        )
+        if not overall_summary:
+            overall_summary = build_overall_summary_fallback(
+                total_items=len(cluster_payload["item_cluster_map"]),
+                clusters=cluster_payload["clusters"],
+                quality_warnings=quality_warnings,
+            )
+            overall_summary_source = "heuristic"
+        data["overall_summary"] = overall_summary
+        data["overall_summary_source"] = overall_summary_source
+        write_json_file(insights_file(analysis_id), data)
+
     return {
         "key_findings": key_findings,
         "theme_summary": theme_summary,
         "quality_warnings": quality_warnings,
+        "overall_summary": overall_summary,
+        "overall_summary_source": overall_summary_source,
     }
 
 
@@ -427,6 +503,9 @@ def _parse_options(raw_options: str | None) -> AnalysisOptions:
 
     try:
         options = AnalysisOptions.model_validate(options_data)
+        options.llm_model = validate_requested_ollama_model(options.llm_model)
+    except LabelingError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
     except Exception as exc:
         raise HTTPException(status_code=422, detail=f"Invalid options: {exc}") from exc
 
@@ -786,6 +865,34 @@ def _load_timing_payload(analysis_id: str) -> dict[str, float]:
     return default
 
 
+def _load_analysis_llm_model(
+    analysis_id: str,
+    *,
+    cluster_data: dict[str, Any] | None = None,
+    overview_data: dict[str, Any] | None = None,
+) -> str:
+    """Load the persisted LLM model for one analysis, falling back to backend default."""
+
+    if isinstance(cluster_data, dict):
+        value = cluster_data.get("llm_model")
+        if isinstance(value, str) and value.strip():
+            return normalize_requested_ollama_model(value)
+
+    if overview_data is None:
+        overview_path = overview_file(analysis_id)
+        if overview_path.exists():
+            loaded = read_json_file(overview_path)
+            if isinstance(loaded, dict):
+                overview_data = loaded
+
+    if isinstance(overview_data, dict):
+        value = overview_data.get("llm_model")
+        if isinstance(value, str) and value.strip():
+            return normalize_requested_ollama_model(value)
+
+    return default_ollama_model()
+
+
 def _extract_top_aspects(analysis_data: dict[str, Any]) -> list[dict[str, Any]]:
     """Extract top aspects when available; return an empty list otherwise."""
 
@@ -848,8 +955,9 @@ def _normalize_run_stage(stage: Any) -> str:
     aliases = {
         "ingestion": "queued",
         "granulation": "granulate",
-        "summaries": "granulate",
+        "summaries": "overview",
         "insights": "overview",
+        "ai_summary": "overview",
         "failed": "failed",
     }
     normalized = aliases.get(value, value)
@@ -876,6 +984,7 @@ def _resolve_clusters(analysis_id: str, requested_k: int | None) -> dict[str, An
 
     cluster_artifact = read_json_file(clusters_file(analysis_id))
     items_data = read_json_file(items_file(analysis_id))
+    selected_llm_model = _load_analysis_llm_model(analysis_id, cluster_data=cluster_artifact)
 
     items = items_data.get("items", [])
     total_items = len(items)
@@ -901,11 +1010,13 @@ def _resolve_clusters(analysis_id: str, requested_k: int | None) -> dict[str, An
         cluster_summaries=cluster_summaries,
         k_clusters=resolved_k,
         cache_path=label_cache_file(analysis_id),
+        model_name=selected_llm_model,
     )
 
     return {
         "k_clusters": resolved_k,
         "total_items": total_items,
+        "llm_model": selected_llm_model,
         "cluster_labels": labels_np.astype(int).tolist(),
         "clusters": labeled_clusters,
     }

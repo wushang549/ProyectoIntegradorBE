@@ -157,6 +157,7 @@ def refine_hierarchy_labels_for_nodes(
     items: list[dict[str, Any]],
     node_ids: list[str],
     cache_path: Path,
+    model_name: str | None = None,
     max_nodes: int = 8,
 ) -> dict[str, str]:
     """Refine selected node labels using LLM with per-node caching."""
@@ -189,11 +190,13 @@ def refine_hierarchy_labels_for_nodes(
         return {}
 
     # Local import avoids coupling for call sites that do not need LLM.
-    from services.labeling import generate_label_from_context
+    from services.labeling import generate_label_from_context, normalize_requested_ollama_model
+
+    resolved_model_name = normalize_requested_ollama_model(model_name)
 
     output: dict[str, str] = {}
     for node_id in selected:
-        cache_key = f"node::{node_id}"
+        cache_key = f"model::{resolved_model_name.lower()}::node::{node_id}"
         node_entry = node_by_id[node_id]
         node_size = int(node_entry.get("size", 0))
         dominant_share = float(node_entry.get("dominant_cluster_share") or 0.0)
@@ -221,7 +224,12 @@ def refine_hierarchy_labels_for_nodes(
         top_terms = _top_terms(texts, top_n=10)
         representatives = _representative_texts(texts, limit=5)
         fallback = str(node_by_id[node_id].get("label") or "Theme")
-        label = generate_label_from_context(top_terms=top_terms, representatives=representatives, fallback=fallback)
+        label = generate_label_from_context(
+            top_terms=top_terms,
+            representatives=representatives,
+            fallback=fallback,
+            model_name=resolved_model_name,
+        )
         node_by_id[node_id]["label"] = label
         if top_terms and not node_by_id[node_id].get("summary"):
             node_by_id[node_id]["summary"] = ", ".join(top_terms[:4])

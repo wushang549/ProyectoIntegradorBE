@@ -1,0 +1,14 @@
+{
+  "model::gemma3:1b::k12_c1": "Good Value",
+  "model::gemma3:1b::k12_c2": "Cozy Atmosphere",
+  "model::gemma3:1b::k12_c3": "Flavorful Food",
+  "model::gemma3:1b::k12_c4": "Waiter Recommendations",
+  "model::gemma3:1b::k12_c5": "Greasy Food",
+  "model::gemma3:1b::k12_c6": "Worth The Price",
+  "model::gemma3:1b::k12_c7": "Small Portions",
+  "model::gemma3:1b::k12_c8": "Slow Service",
+  "model::gemma3:1b::k12_c9": "Food Presentation",
+  "model::gemma3:1b::k12_c10": "Staff Interaction",
+  "model::gemma3:1b::k12_c11": "Noisy Atmosphere",
+  "model::gemma3:1b::k12_c12": "Quick Service"
+}

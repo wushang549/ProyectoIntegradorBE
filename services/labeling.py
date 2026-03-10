@@ -3,17 +3,29 @@
 from __future__ import annotations
 
 import json
+import os
 import re
+import shutil
+import subprocess
 import urllib.error
 import urllib.request
 from collections import Counter
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 from services.storage import read_json_file, write_json_file
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
-OLLAMA_MODEL = "gemma3:1b"
+OLLAMA_TAGS_URL = "http://localhost:11434/api/tags"
+DEFAULT_OLLAMA_MODEL = "gemma3:1b"
+_DEFAULT_MODEL_SENTINELS = {"", "auto", "default"}
+_OLLAMA_BIN_ENV = "OLLAMA_BIN"
+_OLLAMA_WINDOWS_CANDIDATES = (
+    r"C:\Users\%USERNAME%\AppData\Local\Programs\Ollama\ollama.exe",
+    r"C:\Program Files\Ollama\ollama.exe",
+    r"C:\Program Files (x86)\Ollama\ollama.exe",
+)
 
 _TOKEN_RE = re.compile(r"[a-zA-Z][a-zA-Z\-]{1,}")
 _GENERIC_TOKENS = {"food", "service", "restaurant", "place", "staff", "good", "great", "nice"}
@@ -218,25 +230,247 @@ class LabelingError(RuntimeError):
     """Raised when label generation cannot complete."""
 
 
+def default_ollama_model() -> str:
+    """Return the backend default Ollama model."""
+
+    return DEFAULT_OLLAMA_MODEL
+
+
+def normalize_requested_ollama_model(model_name: str | None) -> str:
+    """Normalize user-provided model input to one concrete model name."""
+
+    candidate = str(model_name or "").strip()
+    if candidate.lower() in _DEFAULT_MODEL_SENTINELS:
+        return DEFAULT_OLLAMA_MODEL
+    return candidate or DEFAULT_OLLAMA_MODEL
+
+
+def list_ollama_models() -> list[dict[str, str]]:
+    """List locally installed Ollama models through the Ollama API or CLI."""
+
+    models = _list_ollama_models_via_api()
+    if models:
+        return models
+    return _list_ollama_models_via_cli()
+
+
+def _list_ollama_models_via_api() -> list[dict[str, str]]:
+    """List installed models through the local Ollama HTTP API."""
+
+    try:
+        with urllib.request.urlopen(OLLAMA_TAGS_URL, timeout=10) as response:
+            raw = response.read().decode("utf-8")
+        payload = json.loads(raw)
+    except (urllib.error.URLError, TimeoutError, UnicodeDecodeError, json.JSONDecodeError):
+        return []
+
+    raw_models = payload.get("models")
+    if not isinstance(raw_models, list):
+        return []
+
+    models: list[dict[str, str]] = []
+    for entry in raw_models:
+        if not isinstance(entry, dict):
+            continue
+
+        model_name = str(entry.get("name") or entry.get("model") or "").strip()
+        if not model_name:
+            continue
+
+        normalized: dict[str, str] = {"name": model_name}
+        digest = str(entry.get("digest") or "").strip()
+        if digest:
+            normalized["id"] = digest[:12]
+
+        size = _format_ollama_size(entry.get("size"))
+        if size:
+            normalized["size"] = size
+
+        modified = _format_ollama_modified(entry.get("modified_at"))
+        if modified:
+            normalized["modified"] = modified
+
+        models.append(normalized)
+
+    return models
+
+
+def _list_ollama_models_via_cli() -> list[dict[str, str]]:
+    """List installed models through the Ollama CLI."""
+
+    ollama_bin = _resolve_ollama_cli_command()
+    if not ollama_bin:
+        return []
+
+    try:
+        result = subprocess.run(
+            [ollama_bin, "list"],
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=10,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return []
+
+    lines = [line.rstrip() for line in result.stdout.splitlines() if line.strip()]
+    if len(lines) <= 1:
+        return []
+
+    models: list[dict[str, str]] = []
+    for line in lines[1:]:
+        parts = [part.strip() for part in re.split(r"\s{2,}", line.strip()) if part.strip()]
+        if not parts:
+            continue
+
+        entry = {"name": parts[0]}
+        if len(parts) >= 2:
+            entry["id"] = parts[1]
+        if len(parts) >= 3:
+            entry["size"] = parts[2]
+        if len(parts) >= 4:
+            entry["modified"] = parts[3]
+        models.append(entry)
+
+    return models
+
+
+def _resolve_ollama_cli_command() -> str | None:
+    """Resolve an Ollama executable path without relying only on PATH."""
+
+    override = str(os.environ.get(_OLLAMA_BIN_ENV) or "").strip()
+    if override:
+        return override
+
+    discovered = shutil.which("ollama")
+    if discovered:
+        return discovered
+
+    for candidate in _OLLAMA_WINDOWS_CANDIDATES:
+        expanded = os.path.expandvars(candidate)
+        if Path(expanded).exists():
+            return expanded
+    return None
+
+
+def _format_ollama_size(value: Any) -> str:
+    """Format a byte count into a compact human-readable size string."""
+
+    try:
+        size = float(value)
+    except (TypeError, ValueError):
+        return ""
+
+    units = ("B", "KB", "MB", "GB", "TB")
+    for unit in units:
+        if size < 1000 or unit == units[-1]:
+            if unit == "B":
+                return f"{int(size)} {unit}"
+
+            rounded = round(size, 1)
+            if rounded >= 100 or float(rounded).is_integer():
+                return f"{int(rounded)} {unit}"
+            return f"{rounded:.1f} {unit}"
+        size /= 1000
+
+    return ""
+
+
+def _format_ollama_modified(value: Any) -> str:
+    """Format an Ollama timestamp as a short relative string."""
+
+    raw = str(value or "").strip()
+    if not raw:
+        return ""
+
+    try:
+        modified_at = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+    except ValueError:
+        return raw
+
+    if modified_at.tzinfo is None:
+        modified_at = modified_at.replace(tzinfo=timezone.utc)
+
+    now = datetime.now(modified_at.tzinfo)
+    delta_seconds = max(0, int((now - modified_at).total_seconds()))
+    return _humanize_elapsed(delta_seconds)
+
+
+def _humanize_elapsed(delta_seconds: int) -> str:
+    """Render elapsed seconds into the short strings used by the UI."""
+
+    if delta_seconds < 60:
+        value = delta_seconds
+        unit = "second"
+    elif delta_seconds < 3600:
+        value = delta_seconds // 60
+        unit = "minute"
+    elif delta_seconds < 86400:
+        value = delta_seconds // 3600
+        unit = "hour"
+    elif delta_seconds < 604800:
+        value = delta_seconds // 86400
+        unit = "day"
+    elif delta_seconds < 2629800:
+        value = delta_seconds // 604800
+        unit = "week"
+    elif delta_seconds < 31557600:
+        value = delta_seconds // 2629800
+        unit = "month"
+    else:
+        value = delta_seconds // 31557600
+        unit = "year"
+
+    suffix = "" if value == 1 else "s"
+    return f"{value} {unit}{suffix} ago"
+
+
+def validate_requested_ollama_model(model_name: str | None) -> str:
+    """Validate an explicit model selection against installed Ollama models."""
+
+    raw = str(model_name or "").strip()
+    normalized = normalize_requested_ollama_model(model_name)
+    if raw.lower() in _DEFAULT_MODEL_SENTINELS:
+        return normalized
+
+    installed = list_ollama_models()
+    installed_names = {
+        str(entry.get("name")).strip()
+        for entry in installed
+        if isinstance(entry, dict) and str(entry.get("name", "")).strip()
+    }
+    if installed_names and normalized not in installed_names:
+        options = ", ".join(sorted(installed_names))
+        raise LabelingError(f"Unknown Ollama model '{normalized}'. Installed models: {options}.")
+
+    return normalized
+
+
 def apply_labels(
     cluster_summaries: list[dict[str, Any]],
     k_clusters: int,
     cache_path: Path,
+    model_name: str | None = None,
 ) -> list[dict[str, Any]]:
     """Assign labels to clusters with cache + fallback strategy."""
 
+    resolved_model_name = normalize_requested_ollama_model(model_name)
     cache = _load_cache(cache_path)
 
     for cluster in cluster_summaries:
         cluster_id = int(cluster["cluster_id"])
-        cache_key = f"k{k_clusters}_c{cluster_id}"
+        cache_key = _cluster_cache_key(
+            model_name=resolved_model_name,
+            k_clusters=k_clusters,
+            cluster_id=cluster_id,
+        )
 
         cached = cache.get(cache_key)
         if isinstance(cached, str) and cached.strip():
             cluster["label"] = cached
             continue
 
-        label = _generate_label(cluster)
+        label = _generate_label(cluster, model_name=resolved_model_name)
         cache[cache_key] = label
         cluster["label"] = label
 
@@ -249,16 +483,18 @@ def generate_label_from_context(
     top_terms: list[str],
     representatives: list[str],
     fallback: str = "Theme",
+    model_name: str | None = None,
 ) -> str:
     """Generate one short label from arbitrary context snippets."""
 
     normalized_terms = [str(term) for term in top_terms if str(term).strip()]
     normalized_reps = [str(rep) for rep in representatives if str(rep).strip()]
     cluster_size = max(3, len(normalized_reps))
+    resolved_model_name = normalize_requested_ollama_model(model_name)
 
     try:
         prompt = _build_prompt(top_terms=normalized_terms, representatives=normalized_reps)
-        result = _call_ollama(prompt)
+        result = _call_ollama(prompt, model_name=resolved_model_name)
         cleaned = _sanitize_label(result)
         if (
             cleaned
@@ -279,7 +515,7 @@ def generate_label_from_context(
     return fallback
 
 
-def _generate_label(cluster: dict[str, Any]) -> str:
+def _generate_label(cluster: dict[str, Any], model_name: str | None = None) -> str:
     """Generate one short label for a cluster."""
 
     top_terms = [str(term) for term in cluster.get("top_terms", [])]
@@ -288,6 +524,7 @@ def _generate_label(cluster: dict[str, Any]) -> str:
     signature_label = _theme_signature_label(cluster)
     contextual_label = _contextual_label(top_terms=top_terms, representatives=representatives, cluster=cluster)
     heuristic_label = _heuristic_label(top_terms=top_terms, representatives=representatives, cluster=cluster)
+    resolved_model_name = normalize_requested_ollama_model(model_name)
 
     # Tiny clusters are best labeled deterministically from terms/examples.
     if cluster_size <= 2:
@@ -295,7 +532,7 @@ def _generate_label(cluster: dict[str, Any]) -> str:
 
     prompt = _build_prompt(top_terms=top_terms, representatives=representatives)
     try:
-        result = _call_ollama(prompt)
+        result = _call_ollama(prompt, model_name=resolved_model_name)
         cleaned = _sanitize_label(result)
         if (
             cleaned
@@ -332,11 +569,11 @@ def _build_prompt(top_terms: list[str], representatives: list[str]) -> str:
     )
 
 
-def _call_ollama(prompt: str) -> str:
+def _call_ollama(prompt: str, model_name: str | None = None) -> str:
     """Call local Ollama /api/generate endpoint."""
 
     payload = {
-        "model": OLLAMA_MODEL,
+        "model": normalize_requested_ollama_model(model_name),
         "prompt": prompt,
         "stream": False,
         "options": {
@@ -722,3 +959,10 @@ def _save_cache(cache_path: Path, cache: dict[str, str]) -> None:
     """Persist cluster label cache to disk."""
 
     write_json_file(cache_path, cache)
+
+
+def _cluster_cache_key(model_name: str, k_clusters: int, cluster_id: int) -> str:
+    """Build one cache key scoped by model and partition size."""
+
+    normalized_model = normalize_requested_ollama_model(model_name).lower()
+    return f"model::{normalized_model}::k{k_clusters}_c{cluster_id}"

@@ -1,0 +1,2167 @@
+{
+  "analysis_id": "1ea8660aac684e06895c59c96de26f7c",
+  "total_records": 53,
+  "total_items": 144,
+  "items": [
+    {
+      "id": "row_0_g0",
+      "text": "This restaurant never disappoints",
+      "source_id": "row_0",
+      "source_text": "This restaurant never disappoints. I have visited many times and every experience has been consistently amazing. The pasta dishes are absolutely incredible, rich, comforting, and packed with flavor. The fettuccine is always perfectly",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_0_g1",
+      "text": "I have visited many times and every experience has been consistently amazing",
+      "source_id": "row_0",
+      "source_text": "This restaurant never disappoints. I have visited many times and every experience has been consistently amazing. The pasta dishes are absolutely incredible, rich, comforting, and packed with flavor. The fettuccine is always perfectly",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "positive",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_0_g2",
+      "text": "The pasta dishes are absolutely incredible, rich, comforting, and packed with flavor",
+      "source_id": "row_0",
+      "source_text": "This restaurant never disappoints. I have visited many times and every experience has been consistently amazing. The pasta dishes are absolutely incredible, rich, comforting, and packed with flavor. The fettuccine is always perfectly",
+      "chunk_index": 2,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "positive",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_0_g3",
+      "text": "The fettuccine is always perfectly",
+      "source_id": "row_0",
+      "source_text": "This restaurant never disappoints. I have visited many times and every experience has been consistently amazing. The pasta dishes are absolutely incredible, rich, comforting, and packed with flavor. The fettuccine is always perfectly",
+      "chunk_index": 3,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_1_g0",
+      "text": "Another perfect location for a dinner date or a family meal",
+      "source_id": "row_1",
+      "source_text": "Another perfect location for a dinner date or a family meal. We usually pick this location because even when there is a line, you don't wait too long for a table. The servers are well versed on the menu specials and always have a suggestion",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "positive",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_1_g1",
+      "text": "We usually pick this location because even when there is a line, you don't wait too long for a table",
+      "source_id": "row_1",
+      "source_text": "Another perfect location for a dinner date or a family meal. We usually pick this location because even when there is a line, you don't wait too long for a table. The servers are well versed on the menu specials and always have a suggestion",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "speed",
+          "polarity": "negative",
+          "aspect_confidence": 0.5,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_1_g2",
+      "text": "The servers are well versed on the menu specials and always have a suggestion",
+      "source_id": "row_1",
+      "source_text": "Another perfect location for a dinner date or a family meal. We usually pick this location because even when there is a line, you don't wait too long for a table. The servers are well versed on the menu specials and always have a suggestion",
+      "chunk_index": 2,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_2_g0",
+      "text": "Excellent place, friendly service and tasty food",
+      "source_id": "row_2",
+      "source_text": "Excellent place, friendly service and tasty food. It is a place to go with family to celebrate any occasion and enjoy some time in a pleasant environment",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "positive",
+          "aspect_confidence": 0.6667,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_2_g1",
+      "text": "It is a place to go with family to celebrate any occasion and enjoy some time in a pleasant environment",
+      "source_id": "row_2",
+      "source_text": "Excellent place, friendly service and tasty food. It is a place to go with family to celebrate any occasion and enjoy some time in a pleasant environment",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "atmosphere",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_3",
+      "text": "The waiter is awesome and gave us free bread sticks and a drink to go",
+      "source_id": "row_3",
+      "source_text": "The waiter is awesome and gave us free bread sticks and a drink to go",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_4_g0",
+      "text": "We went on September 8 for my wife's birthday and from the moment we arrived they treated us very kindly",
+      "source_id": "row_4",
+      "source_text": "We went on September 8 for my wife's birthday and from the moment we arrived they treated us very kindly. We did not have to wait long. I told them it was my wife's birthday and the waiters sang happy birthday to her. She loved the surprise. The steak was cooked perfectly and the Alfredo soup was great. The salad and the potato soup with cheese were delicious",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "speed",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_4_g1",
+      "text": "We did not have to wait long",
+      "source_id": "row_4",
+      "source_text": "We went on September 8 for my wife's birthday and from the moment we arrived they treated us very kindly. We did not have to wait long. I told them it was my wife's birthday and the waiters sang happy birthday to her. She loved the surprise. The steak was cooked perfectly and the Alfredo soup was great. The salad and the potato soup with cheese were delicious",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "speed",
+          "polarity": "negative",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_4_g2",
+      "text": "I told them it was my wife's birthday and the waiters sang happy birthday to her",
+      "source_id": "row_4",
+      "source_text": "We went on September 8 for my wife's birthday and from the moment we arrived they treated us very kindly. We did not have to wait long. I told them it was my wife's birthday and the waiters sang happy birthday to her. She loved the surprise. The steak was cooked perfectly and the Alfredo soup was great. The salad and the potato soup with cheese were delicious",
+      "chunk_index": 2,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_4_g3",
+      "text": "She loved the surprise",
+      "source_id": "row_4",
+      "source_text": "We went on September 8 for my wife's birthday and from the moment we arrived they treated us very kindly. We did not have to wait long. I told them it was my wife's birthday and the waiters sang happy birthday to her. She loved the surprise. The steak was cooked perfectly and the Alfredo soup was great. The salad and the potato soup with cheese were delicious",
+      "chunk_index": 3,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_4_g4",
+      "text": "The steak was cooked perfectly and the Alfredo soup was great",
+      "source_id": "row_4",
+      "source_text": "We went on September 8 for my wife's birthday and from the moment we arrived they treated us very kindly. We did not have to wait long. I told them it was my wife's birthday and the waiters sang happy birthday to her. She loved the surprise. The steak was cooked perfectly and the Alfredo soup was great. The salad and the potato soup with cheese were delicious",
+      "chunk_index": 4,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "positive",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_4_g5",
+      "text": "The salad and the potato soup with cheese were delicious",
+      "source_id": "row_4",
+      "source_text": "We went on September 8 for my wife's birthday and from the moment we arrived they treated us very kindly. We did not have to wait long. I told them it was my wife's birthday and the waiters sang happy birthday to her. She loved the surprise. The steak was cooked perfectly and the Alfredo soup was great. The salad and the potato soup with cheese were delicious",
+      "chunk_index": 5,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "positive",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_5_g0",
+      "text": "Second time stopping by this location, both times for a special occasion",
+      "source_id": "row_5",
+      "source_text": "Second time stopping by this location, both times for a special occasion. First time for an anniversary, second time for my birthday. The first time service was 10 out of 10 even though it was busy, the food was great and the server had great",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_5_g1",
+      "text": "First time for an anniversary, second time for my birthday",
+      "source_id": "row_5",
+      "source_text": "Second time stopping by this location, both times for a special occasion. First time for an anniversary, second time for my birthday. The first time service was 10 out of 10 even though it was busy, the food was great and the server had great",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_5_g2",
+      "text": "The first time service was 10 out of 10 even",
+      "source_id": "row_5",
+      "source_text": "Second time stopping by this location, both times for a special occasion. First time for an anniversary, second time for my birthday. The first time service was 10 out of 10 even though it was busy, the food was great and the server had great",
+      "chunk_index": 2,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_5_g3",
+      "text": "it was busy, the food was great and the server had great",
+      "source_id": "row_5",
+      "source_text": "Second time stopping by this location, both times for a special occasion. First time for an anniversary, second time for my birthday. The first time service was 10 out of 10 even though it was busy, the food was great and the server had great",
+      "chunk_index": 3,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "positive",
+          "aspect_confidence": 0.5,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_6_g0",
+      "text": "Olive Garden is usually my go to spot for pasta",
+      "source_id": "row_6",
+      "source_text": "Olive Garden is usually my go to spot for pasta. So far I havent had any bad experience regardless of the location. For this one, keeping it simple, food is good, place is decent and staff are nice and attentive",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_6_g1",
+      "text": "So far I havent had any bad experience regardless of the location",
+      "source_id": "row_6",
+      "source_text": "Olive Garden is usually my go to spot for pasta. So far I havent had any bad experience regardless of the location. For this one, keeping it simple, food is good, place is decent and staff are nice and attentive",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_6_g2",
+      "text": "For this one, keeping it simple, food is good, place is decent and staff are nice and attentive",
+      "source_id": "row_6",
+      "source_text": "Olive Garden is usually my go to spot for pasta. So far I havent had any bad experience regardless of the location. For this one, keeping it simple, food is good, place is decent and staff are nice and attentive",
+      "chunk_index": 2,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "positive",
+          "aspect_confidence": 0.6667,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_7_g0",
+      "text": "I am incredibly disappointed that I have to craft this email",
+      "source_id": "row_7",
+      "source_text": "I am incredibly disappointed that I have to craft this email. And as a long time fan of Olive Garden for over 25 years, I wish I did not have to",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_7_g1",
+      "text": "And as a long time fan of Olive Garden for over 25 years, I wish I did not have to",
+      "source_id": "row_7",
+      "source_text": "I am incredibly disappointed that I have to craft this email. And as a long time fan of Olive Garden for over 25 years, I wish I did not have to",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_8_g0",
+      "text": "I love Olive Garden",
+      "source_id": "row_8",
+      "source_text": "I love Olive Garden but this visit was really disappointing. The wait was long which I understand but the service itself was not good. We did not receive water for about 30 minutes and no one even greeted us for the first 15 minutes",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_8_g1",
+      "text": "this visit was really disappointing",
+      "source_id": "row_8",
+      "source_text": "I love Olive Garden but this visit was really disappointing. The wait was long which I understand but the service itself was not good. We did not receive water for about 30 minutes and no one even greeted us for the first 15 minutes",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "negative",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_8_g2",
+      "text": "The wait was long which I understand",
+      "source_id": "row_8",
+      "source_text": "I love Olive Garden but this visit was really disappointing. The wait was long which I understand but the service itself was not good. We did not receive water for about 30 minutes and no one even greeted us for the first 15 minutes",
+      "chunk_index": 2,
+      "metadata": {
+        "_analysis": {
+          "aspect": "speed",
+          "polarity": "negative",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_8_g3",
+      "text": "the service itself was not good",
+      "source_id": "row_8",
+      "source_text": "I love Olive Garden but this visit was really disappointing. The wait was long which I understand but the service itself was not good. We did not receive water for about 30 minutes and no one even greeted us for the first 15 minutes",
+      "chunk_index": 3,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_8_g4",
+      "text": "We did not receive water for about 30 minutes and no one even greeted us for the first 15 minutes",
+      "source_id": "row_8",
+      "source_text": "I love Olive Garden but this visit was really disappointing. The wait was long which I understand but the service itself was not good. We did not receive water for about 30 minutes and no one even greeted us for the first 15 minutes",
+      "chunk_index": 4,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_9_g0",
+      "text": "I ordered the Chicken and Gnocchi with breadsticks",
+      "source_id": "row_9",
+      "source_text": "I ordered the Chicken and Gnocchi with breadsticks. The flavors were great and everything tasted fresh. The soup was slightly cold but overall the meal was very enjoyable. Great service and cozy atmosphere as always",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_9_g1",
+      "text": "The flavors were great and everything tasted fresh",
+      "source_id": "row_9",
+      "source_text": "I ordered the Chicken and Gnocchi with breadsticks. The flavors were great and everything tasted fresh. The soup was slightly cold but overall the meal was very enjoyable. Great service and cozy atmosphere as always",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "positive",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_9_g2",
+      "text": "The soup was slightly cold",
+      "source_id": "row_9",
+      "source_text": "I ordered the Chicken and Gnocchi with breadsticks. The flavors were great and everything tasted fresh. The soup was slightly cold but overall the meal was very enjoyable. Great service and cozy atmosphere as always",
+      "chunk_index": 2,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "negative",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_9_g3",
+      "text": "overall the meal was very enjoyable",
+      "source_id": "row_9",
+      "source_text": "I ordered the Chicken and Gnocchi with breadsticks. The flavors were great and everything tasted fresh. The soup was slightly cold but overall the meal was very enjoyable. Great service and cozy atmosphere as always",
+      "chunk_index": 3,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_9_g4",
+      "text": "Great service and cozy atmosphere as always",
+      "source_id": "row_9",
+      "source_text": "I ordered the Chicken and Gnocchi with breadsticks. The flavors were great and everything tasted fresh. The soup was slightly cold but overall the meal was very enjoyable. Great service and cozy atmosphere as always",
+      "chunk_index": 4,
+      "metadata": {
+        "_analysis": {
+          "aspect": "atmosphere",
+          "polarity": "positive",
+          "aspect_confidence": 0.6667,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_10_g0",
+      "text": "We really enjoy this Olive Garden location",
+      "source_id": "row_10",
+      "source_text": "We really enjoy this Olive Garden location. Every member of the staff that I have had contact with has been super kind. The food comes out quickly and is always hot and fresh. I have been to many locations and this one is probably my favorite",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_10_g1",
+      "text": "Every member of the staff that I have had contact with has been super kind",
+      "source_id": "row_10",
+      "source_text": "We really enjoy this Olive Garden location. Every member of the staff that I have had contact with has been super kind. The food comes out quickly and is always hot and fresh. I have been to many locations and this one is probably my favorite",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_10_g2",
+      "text": "The food comes out quickly and is always hot and fresh",
+      "source_id": "row_10",
+      "source_text": "We really enjoy this Olive Garden location. Every member of the staff that I have had contact with has been super kind. The food comes out quickly and is always hot and fresh. I have been to many locations and this one is probably my favorite",
+      "chunk_index": 2,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "positive",
+          "aspect_confidence": 0.6667,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_10_g3",
+      "text": "I have been to many locations and this one is probably my favorite",
+      "source_id": "row_10",
+      "source_text": "We really enjoy this Olive Garden location. Every member of the staff that I have had contact with has been super kind. The food comes out quickly and is always hot and fresh. I have been to many locations and this one is probably my favorite",
+      "chunk_index": 3,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_11_g0",
+      "text": "Include a disclaimer on the menu if you share a salad and soup when both dishes are included",
+      "source_id": "row_11",
+      "source_text": "Include a disclaimer on the menu if you share a salad and soup when both dishes are included. You cannot share and the waiter was very rude. I could not finish my dinner",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_11_g1",
+      "text": "You cannot share and the waiter was very rude",
+      "source_id": "row_11",
+      "source_text": "Include a disclaimer on the menu if you share a salad and soup when both dishes are included. You cannot share and the waiter was very rude. I could not finish my dinner",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "negative",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_11_g2",
+      "text": "I could not finish my dinner",
+      "source_id": "row_11",
+      "source_text": "Include a disclaimer on the menu if you share a salad and soup when both dishes are included. You cannot share and the waiter was very rude. I could not finish my dinner",
+      "chunk_index": 2,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_12_g0",
+      "text": "I do not know why their spaghetti was a little bitter",
+      "source_id": "row_12",
+      "source_text": "I do not know why their spaghetti was a little bitter. It was not the same as before. It was not only me who tasted that, my whole family noticed it. Maybe the chef is different. Next time I will order different pasta. Other pasta we ordered were good. The breadsticks were good too",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_12_g1",
+      "text": "It was not the same as before",
+      "source_id": "row_12",
+      "source_text": "I do not know why their spaghetti was a little bitter. It was not the same as before. It was not only me who tasted that, my whole family noticed it. Maybe the chef is different. Next time I will order different pasta. Other pasta we ordered were good. The breadsticks were good too",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_12_g2",
+      "text": "It was not only me who tasted that, my whole family noticed it",
+      "source_id": "row_12",
+      "source_text": "I do not know why their spaghetti was a little bitter. It was not the same as before. It was not only me who tasted that, my whole family noticed it. Maybe the chef is different. Next time I will order different pasta. Other pasta we ordered were good. The breadsticks were good too",
+      "chunk_index": 2,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_12_g3",
+      "text": "Maybe the chef is different",
+      "source_id": "row_12",
+      "source_text": "I do not know why their spaghetti was a little bitter. It was not the same as before. It was not only me who tasted that, my whole family noticed it. Maybe the chef is different. Next time I will order different pasta. Other pasta we ordered were good. The breadsticks were good too",
+      "chunk_index": 3,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_12_g4",
+      "text": "Next time I will order different pasta",
+      "source_id": "row_12",
+      "source_text": "I do not know why their spaghetti was a little bitter. It was not the same as before. It was not only me who tasted that, my whole family noticed it. Maybe the chef is different. Next time I will order different pasta. Other pasta we ordered were good. The breadsticks were good too",
+      "chunk_index": 4,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "neutral",
+          "aspect_confidence": 0.5,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_12_g5",
+      "text": "Other pasta we ordered were good The breadsticks were good too",
+      "source_id": "row_12",
+      "source_text": "I do not know why their spaghetti was a little bitter. It was not the same as before. It was not only me who tasted that, my whole family noticed it. Maybe the chef is different. Next time I will order different pasta. Other pasta we ordered were good. The breadsticks were good too",
+      "chunk_index": 5,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_13_g0",
+      "text": "Olive Garden offers a reliable and satisfying dining experience and my recent visit was no exception",
+      "source_id": "row_13",
+      "source_text": "Olive Garden offers a reliable and satisfying dining experience and my recent visit was no exception. I started with the Toscana soup and salad combo both of which were fresh and flavorful. The soup had a comforting hearty taste",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "positive",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_13_g1",
+      "text": "I started with the Toscana soup and salad combo both of which were fresh and flavorful",
+      "source_id": "row_13",
+      "source_text": "Olive Garden offers a reliable and satisfying dining experience and my recent visit was no exception. I started with the Toscana soup and salad combo both of which were fresh and flavorful. The soup had a comforting hearty taste",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "positive",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_13_g2",
+      "text": "The soup had a comforting hearty taste",
+      "source_id": "row_13",
+      "source_text": "Olive Garden offers a reliable and satisfying dining experience and my recent visit was no exception. I started with the Toscana soup and salad combo both of which were fresh and flavorful. The soup had a comforting hearty taste",
+      "chunk_index": 2,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_14_g0",
+      "text": "The greeter, the front desk attendants and the servers gave a great presentation and great vibes",
+      "source_id": "row_14",
+      "source_text": "The greeter, the front desk attendants and the servers gave a great presentation and great vibes. Special thanks to server Caleb for going above and beyond",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "positive",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_14_g1",
+      "text": "Special thanks to server Caleb for going above and beyond",
+      "source_id": "row_14",
+      "source_text": "The greeter, the front desk attendants and the servers gave a great presentation and great vibes. Special thanks to server Caleb for going above and beyond",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_15_g0",
+      "text": "Excellent service, very good food and a relaxing atmosphere",
+      "source_id": "row_15",
+      "source_text": "Excellent service, very good food and a relaxing atmosphere. Absolutely love Olive Garden",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "positive",
+          "aspect_confidence": 0.3333,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_15_g1",
+      "text": "Absolutely love Olive Garden",
+      "source_id": "row_15",
+      "source_text": "Excellent service, very good food and a relaxing atmosphere. Absolutely love Olive Garden",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_16_g0",
+      "text": "Olive Garden lower standards than a field ration",
+      "source_id": "row_16",
+      "source_text": "Olive Garden lower standards than a field ration. Came here expecting basic Italian food and left with a new impression",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_16_g1",
+      "text": "Came here expecting basic Italian food and left with a new impression",
+      "source_id": "row_16",
+      "source_text": "Olive Garden lower standards than a field ration. Came here expecting basic Italian food and left with a new impression",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_17_g0",
+      "text": "The staff service is excellent",
+      "source_id": "row_17",
+      "source_text": "The staff service is excellent. We waited about 30 minutes to enter but they send you a message when your table is ready. The shrimp Alfredo and soup starter were very good",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "positive",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_17_g1",
+      "text": "We waited about 30 minutes to enter",
+      "source_id": "row_17",
+      "source_text": "The staff service is excellent. We waited about 30 minutes to enter but they send you a message when your table is ready. The shrimp Alfredo and soup starter were very good",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "speed",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_17_g2",
+      "text": "they send you a message when your table is ready",
+      "source_id": "row_17",
+      "source_text": "The staff service is excellent. We waited about 30 minutes to enter but they send you a message when your table is ready. The shrimp Alfredo and soup starter were very good",
+      "chunk_index": 2,
+      "metadata": {
+        "_analysis": {
+          "aspect": "cleanliness",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_17_g3",
+      "text": "The shrimp Alfredo and soup starter were very good",
+      "source_id": "row_17",
+      "source_text": "The staff service is excellent. We waited about 30 minutes to enter but they send you a message when your table is ready. The shrimp Alfredo and soup starter were very good",
+      "chunk_index": 3,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_18_g0",
+      "text": "Danny was very customer focused, knowledgeable, helpful, friendly and kind",
+      "source_id": "row_18",
+      "source_text": "Danny was very customer focused, knowledgeable, helpful, friendly and kind. The food service was great. Everything was nice and hot and reasonably priced. Thank you again",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "positive",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_18_g1",
+      "text": "The food service was great",
+      "source_id": "row_18",
+      "source_text": "Danny was very customer focused, knowledgeable, helpful, friendly and kind. The food service was great. Everything was nice and hot and reasonably priced. Thank you again",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "positive",
+          "aspect_confidence": 0.5,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_18_g2",
+      "text": "Everything was nice and hot and reasonably priced Thank you again",
+      "source_id": "row_18",
+      "source_text": "Danny was very customer focused, knowledgeable, helpful, friendly and kind. The food service was great. Everything was nice and hot and reasonably priced. Thank you again",
+      "chunk_index": 2,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_19_g0",
+      "text": "I thought the days of excellent waiters were long gone until today",
+      "source_id": "row_19",
+      "source_text": "I thought the days of excellent waiters were long gone until today. Edgar was our waiter and he was very attentive, thoughtful and humorous. Thank you for the excellent service Edgar. We will be back soon",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "positive",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_19_g1",
+      "text": "Edgar was our waiter and he was very attentive, thoughtful and humorous",
+      "source_id": "row_19",
+      "source_text": "I thought the days of excellent waiters were long gone until today. Edgar was our waiter and he was very attentive, thoughtful and humorous. Thank you for the excellent service Edgar. We will be back soon",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "positive",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_19_g2",
+      "text": "Thank you for the excellent service Edgar",
+      "source_id": "row_19",
+      "source_text": "I thought the days of excellent waiters were long gone until today. Edgar was our waiter and he was very attentive, thoughtful and humorous. Thank you for the excellent service Edgar. We will be back soon",
+      "chunk_index": 2,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "positive",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_19_g3",
+      "text": "We will be back soon",
+      "source_id": "row_19",
+      "source_text": "I thought the days of excellent waiters were long gone until today. Edgar was our waiter and he was very attentive, thoughtful and humorous. Thank you for the excellent service Edgar. We will be back soon",
+      "chunk_index": 3,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_20_g0",
+      "text": "The waitresses were very attentive and friendly",
+      "source_id": "row_20",
+      "source_text": "The waitresses were very attentive and friendly. The food was good",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "positive",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_20_g1",
+      "text": "The food was good",
+      "source_id": "row_20",
+      "source_text": "The waitresses were very attentive and friendly. The food was good",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_21_g0",
+      "text": "I was very impressed with the service that I received tonight from all the staff",
+      "source_id": "row_21",
+      "source_text": "I was very impressed with the service that I received tonight from all the staff. Amairany was our server and she was very attentive and made suggestions for us. You can tell she loves her job. The food was warm and delicious and we will definitely come back again",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_21_g1",
+      "text": "Amairany was our server and she was very attentive and made suggestions for us",
+      "source_id": "row_21",
+      "source_text": "I was very impressed with the service that I received tonight from all the staff. Amairany was our server and she was very attentive and made suggestions for us. You can tell she loves her job. The food was warm and delicious and we will definitely come back again",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "positive",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_21_g2",
+      "text": "You can tell she loves her job",
+      "source_id": "row_21",
+      "source_text": "I was very impressed with the service that I received tonight from all the staff. Amairany was our server and she was very attentive and made suggestions for us. You can tell she loves her job. The food was warm and delicious and we will definitely come back again",
+      "chunk_index": 2,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_21_g3",
+      "text": "The food was warm and delicious and we will definitely come back again",
+      "source_id": "row_21",
+      "source_text": "I was very impressed with the service that I received tonight from all the staff. Amairany was our server and she was very attentive and made suggestions for us. You can tell she loves her job. The food was warm and delicious and we will definitely come back again",
+      "chunk_index": 3,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "positive",
+          "aspect_confidence": 0.5,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_22_g0",
+      "text": "Food is delicious and prices affordable",
+      "source_id": "row_22",
+      "source_text": "Food is delicious and prices affordable. Service is terrific and wait times are reasonable. I loved the decor and atmosphere",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "positive",
+          "aspect_confidence": 0.5,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_22_g1",
+      "text": "Service is terrific and wait times are reasonable",
+      "source_id": "row_22",
+      "source_text": "Food is delicious and prices affordable. Service is terrific and wait times are reasonable. I loved the decor and atmosphere",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "speed",
+          "polarity": "mixed",
+          "aspect_confidence": 0.3333,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_22_g2",
+      "text": "I loved the decor and atmosphere",
+      "source_id": "row_22",
+      "source_text": "Food is delicious and prices affordable. Service is terrific and wait times are reasonable. I loved the decor and atmosphere",
+      "chunk_index": 2,
+      "metadata": {
+        "_analysis": {
+          "aspect": "atmosphere",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_23_g0",
+      "text": "A very kind waiter attended us and asked if we preferred Spanish or English",
+      "source_id": "row_23",
+      "source_text": "A very kind waiter attended us and asked if we preferred Spanish or English. The food was very good and the dessert was delicious",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_23_g1",
+      "text": "The food was very good and the dessert was delicious",
+      "source_id": "row_23",
+      "source_text": "A very kind waiter attended us and asked if we preferred Spanish or English. The food was very good and the dessert was delicious",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "positive",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_24_g0",
+      "text": "It has been almost 10 years since I have been here",
+      "source_id": "row_24",
+      "source_text": "It has been almost 10 years since I have been here. The wait was always too long but this time it was only 15 minutes. Ivan was our server and he was hustling back and forth. Very attentive and checked on us frequently. Overall pretty good food",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_24_g1",
+      "text": "The wait was always too long",
+      "source_id": "row_24",
+      "source_text": "It has been almost 10 years since I have been here. The wait was always too long but this time it was only 15 minutes. Ivan was our server and he was hustling back and forth. Very attentive and checked on us frequently. Overall pretty good food",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "speed",
+          "polarity": "negative",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_24_g2",
+      "text": "this time it was only 15 minutes",
+      "source_id": "row_24",
+      "source_text": "It has been almost 10 years since I have been here. The wait was always too long but this time it was only 15 minutes. Ivan was our server and he was hustling back and forth. Very attentive and checked on us frequently. Overall pretty good food",
+      "chunk_index": 2,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_24_g3",
+      "text": "Ivan was our server and he was hustling back and forth",
+      "source_id": "row_24",
+      "source_text": "It has been almost 10 years since I have been here. The wait was always too long but this time it was only 15 minutes. Ivan was our server and he was hustling back and forth. Very attentive and checked on us frequently. Overall pretty good food",
+      "chunk_index": 3,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_24_g4",
+      "text": "Very attentive and checked on us frequently",
+      "source_id": "row_24",
+      "source_text": "It has been almost 10 years since I have been here. The wait was always too long but this time it was only 15 minutes. Ivan was our server and he was hustling back and forth. Very attentive and checked on us frequently. Overall pretty good food",
+      "chunk_index": 4,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "positive",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_24_g5",
+      "text": "Overall pretty good food",
+      "source_id": "row_24",
+      "source_text": "It has been almost 10 years since I have been here. The wait was always too long but this time it was only 15 minutes. Ivan was our server and he was hustling back and forth. Very attentive and checked on us frequently. Overall pretty good food",
+      "chunk_index": 5,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_25_g0",
+      "text": "The food is really good and the portions are large",
+      "source_id": "row_25",
+      "source_text": "The food is really good and the portions are large. They include soup or salad free with any dish. The cocktails are good and the atmosphere is warm and pleasant. Service is friendly",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "neutral",
+          "aspect_confidence": 0.5,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_25_g1",
+      "text": "They include soup or salad free with any dish",
+      "source_id": "row_25",
+      "source_text": "The food is really good and the portions are large. They include soup or salad free with any dish. The cocktails are good and the atmosphere is warm and pleasant. Service is friendly",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_25_g2",
+      "text": "The cocktails are good and the atmosphere is warm and pleasant Service is friendly",
+      "source_id": "row_25",
+      "source_text": "The food is really good and the portions are large. They include soup or salad free with any dish. The cocktails are good and the atmosphere is warm and pleasant. Service is friendly",
+      "chunk_index": 2,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "positive",
+          "aspect_confidence": 0.5,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_26_g0",
+      "text": "Food was amazing, waiter was very friendly",
+      "source_id": "row_26",
+      "source_text": "Food was amazing, waiter was very friendly but the hostess was rude. We waited to be seated and the staff ignored us. The friendly waiter made up for the experience",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "positive",
+          "aspect_confidence": 0.6667,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_26_g1",
+      "text": "the hostess was rude",
+      "source_id": "row_26",
+      "source_text": "Food was amazing, waiter was very friendly but the hostess was rude. We waited to be seated and the staff ignored us. The friendly waiter made up for the experience",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "negative",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_26_g2",
+      "text": "We waited to be seated and the staff ignored us",
+      "source_id": "row_26",
+      "source_text": "Food was amazing, waiter was very friendly but the hostess was rude. We waited to be seated and the staff ignored us. The friendly waiter made up for the experience",
+      "chunk_index": 2,
+      "metadata": {
+        "_analysis": {
+          "aspect": "speed",
+          "polarity": "neutral",
+          "aspect_confidence": 0.5,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_26_g3",
+      "text": "The friendly waiter made up for the experience",
+      "source_id": "row_26",
+      "source_text": "Food was amazing, waiter was very friendly but the hostess was rude. We waited to be seated and the staff ignored us. The friendly waiter made up for the experience",
+      "chunk_index": 3,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "positive",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_27_g0",
+      "text": "This place sucks",
+      "source_id": "row_27",
+      "source_text": "This place sucks. I ordered online and the order was wrong and missing utensils and cheese. Breadsticks were cold and dry. We also had to wait more than 40 minutes despite having a reservation",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_27_g1",
+      "text": "I ordered online and the order was wrong and missing utensils and cheese",
+      "source_id": "row_27",
+      "source_text": "This place sucks. I ordered online and the order was wrong and missing utensils and cheese. Breadsticks were cold and dry. We also had to wait more than 40 minutes despite having a reservation",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "negative",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_27_g2",
+      "text": "Breadsticks were cold and dry",
+      "source_id": "row_27",
+      "source_text": "This place sucks. I ordered online and the order was wrong and missing utensils and cheese. Breadsticks were cold and dry. We also had to wait more than 40 minutes despite having a reservation",
+      "chunk_index": 2,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "negative",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_27_g3",
+      "text": "We also had to wait more than 40 minutes despite having a reservation",
+      "source_id": "row_27",
+      "source_text": "This place sucks. I ordered online and the order was wrong and missing utensils and cheese. Breadsticks were cold and dry. We also had to wait more than 40 minutes despite having a reservation",
+      "chunk_index": 3,
+      "metadata": {
+        "_analysis": {
+          "aspect": "speed",
+          "polarity": "negative",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_28_g0",
+      "text": "Great service and great vibes",
+      "source_id": "row_28",
+      "source_text": "Great service and great vibes. Our waitress Sophia was very sweet and caring",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "positive",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_28_g1",
+      "text": "Our waitress Sophia was very sweet and caring",
+      "source_id": "row_28",
+      "source_text": "Great service and great vibes. Our waitress Sophia was very sweet and caring",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_29_g0",
+      "text": "It was one of my favorite restaurants",
+      "source_id": "row_29",
+      "source_text": "It was one of my favorite restaurants but I do not go anymore in San Diego",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_29_g1",
+      "text": "I do not go anymore in San Diego",
+      "source_id": "row_29",
+      "source_text": "It was one of my favorite restaurants but I do not go anymore in San Diego",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_30_g0",
+      "text": "Overall this is a good place to eat Staff are courteous",
+      "source_id": "row_30",
+      "source_text": "Overall this is a good place to eat. Staff are courteous. I would reduce the amount of dressing on the salad and the amount of cheese on the eggplant parmesan",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_30_g1",
+      "text": "I would reduce the amount of dressing on the salad and the amount of cheese on the eggplant parmesan",
+      "source_id": "row_30",
+      "source_text": "Overall this is a good place to eat. Staff are courteous. I would reduce the amount of dressing on the salad and the amount of cheese on the eggplant parmesan",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_31",
+      "text": "Awesome place to do lunch and celebrate a birthday",
+      "source_id": "row_31",
+      "source_text": "Awesome place to do lunch and celebrate a birthday",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_32_g0",
+      "text": "The wait staff has little to no customer service",
+      "source_id": "row_32",
+      "source_text": "The wait staff has little to no customer service. Corporate must do better at training staff. Go support a local Italian restaurant instead",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "negative",
+          "aspect_confidence": 0.75,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_32_g1",
+      "text": "Corporate must do better at training staff",
+      "source_id": "row_32",
+      "source_text": "The wait staff has little to no customer service. Corporate must do better at training staff. Go support a local Italian restaurant instead",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_32_g2",
+      "text": "Go support a local Italian restaurant instead",
+      "source_id": "row_32",
+      "source_text": "The wait staff has little to no customer service. Corporate must do better at training staff. Go support a local Italian restaurant instead",
+      "chunk_index": 2,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_33_g0",
+      "text": "Some people say Olive Garden is not genuine Italian food but I like it",
+      "source_id": "row_33",
+      "source_text": "Some people say Olive Garden is not genuine Italian food but I like it. Prices are a little high so I do not go often",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_33_g1",
+      "text": "Prices are a little high so I do not go often",
+      "source_id": "row_33",
+      "source_text": "Some people say Olive Garden is not genuine Italian food but I like it. Prices are a little high so I do not go often",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "value",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_34_g0",
+      "text": "I have been here dozens of times",
+      "source_id": "row_34",
+      "source_text": "I have been here dozens of times. Best pasta ever and the flavors melt in your mouth. Staff are friendly",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_34_g1",
+      "text": "Best pasta ever and the flavors melt in your mouth Staff are friendly",
+      "source_id": "row_34",
+      "source_text": "I have been here dozens of times. Best pasta ever and the flavors melt in your mouth. Staff are friendly",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "positive",
+          "aspect_confidence": 0.6667,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_35_g0",
+      "text": "The carpet area concentrates many odors and should be cleaned more often",
+      "source_id": "row_35",
+      "source_text": "The carpet area concentrates many odors and should be cleaned more often. We had to leave because the smell bothered my daughter",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_35_g1",
+      "text": "We had to leave because the smell bothered my daughter",
+      "source_id": "row_35",
+      "source_text": "The carpet area concentrates many odors and should be cleaned more often. We had to leave because the smell bothered my daughter",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "cleanliness",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_36_g0",
+      "text": "I had an issue with a to go order",
+      "source_id": "row_36",
+      "source_text": "I had an issue with a to go order but Yamilet was very kind and helpful and resolved the issue",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_36_g1",
+      "text": "Yamilet was very kind and helpful and resolved the issue",
+      "source_id": "row_36",
+      "source_text": "I had an issue with a to go order but Yamilet was very kind and helpful and resolved the issue",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "positive",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_37_g0",
+      "text": "The pasta, bread and salad were good and the atmosphere pleasant",
+      "source_id": "row_37",
+      "source_text": "The pasta, bread and salad were good and the atmosphere pleasant but the service was slow because the waitress took too long to return",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "neutral",
+          "aspect_confidence": 0.6667,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_37_g1",
+      "text": "the service was slow because the waitress took too long to return",
+      "source_id": "row_37",
+      "source_text": "The pasta, bread and salad were good and the atmosphere pleasant but the service was slow because the waitress took too long to return",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "negative",
+          "aspect_confidence": 0.6667,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_38_g0",
+      "text": "It is a must visit for our family whenever we come to San Diego",
+      "source_id": "row_38",
+      "source_text": "It is a must visit for our family whenever we come to San Diego. Kids love the food",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_38_g1",
+      "text": "Kids love the food",
+      "source_id": "row_38",
+      "source_text": "It is a must visit for our family whenever we come to San Diego. Kids love the food",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_39",
+      "text": "Olive Garden has brought back several fan favorite dishes including Steak Gorgonzola Alfredo and Stuffed Chicken Marsala",
+      "source_id": "row_39",
+      "source_text": "Olive Garden has brought back several fan favorite dishes including Steak Gorgonzola Alfredo and Stuffed Chicken Marsala",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_40_g0",
+      "text": "Not a long wait for a Sunday",
+      "source_id": "row_40",
+      "source_text": "Not a long wait for a Sunday. Server had an excellent attitude and food tasted great",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "speed",
+          "polarity": "negative",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_40_g1",
+      "text": "Server had an excellent attitude and food tasted great",
+      "source_id": "row_40",
+      "source_text": "Not a long wait for a Sunday. Server had an excellent attitude and food tasted great",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "positive",
+          "aspect_confidence": 0.5,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_41",
+      "text": "The line looked long but since we were two people we were seated in less than 20 minutes",
+      "source_id": "row_41",
+      "source_text": "The line looked long but since we were two people we were seated in less than 20 minutes",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_42_g0",
+      "text": "We had dinner at Olive Garden on Veterans Day evening",
+      "source_id": "row_42",
+      "source_text": "We had dinner at Olive Garden on Veterans Day evening. Service was great and the chicken parmesan was good",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_42_g1",
+      "text": "Service was great and the chicken parmesan was good",
+      "source_id": "row_42",
+      "source_text": "We had dinner at Olive Garden on Veterans Day evening. Service was great and the chicken parmesan was good",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "positive",
+          "aspect_confidence": 0.5,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_43_g0",
+      "text": "I was very impressed here",
+      "source_id": "row_43",
+      "source_text": "I was very impressed here. No wait time and management seems strong",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_43_g1",
+      "text": "No wait time and management seems strong",
+      "source_id": "row_43",
+      "source_text": "I was very impressed here. No wait time and management seems strong",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "speed",
+          "polarity": "positive",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_44_g0",
+      "text": "I parked in a to go spot and waited more than 40 minutes for the order",
+      "source_id": "row_44",
+      "source_text": "I parked in a to go spot and waited more than 40 minutes for the order. Food taste is good but time management is poor",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "speed",
+          "polarity": "neutral",
+          "aspect_confidence": 0.5,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_44_g1",
+      "text": "Food taste is good",
+      "source_id": "row_44",
+      "source_text": "I parked in a to go spot and waited more than 40 minutes for the order. Food taste is good but time management is poor",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_44_g2",
+      "text": "time management is poor",
+      "source_id": "row_44",
+      "source_text": "I parked in a to go spot and waited more than 40 minutes for the order. Food taste is good but time management is poor",
+      "chunk_index": 2,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_45_g0",
+      "text": "Although you may have to wait for a table it is worth it",
+      "source_id": "row_45",
+      "source_text": "Although you may have to wait for a table it is worth it. The menu is wide and the food was very good",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "speed",
+          "polarity": "mixed",
+          "aspect_confidence": 0.3333,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_45_g1",
+      "text": "The menu is wide and the food was very good",
+      "source_id": "row_45",
+      "source_text": "Although you may have to wait for a table it is worth it. The menu is wide and the food was very good",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_46_g0",
+      "text": "Horrible experience",
+      "source_id": "row_46",
+      "source_text": "Horrible experience. The server never acknowledged us and we did not get drinks or proper service",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_46_g1",
+      "text": "The server never acknowledged us and we did not get drinks or proper service",
+      "source_id": "row_46",
+      "source_text": "Horrible experience. The server never acknowledged us and we did not get drinks or proper service",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_47_g0",
+      "text": "The service is great",
+      "source_id": "row_47",
+      "source_text": "The service is great. Our server Mila was attentive and gracious. The food and drinks are consistent and delicious",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "positive",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_47_g1",
+      "text": "Our server Mila was attentive and gracious",
+      "source_id": "row_47",
+      "source_text": "The service is great. Our server Mila was attentive and gracious. The food and drinks are consistent and delicious",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "positive",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_47_g2",
+      "text": "The food and drinks are consistent and delicious",
+      "source_id": "row_47",
+      "source_text": "The service is great. Our server Mila was attentive and gracious. The food and drinks are consistent and delicious",
+      "chunk_index": 2,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "positive",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_48",
+      "text": "It is a very good Italian meal with abundant salad and fast service",
+      "source_id": "row_48",
+      "source_text": "It is a very good Italian meal with abundant salad and fast service",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "neutral",
+          "aspect_confidence": 0.3333,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_49_g0",
+      "text": "My wife and I had the best experience this evening",
+      "source_id": "row_49",
+      "source_text": "My wife and I had the best experience this evening. Our server Evelyn was very pleasant and attentive",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "positive",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_49_g1",
+      "text": "Our server Evelyn was very pleasant and attentive",
+      "source_id": "row_49",
+      "source_text": "My wife and I had the best experience this evening. Our server Evelyn was very pleasant and attentive",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "positive",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_50_g0",
+      "text": "Pastas with fresh ingredients, great staff and fast service",
+      "source_id": "row_50",
+      "source_text": "Pastas with fresh ingredients, great staff and fast service. Prices are high but it is a good place for pasta or salad",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "positive",
+          "aspect_confidence": 0.4,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_50_g1",
+      "text": "Prices are high but it is a good place for pasta or salad",
+      "source_id": "row_50",
+      "source_text": "Pastas with fresh ingredients, great staff and fast service. Prices are high but it is a good place for pasta or salad",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "neutral",
+          "aspect_confidence": 0.6667,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_51",
+      "text": "Very busy but service is fast and servers are attentive and kind",
+      "source_id": "row_51",
+      "source_text": "Very busy but service is fast and servers are attentive and kind",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "service",
+          "polarity": "positive",
+          "aspect_confidence": 0.6667,
+          "polarity_confidence": 1.0
+        }
+      }
+    },
+    {
+      "id": "row_52_g0",
+      "text": "I love this restaurant",
+      "source_id": "row_52",
+      "source_text": "I love this restaurant. I recommend the Tour of Italy dish because it has a little of everything including Alfredo pasta, chicken parmesan and lasagna",
+      "chunk_index": 0,
+      "metadata": {
+        "_analysis": {
+          "aspect": "general",
+          "polarity": "neutral",
+          "aspect_confidence": 0.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    },
+    {
+      "id": "row_52_g1",
+      "text": "I recommend the Tour of Italy dish because it has a little of everything including Alfredo pasta, chicken parmesan and lasagna",
+      "source_id": "row_52",
+      "source_text": "I love this restaurant. I recommend the Tour of Italy dish because it has a little of everything including Alfredo pasta, chicken parmesan and lasagna",
+      "chunk_index": 1,
+      "metadata": {
+        "_analysis": {
+          "aspect": "food",
+          "polarity": "neutral",
+          "aspect_confidence": 1.0,
+          "polarity_confidence": 0.0
+        }
+      }
+    }
+  ]
+}
