@@ -23,6 +23,7 @@ from services.insights import build_insight_heuristics, build_overall_summary
 from services.labeling import apply_labels, normalize_requested_ollama_model
 from services.storage import (
     clusters_file,
+    delete_analysis_dir,
     embeddings_file,
     ensure_analysis_dir,
     hierarchy_file,
@@ -53,6 +54,7 @@ class PipelinePayload:
 
 def run_analysis_pipeline(
     analysis_id: str,
+    owner_id: str,
     payload: PipelinePayload,
     options: AnalysisOptions,
     progress: ProgressCallback,
@@ -83,15 +85,13 @@ def run_analysis_pipeline(
     )
     granulated_items = granulate_records(records, granulate=options.granulate)
     items_as_dicts = [item.model_dump() for item in granulated_items]
-    write_json_file(
-        items_file(analysis_id),
-        {
-            "analysis_id": analysis_id,
-            "total_records": len(records),
-            "total_items": len(items_as_dicts),
-            "items": items_as_dicts,
-        },
-    )
+    items_payload = {
+        "analysis_id": analysis_id,
+        "total_records": len(records),
+        "total_items": len(items_as_dicts),
+        "items": items_as_dicts,
+    }
+    write_json_file(items_file(analysis_id), items_payload)
 
     progress(
         "embeddings",
@@ -178,13 +178,11 @@ def run_analysis_pipeline(
         len(items_as_dicts),
     )
     umap_points = _compute_umap_points(items_as_dicts, vectors)
-    write_json_file(
-        umap_file(analysis_id),
-        {
-            "analysis_id": analysis_id,
-            "points": umap_points,
-        },
-    )
+    umap_payload = {
+        "analysis_id": analysis_id,
+        "points": umap_points,
+    }
+    write_json_file(umap_file(analysis_id), umap_payload)
 
     progress(
         "labeling",
@@ -217,31 +215,27 @@ def run_analysis_pipeline(
         len(items_as_dicts),
     )
     cluster_distribution = _build_cluster_distribution(labeled_clusters, total_items=n_items)
-    write_json_file(
-        clusters_file(analysis_id),
-        {
-            "analysis_id": analysis_id,
-            "k_clusters": default_k,
-            "llm_model": selected_llm_model,
-            "cluster_labels": cluster_labels.tolist(),
-            "clusters": labeled_clusters,
-        },
-    )
-    write_json_file(
-        overview_file(analysis_id),
-        {
-            "analysis_id": analysis_id,
-            "created_at": now_utc_iso(),
-            "total_records": len(records),
-            "total_items": n_items,
-            "k_clusters": default_k,
-            "llm_model": selected_llm_model,
-            "embedding_method": embedding_result.method,
-            "k_selection": k_selection,
-            "cluster_quality": cluster_quality,
-            "cluster_distribution": cluster_distribution,
-        },
-    )
+    clusters_payload = {
+        "analysis_id": analysis_id,
+        "k_clusters": default_k,
+        "llm_model": selected_llm_model,
+        "cluster_labels": cluster_labels.tolist(),
+        "clusters": labeled_clusters,
+    }
+    write_json_file(clusters_file(analysis_id), clusters_payload)
+    overview_payload = {
+        "analysis_id": analysis_id,
+        "created_at": now_utc_iso(),
+        "total_records": len(records),
+        "total_items": n_items,
+        "k_clusters": default_k,
+        "llm_model": selected_llm_model,
+        "embedding_method": embedding_result.method,
+        "k_selection": k_selection,
+        "cluster_quality": cluster_quality,
+        "cluster_distribution": cluster_distribution,
+    }
+    write_json_file(overview_file(analysis_id), overview_payload)
 
     progress(
         "insights",
@@ -275,6 +269,20 @@ def run_analysis_pipeline(
     insights_data["overall_summary"] = overall_summary
     insights_data["overall_summary_source"] = overall_summary_source
     write_json_file(insights_file(analysis_id), insights_data)
+    _persist_to_supabase(
+        analysis_id=analysis_id,
+        owner_id=owner_id,
+        llm_model=selected_llm_model,
+        embedding_method=embedding_result.method,
+        total_records=len(records),
+        total_items=n_items,
+        items_payload=items_payload,
+        overview_payload=overview_payload,
+        insights_payload=insights_data,
+        clusters_payload=clusters_payload,
+        umap_payload=umap_payload,
+        hierarchy_payload=hierarchy_data,
+    )
 
     progress(
         "completed",
@@ -292,6 +300,73 @@ def run_analysis_pipeline(
         "k_clusters": default_k,
         "llm_model": selected_llm_model,
     }
+
+
+def _persist_to_supabase(
+    *,
+    analysis_id: str,
+    owner_id: str,
+    llm_model: str,
+    embedding_method: str,
+    total_records: int,
+    total_items: int,
+    items_payload: dict[str, Any],
+    overview_payload: dict[str, Any],
+    insights_payload: dict[str, Any],
+    clusters_payload: dict[str, Any],
+    umap_payload: dict[str, Any],
+    hierarchy_payload: dict[str, Any],
+) -> None:
+    """Mirror completed local artifacts to Supabase when backend credentials exist."""
+
+    from services.supabase_persistence import (
+        is_configured,
+        upload_artifact,
+        upsert_analysis_results,
+        upsert_analysis_run,
+    )
+
+    if not is_configured():
+        raise RuntimeError("Supabase persistence is not configured on backend.")
+
+    embeddings_path = embeddings_file(analysis_id)
+    if not embeddings_path.exists():
+        raise RuntimeError("Local embeddings artifact is missing before Supabase sync.")
+
+    embeddings_storage_path = upload_artifact(
+        owner_id=owner_id,
+        analysis_id=analysis_id,
+        filename="embeddings.npy",
+        content_type="application/octet-stream",
+        file_body=embeddings_path.read_bytes(),
+    )
+    upsert_analysis_results(
+        {
+            "analysis_id": analysis_id,
+            "owner_id": owner_id,
+            "items_json": items_payload,
+            "overview_json": overview_payload,
+            "insights_json": insights_payload,
+            "clusters_json": clusters_payload,
+            "umap_json": umap_payload,
+            "hierarchy_json": hierarchy_payload,
+            "updated_at": now_utc_iso(),
+        }
+    )
+    upsert_analysis_run(
+        {
+            "id": analysis_id,
+            "owner_id": owner_id,
+            "llm_model": llm_model,
+            "embedding_method": embedding_method,
+            "total_records": total_records,
+            "total_items": total_items,
+            "embeddings_storage_path": embeddings_storage_path,
+            "artifacts_synced": True,
+            "updated_at": now_utc_iso(),
+        }
+    )
+    delete_analysis_dir(analysis_id)
 
 
 def _build_cluster_distribution(

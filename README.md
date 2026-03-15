@@ -29,6 +29,39 @@ uvicorn main:app --reload
 
 API base path: `http://127.0.0.1:8000/v1`
 
+## Supabase Persistence
+
+The backend persists new analyses into Supabase as the source of truth.
+Local files are only used as temporary workspace during processing and are deleted
+after a successful sync.
+
+Setup:
+
+1. Run `supabase/001_analysis_schema.sql` in the Supabase SQL Editor.
+2. Create `ProyectoIntegradorBE/.env` from `ProyectoIntegradorBE/.env.example`.
+3. Fill:
+
+```env
+SUPABASE_URL=https://your-project-ref.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+SUPABASE_STORAGE_BUCKET=analysis-artifacts
+```
+
+4. Restart FastAPI.
+
+What gets persisted:
+
+- `analysis_runs` table: ownership, status, progress, metadata
+- `analysis_results` table: `items`, `overview`, `insights`, `clusters`, `umap`, `hierarchy`
+- `analysis-artifacts` storage bucket: `embeddings.npy`
+
+Current behavior:
+
+- Supabase is the persistent source of truth
+- Local files are temporary and are cleaned after sync or failure
+- If an endpoint needs a local artifact later, the backend hydrates it from Supabase on demand
+- Existing legacy local analyses are not migrated automatically
+
 ## Main Endpoints
 
 - `POST /v1/analysis`
@@ -71,13 +104,10 @@ curl "http://127.0.0.1:8000/v1/analysis/<analysis_id>/status"
 
 ## Data Artifacts
 
-Each run is stored in:
+During processing, artifacts are written to a temporary workspace directory.
+Persistent storage lives in Supabase.
 
-```text
-data/<analysis_id>/
-```
-
-Generated files:
+Temporary generated files:
 
 - `items.json`
 - `embeddings.npy`
@@ -86,7 +116,3 @@ Generated files:
 - `hierarchy.json`
 - `overview.json`
 - `insights.json`
-
-Recent runs index:
-
-- `data/index.json`

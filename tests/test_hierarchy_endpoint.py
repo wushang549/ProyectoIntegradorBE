@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from api import routes_analysis
+from services.auth import AuthenticatedUser
 
 
 def test_hierarchy_handler_returns_frontend_contract(monkeypatch) -> None:
@@ -46,6 +47,11 @@ def test_hierarchy_handler_returns_frontend_contract(monkeypatch) -> None:
         "linkage_matrix": [[0.0, 1.0, 0.42, 2.0]],
     }
 
+    monkeypatch.setattr(
+        routes_analysis,
+        "_require_analysis_access",
+        lambda _analysis_id, _owner_id: {"analysis_id": "test-analysis", "owner_id": "user-1"},
+    )
     monkeypatch.setattr(routes_analysis, "_require_ready", lambda _analysis_id, _artifact_name: None)
     monkeypatch.setattr(routes_analysis, "hierarchy_file", lambda _analysis_id: Path("fake_hierarchy.json"))
     monkeypatch.setattr(
@@ -55,7 +61,7 @@ def test_hierarchy_handler_returns_frontend_contract(monkeypatch) -> None:
     )
     monkeypatch.setattr(routes_analysis, "read_json_file", lambda _path: fake_hierarchy)
 
-    result = routes_analysis.analysis_hierarchy("test-analysis")
+    result = routes_analysis.analysis_hierarchy("test-analysis", current_user=AuthenticatedUser(user_id="user-1"))
     payload = result.model_dump() if hasattr(result, "model_dump") else result
 
     assert "root_id" in payload

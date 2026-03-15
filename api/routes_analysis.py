@@ -8,7 +8,7 @@ from typing import Any
 from uuid import uuid4
 
 import numpy as np
-from fastapi import APIRouter, Body, File, Form, HTTPException, Query, UploadFile
+from fastapi import APIRouter, Body, Depends, File, Form, HTTPException, Query, UploadFile
 
 from jobs import worker
 from models.schemas import (
@@ -20,14 +20,24 @@ from models.schemas import (
     TabLinks,
 )
 from services.clustering import cut_clusters, normalize_k_clusters
+from services.auth import AuthenticatedUser, require_authenticated_user
 from services.hierarchy import enrich_hierarchy_nodes, refine_hierarchy_labels_for_nodes
 from services.insights import build_overall_summary, build_overall_summary_fallback
 from services.pipeline import PipelinePayload, run_analysis_pipeline
+from services.supabase_persistence import (
+    get_analysis_run,
+    hydrate_analysis_locally,
+    list_analysis_runs,
+    patch_analysis_results,
+    upsert_analysis_run,
+)
 from services.storage import (
     analysis_exists,
     artifacts_ready,
     clusters_file,
+    delete_analysis_dir,
     embeddings_file,
+    get_index_entry,
     hierarchy_file,
     hierarchy_label_cache_file,
     insights_file,
@@ -38,6 +48,7 @@ from services.storage import (
     read_embeddings,
     read_json_file,
     umap_file,
+    upsert_index_entry,
     write_json_file,
 )
 from services.summaries import build_cluster_summaries
@@ -60,6 +71,7 @@ async def create_analysis(
     text: str | None = Form(default=None),
     file: UploadFile | None = File(default=None),
     options: str | None = Form(default=None),
+    current_user: AuthenticatedUser = Depends(require_authenticated_user),
 ) -> CreateAnalysisResponse:
     """Create an asynchronous NLP analysis job."""
 
@@ -93,13 +105,27 @@ async def create_analysis(
         filename=filename,
     )
 
-    worker.create_job(analysis_id)
+    worker.create_job(analysis_id, owner_id=current_user.user_id)
+    source_name = _build_analysis_source_name(
+        input_type=source_type,
+        text=text,
+        filename=filename,
+    )
+    _sync_analysis_run_metadata(
+        analysis_id=analysis_id,
+        owner_id=current_user.user_id,
+        input_type=source_type,
+        source_name=source_name,
+        llm_model=parsed_options.llm_model,
+        created_at=created_at.isoformat(),
+    )
 
     def _run() -> None:
         worker.set_processing(analysis_id)
         try:
             run_analysis_pipeline(
                 analysis_id=analysis_id,
+                owner_id=current_user.user_id,
                 payload=payload,
                 options=parsed_options,
                 progress=lambda stage, pct, stage_label, message, total_records, total_items: worker.update_progress(
@@ -137,6 +163,196 @@ async def create_analysis(
     )
 
 
+def _sync_analysis_run_metadata(
+    *,
+    analysis_id: str,
+    owner_id: str,
+    input_type: str,
+    source_name: str | None,
+    llm_model: str | None,
+    created_at: str,
+) -> None:
+    """Persist static analysis metadata to Supabase without breaking the request."""
+
+    upsert_index_entry(
+        {
+            "analysis_id": analysis_id,
+            "owner_id": owner_id,
+            "created_at": created_at,
+            "updated_at": created_at,
+            "input_type": input_type,
+            "source_name": source_name,
+        }
+    )
+    try:
+        upsert_analysis_run(
+            {
+                "id": analysis_id,
+                "owner_id": owner_id,
+                "input_type": input_type,
+                "source_name": source_name,
+                "llm_model": llm_model,
+                "created_at": created_at,
+                "updated_at": created_at,
+            }
+        )
+    except Exception:
+        return
+
+
+def _load_recent_entries(*, owner_id: str, limit: int) -> list[dict[str, Any]]:
+    """Load recent analyses, preferring Supabase when available."""
+
+    merged: dict[str, dict[str, Any]] = {}
+
+    try:
+        for row in list_analysis_runs(owner_id=owner_id, limit=limit):
+            entry = _analysis_run_row_to_entry(row)
+            analysis_id = str(entry.get("analysis_id") or "").strip()
+            if analysis_id:
+                merged[analysis_id] = entry
+    except Exception:
+        pass
+
+    for entry in list_recent(limit=limit, owner_id=owner_id):
+        if not isinstance(entry, dict):
+            continue
+        analysis_id = str(entry.get("analysis_id") or "").strip()
+        if analysis_id and analysis_id not in merged:
+            merged[analysis_id] = entry
+
+    items = list(merged.values())
+    items.sort(key=lambda entry: str(entry.get("created_at") or ""), reverse=True)
+    return items[: max(1, limit)]
+
+
+def _build_analysis_source_name(*, input_type: str, text: str | None, filename: str | None) -> str:
+    """Build a human-readable source name for recent analyses."""
+
+    cleaned_filename = str(filename or "").strip()
+    if cleaned_filename:
+        return cleaned_filename
+
+    if input_type == "text":
+        normalized_text = " ".join(str(text or "").split())
+        if not normalized_text:
+            return "Text input"
+        if len(normalized_text) <= 48:
+            return normalized_text
+        return f"{normalized_text[:45].rstrip()}..."
+
+    return "Analysis"
+
+
+def _build_recent_display_name(payload: dict[str, Any]) -> str:
+    """Resolve the display name for one recent-analysis list item."""
+
+    source_name = str(payload.get("source_name") or "").strip()
+    if source_name:
+        return source_name
+
+    input_type = str(payload.get("input_type") or "").strip().lower()
+    if input_type == "csv":
+        return "CSV upload"
+    if input_type == "text":
+        return "Text input"
+
+    analysis_id = str(payload.get("analysis_id") or payload.get("id") or "").strip()
+    if analysis_id:
+        return analysis_id[:12]
+    return "Analysis"
+
+
+def _analysis_run_row_to_entry(row: dict[str, Any]) -> dict[str, Any]:
+    """Normalize a Supabase analysis_runs row to the local response shape."""
+
+    return {
+        "analysis_id": str(row.get("id") or "").strip(),
+        "owner_id": str(row.get("owner_id") or "").strip(),
+        "created_at": str(row.get("created_at") or "").strip(),
+        "updated_at": str(row.get("updated_at") or "").strip(),
+        "status": str(row.get("status") or "queued").strip() or "queued",
+        "stage": str(row.get("raw_stage") or "queued").strip() or "queued",
+        "stage_label": str(row.get("stage_label") or "").strip() or None,
+        "message": str(row.get("message") or "").strip() or None,
+        "pct": int(row.get("progress_pct") or 0),
+        "total_records": int(row.get("total_records") or 0),
+        "total_items": int(row.get("total_items") or 0),
+        "item_count": int(row.get("total_items") or 0),
+        "error": str(row.get("error_message") or "").strip() or None,
+        "input_type": str(row.get("input_type") or "").strip() or None,
+        "source_name": str(row.get("source_name") or "").strip() or None,
+        "display_name": _build_recent_display_name(row),
+        "llm_model": str(row.get("llm_model") or "").strip() or None,
+    }
+
+
+def _load_remote_analysis_entry(*, owner_id: str, analysis_id: str) -> dict[str, Any] | None:
+    """Load one analysis entry from Supabase when available."""
+
+    try:
+        row = get_analysis_run(owner_id=owner_id, analysis_id=analysis_id)
+    except Exception:
+        return None
+    if not isinstance(row, dict):
+        return None
+    return _analysis_run_row_to_entry(row)
+
+
+def _try_hydrate_from_supabase(*, owner_id: str, analysis_id: str) -> None:
+    """Best-effort local hydration from Supabase."""
+
+    try:
+        hydrate_analysis_locally(owner_id=owner_id, analysis_id=analysis_id)
+    except Exception:
+        return
+
+
+def _patch_analysis_results_field(*, owner_id: str, analysis_id: str, fields: dict[str, Any]) -> None:
+    """Persist result-field updates back to Supabase without breaking responses."""
+
+    try:
+        patch_analysis_results(owner_id=owner_id, analysis_id=analysis_id, fields=fields)
+    except Exception:
+        return
+
+
+def _status_payload_from_entry(analysis_id: str, entry: dict[str, Any]) -> dict[str, Any]:
+    """Build a status payload from persisted run metadata."""
+
+    raw_stage = str(entry.get("stage") or "").strip().lower() or "queued"
+    pct = int(entry.get("pct") or 0)
+    status_value = str(entry.get("status") or "processing").strip() or "processing"
+    message = str(entry.get("message") or "").strip()
+    error_message = entry.get("error")
+
+    return {
+        "analysis_id": analysis_id,
+        "status": status_value,
+        "progress": {
+            "stage": _normalize_run_stage(raw_stage),
+            "raw_stage": raw_stage,
+            "pct": pct,
+            "stage_label": str(entry.get("stage_label") or "Processing"),
+            "message": message or ("Analysis complete" if status_value == "completed" else "Processing analysis"),
+            "stage_pct": pct,
+            "elapsed_sec": 0.0,
+        },
+        "error": error_message,
+        "debug_error": error_message,
+        "updated_at": str(entry.get("updated_at") or datetime.now(timezone.utc).isoformat()),
+    }
+
+
+def _raise_not_ready_for_entry(entry: dict[str, Any], *, artifact_name: str) -> None:
+    """Raise the correct error for a persisted run that lacks a local artifact."""
+
+    status_value = str(entry.get("status") or "").strip().lower()
+    if status_value == "failed":
+        raise HTTPException(status_code=500, detail=str(entry.get("error") or "Analysis failed."))
+    raise HTTPException(status_code=409, detail=f"Artifact '{artifact_name}' is not ready yet.")
+
+
 @router.get("/models")
 def analysis_models() -> dict[str, Any]:
     """Return installed Ollama models for frontend selectors."""
@@ -166,26 +382,35 @@ def analysis_models() -> dict[str, Any]:
 
 
 @router.get("/recent")
-def recent_analyses(limit: int = Query(default=10, ge=1, le=100)) -> dict[str, Any]:
+def recent_analyses(
+    limit: int = Query(default=10, ge=1, le=100),
+    current_user: AuthenticatedUser = Depends(require_authenticated_user),
+) -> dict[str, Any]:
     """Return recently submitted analyses."""
 
     items = []
-    for entry in list_recent(limit=limit):
+    for entry in _load_recent_entries(owner_id=current_user.user_id, limit=limit):
         if not isinstance(entry, dict):
             continue
         raw_stage = str(entry.get("stage") or "").strip().lower() or "queued"
         normalized = dict(entry)
         normalized["raw_stage"] = raw_stage
         normalized["stage"] = _normalize_run_stage(raw_stage)
+        normalized["item_count"] = int(normalized.get("item_count") or normalized.get("total_items") or 0)
+        normalized["display_name"] = _build_recent_display_name(normalized)
         items.append(normalized)
 
     return {"items": items}
 
 
 @router.get("/{analysis_id}/status")
-def analysis_status(analysis_id: str) -> dict[str, Any]:
+def analysis_status(
+    analysis_id: str,
+    current_user: AuthenticatedUser = Depends(require_authenticated_user),
+) -> dict[str, Any]:
     """Return asynchronous status/progress for one analysis."""
 
+    entry = _require_analysis_access(analysis_id, current_user.user_id)
     payload = worker.get_job_payload(analysis_id)
     if payload is not None:
         updated_at = payload["updated_at"].isoformat() if hasattr(payload["updated_at"], "isoformat") else str(payload["updated_at"])
@@ -209,9 +434,6 @@ def analysis_status(analysis_id: str) -> dict[str, Any]:
             "updated_at": updated_at,
         }
 
-    if not analysis_exists(analysis_id):
-        raise HTTPException(status_code=404, detail="Analysis id not found.")
-
     if artifacts_ready(analysis_id):
         now = datetime.now(timezone.utc).isoformat()
         return {
@@ -231,260 +453,333 @@ def analysis_status(analysis_id: str) -> dict[str, Any]:
             "updated_at": now,
         }
 
-    raise HTTPException(status_code=409, detail="Analysis is still processing.")
+    return _status_payload_from_entry(analysis_id=analysis_id, entry=entry)
 
 
 @router.get("/{analysis_id}/overview")
-def analysis_overview(analysis_id: str) -> dict[str, Any]:
+def analysis_overview(
+    analysis_id: str,
+    current_user: AuthenticatedUser = Depends(require_authenticated_user),
+) -> dict[str, Any]:
     """Return overview artifact."""
 
-    _require_ready(analysis_id, str(overview_file(analysis_id).name))
-    overview_data = read_json_file(overview_file(analysis_id))
-    items_payload = read_json_file(items_file(analysis_id))
-    cluster_payload = _build_cluster_payload(analysis_id=analysis_id, requested_k=None)
-    timing = _load_timing_payload(analysis_id)
+    _require_analysis_access(analysis_id, current_user.user_id)
+    hydrated = False
+    try:
+        hydrated |= _require_ready(analysis_id, str(overview_file(analysis_id).name), current_user.user_id)
+        overview_data = read_json_file(overview_file(analysis_id))
+        items_payload = read_json_file(items_file(analysis_id))
+        cluster_payload = _build_cluster_payload(analysis_id=analysis_id, requested_k=None)
+        timing = _load_timing_payload(analysis_id)
 
-    top_clusters = sorted(cluster_payload["clusters"], key=lambda cluster: int(cluster["size"]), reverse=True)[:5]
-    top_aspects = _extract_top_aspects(analysis_data=overview_data)
+        top_clusters = sorted(cluster_payload["clusters"], key=lambda cluster: int(cluster["size"]), reverse=True)[:5]
+        top_aspects = _extract_top_aspects(analysis_data=overview_data)
 
-    items = _extract_items(items_payload)
-    return {
-        "counts": {
-            "items": len(items),
-            "clusters": len(cluster_payload["clusters"]),
-            "aspects": len(top_aspects),
+        items = _extract_items(items_payload)
+        return {
+            "counts": {
+                "items": len(items),
+                "clusters": len(cluster_payload["clusters"]),
+                "aspects": len(top_aspects),
+            },
+            "top_clusters": top_clusters,
+            "top_aspects": top_aspects,
+            "runtime": {
+                "embedding_method": str(overview_data.get("embedding_method") or ""),
+                "llm_model": _load_analysis_llm_model(analysis_id, overview_data=overview_data),
+            },
+            "timing": timing,
         },
-        "top_clusters": top_clusters,
-        "top_aspects": top_aspects,
-        "runtime": {
-            "embedding_method": str(overview_data.get("embedding_method") or ""),
-            "llm_model": _load_analysis_llm_model(analysis_id, overview_data=overview_data),
-        },
-        "timing": timing,
-    }
+    finally:
+        if hydrated:
+            delete_analysis_dir(analysis_id)
 
 
 @router.get("/{analysis_id}/granulate")
 def analysis_granulate(
     analysis_id: str,
     include_items: bool = Query(default=True),
+    current_user: AuthenticatedUser = Depends(require_authenticated_user),
 ) -> Any:
     """Return granulated items artifact."""
 
-    _require_ready(analysis_id, str(items_file(analysis_id).name))
-    data = read_json_file(items_file(analysis_id))
-    items = _extract_items(data)
+    _require_analysis_access(analysis_id, current_user.user_id)
+    hydrated = False
+    try:
+        hydrated |= _require_ready(analysis_id, str(items_file(analysis_id).name), current_user.user_id)
+        data = read_json_file(items_file(analysis_id))
+        items = _extract_items(data)
 
-    if include_items:
-        return [
-            {
-                "id": item.get("id"),
-                "preview": build_preview(str(item.get("text", ""))),
-                "result": {
-                    "text": str(item.get("text", "")),
-                    "units": [str(item.get("text", ""))] if str(item.get("text", "")).strip() else [],
-                    "granules": [],
-                    "taxonomy": [],
-                    "detected_taxonomy": "general",
-                    "taxonomy_candidates": [],
-                    "detection_margin": 0.0,
-                    "aspect_summary": _item_aspect_summary(item),
-                    "highlights": [],
-                },
-            }
-            for item in items
-        ]
+        if include_items:
+            return [
+                {
+                    "id": item.get("id"),
+                    "preview": build_preview(str(item.get("text", ""))),
+                    "result": {
+                        "text": str(item.get("text", "")),
+                        "units": [str(item.get("text", ""))] if str(item.get("text", "")).strip() else [],
+                        "granules": [],
+                        "taxonomy": [],
+                        "detected_taxonomy": "general",
+                        "taxonomy_candidates": [],
+                        "detection_margin": 0.0,
+                        "aspect_summary": _item_aspect_summary(item),
+                        "highlights": [],
+                    },
+                }
+                for item in items
+            ]
 
-    mode = "csv" if any(bool(item.get("metadata")) for item in items if isinstance(item, dict)) else "text"
-    item_ids = [str(item.get("id")) for item in items if isinstance(item, dict) and item.get("id") is not None]
-    return {
-        "mode": mode,
-        "aggregate_aspect_summary": [],
-        "per_cluster_aggregate": [],
-        "items_included": len(item_ids),
-        "items_total": len(item_ids),
-        "item_ids_included": item_ids,
-    }
+        mode = "csv" if any(bool(item.get("metadata")) for item in items if isinstance(item, dict)) else "text"
+        item_ids = [str(item.get("id")) for item in items if isinstance(item, dict) and item.get("id") is not None]
+        return {
+            "mode": mode,
+            "aggregate_aspect_summary": [],
+            "per_cluster_aggregate": [],
+            "items_included": len(item_ids),
+            "items_total": len(item_ids),
+            "item_ids_included": item_ids,
+        }
+    finally:
+        if hydrated:
+            delete_analysis_dir(analysis_id)
 
 
 @router.get("/{analysis_id}/hierarchy", response_model=HierarchyResponse)
-def analysis_hierarchy(analysis_id: str) -> HierarchyResponse:
+def analysis_hierarchy(
+    analysis_id: str,
+    current_user: AuthenticatedUser = Depends(require_authenticated_user),
+) -> HierarchyResponse:
     """Return hierarchy artifact."""
 
-    _require_ready(analysis_id, str(hierarchy_file(analysis_id).name))
-    hierarchy_data = read_json_file(hierarchy_file(analysis_id))
-    if not isinstance(hierarchy_data, dict):
-        raise HTTPException(status_code=500, detail="Invalid hierarchy artifact format: expected object.")
-    hierarchy_data = _ensure_hierarchy_enriched(analysis_id=analysis_id, hierarchy_data=hierarchy_data)
-    return _build_hierarchy_response(analysis_id=analysis_id, hierarchy_data=hierarchy_data)
+    _require_analysis_access(analysis_id, current_user.user_id)
+    hydrated = False
+    try:
+        hydrated |= _require_ready(analysis_id, str(hierarchy_file(analysis_id).name), current_user.user_id)
+        hierarchy_data = read_json_file(hierarchy_file(analysis_id))
+        if not isinstance(hierarchy_data, dict):
+            raise HTTPException(status_code=500, detail="Invalid hierarchy artifact format: expected object.")
+        hierarchy_data = _ensure_hierarchy_enriched(
+            analysis_id=analysis_id,
+            owner_id=current_user.user_id,
+            hierarchy_data=hierarchy_data,
+        )
+        return _build_hierarchy_response(analysis_id=analysis_id, hierarchy_data=hierarchy_data)
+    finally:
+        if hydrated:
+            delete_analysis_dir(analysis_id)
 
 
 @router.post("/{analysis_id}/hierarchy/labels")
 def analysis_hierarchy_labels(
     analysis_id: str,
     payload: dict[str, Any] | None = Body(default=None),
+    current_user: AuthenticatedUser = Depends(require_authenticated_user),
 ) -> dict[str, Any]:
     """Refine labels for selected hierarchy nodes using cached LLM calls."""
 
-    _require_ready(analysis_id, str(hierarchy_file(analysis_id).name))
-    _require_ready(analysis_id, str(items_file(analysis_id).name))
+    _require_analysis_access(analysis_id, current_user.user_id)
+    hydrated = False
+    try:
+        hydrated |= _require_ready(analysis_id, str(hierarchy_file(analysis_id).name), current_user.user_id)
+        hydrated |= _require_ready(analysis_id, str(items_file(analysis_id).name), current_user.user_id)
 
-    node_ids_raw = payload.get("node_ids") if isinstance(payload, dict) else None
-    if not isinstance(node_ids_raw, list):
-        raise HTTPException(status_code=422, detail="'node_ids' must be a list of node id strings.")
+        node_ids_raw = payload.get("node_ids") if isinstance(payload, dict) else None
+        if not isinstance(node_ids_raw, list):
+            raise HTTPException(status_code=422, detail="'node_ids' must be a list of node id strings.")
 
-    node_ids = [str(node_id).strip() for node_id in node_ids_raw if str(node_id).strip()]
-    if not node_ids:
-        return {"labels": {}, "updated": 0}
+        node_ids = [str(node_id).strip() for node_id in node_ids_raw if str(node_id).strip()]
+        if not node_ids:
+            return {"labels": {}, "updated": 0}
 
-    hierarchy_data = read_json_file(hierarchy_file(analysis_id))
-    if not isinstance(hierarchy_data, dict):
-        raise HTTPException(status_code=500, detail="Invalid hierarchy artifact format: expected object.")
-    hierarchy_data = _ensure_hierarchy_enriched(analysis_id=analysis_id, hierarchy_data=hierarchy_data)
+        hierarchy_data = read_json_file(hierarchy_file(analysis_id))
+        if not isinstance(hierarchy_data, dict):
+            raise HTTPException(status_code=500, detail="Invalid hierarchy artifact format: expected object.")
+        hierarchy_data = _ensure_hierarchy_enriched(
+            analysis_id=analysis_id,
+            owner_id=current_user.user_id,
+            hierarchy_data=hierarchy_data,
+        )
 
-    items_payload = read_json_file(items_file(analysis_id))
-    items = _extract_items(items_payload)
-    labels = refine_hierarchy_labels_for_nodes(
-        hierarchy_data=hierarchy_data,
-        items=items,
-        node_ids=node_ids,
-        cache_path=hierarchy_label_cache_file(analysis_id),
-        model_name=_load_analysis_llm_model(analysis_id),
-        max_nodes=8,
-    )
-    write_json_file(hierarchy_file(analysis_id), hierarchy_data)
-    return {"labels": labels, "updated": len(labels)}
+        items_payload = read_json_file(items_file(analysis_id))
+        items = _extract_items(items_payload)
+        labels = refine_hierarchy_labels_for_nodes(
+            hierarchy_data=hierarchy_data,
+            items=items,
+            node_ids=node_ids,
+            cache_path=hierarchy_label_cache_file(analysis_id),
+            model_name=_load_analysis_llm_model(analysis_id),
+            max_nodes=8,
+        )
+        write_json_file(hierarchy_file(analysis_id), hierarchy_data)
+        _patch_analysis_results_field(
+            owner_id=current_user.user_id,
+            analysis_id=analysis_id,
+            fields={"hierarchy_json": hierarchy_data},
+        )
+        return {"labels": labels, "updated": len(labels)}
+    finally:
+        if hydrated:
+            delete_analysis_dir(analysis_id)
 
 
 @router.get("/{analysis_id}/insights")
-def analysis_insights(analysis_id: str) -> dict[str, Any]:
+def analysis_insights(
+    analysis_id: str,
+    current_user: AuthenticatedUser = Depends(require_authenticated_user),
+) -> dict[str, Any]:
     """Return insights artifact."""
 
-    _require_ready(analysis_id, str(insights_file(analysis_id).name))
-    data = read_json_file(insights_file(analysis_id))
-    if not isinstance(data, dict):
-        raise HTTPException(status_code=500, detail="Invalid insights artifact format.")
+    _require_analysis_access(analysis_id, current_user.user_id)
+    hydrated = False
+    try:
+        hydrated |= _require_ready(analysis_id, str(insights_file(analysis_id).name), current_user.user_id)
+        data = read_json_file(insights_file(analysis_id))
+        if not isinstance(data, dict):
+            raise HTTPException(status_code=500, detail="Invalid insights artifact format.")
 
-    cluster_payload = _build_cluster_payload(analysis_id=analysis_id, requested_k=None)
-    top_themes = sorted(cluster_payload["clusters"], key=lambda cluster: int(cluster["size"]), reverse=True)[:5]
+        cluster_payload = _build_cluster_payload(analysis_id=analysis_id, requested_k=None)
+        top_themes = sorted(cluster_payload["clusters"], key=lambda cluster: int(cluster["size"]), reverse=True)[:5]
 
-    theme_summary = [
-        {
-            "label": theme["label"],
-            "size": int(theme["size"]),
-            "top_terms": theme.get("top_terms", [])[:8],
-            "examples": [rep.get("preview", "") for rep in theme.get("representatives", [])[:2]],
-        }
-        for theme in top_themes
-    ]
+        theme_summary = [
+            {
+                "label": theme["label"],
+                "size": int(theme["size"]),
+                "top_terms": theme.get("top_terms", [])[:8],
+                "examples": [rep.get("preview", "") for rep in theme.get("representatives", [])[:2]],
+            }
+            for theme in top_themes
+        ]
 
-    key_findings = data.get("key_findings")
-    if not isinstance(key_findings, list):
-        key_findings = []
+        key_findings = data.get("key_findings")
+        if not isinstance(key_findings, list):
+            key_findings = []
 
-    quality_warnings = data.get("quality_warnings")
-    if not isinstance(quality_warnings, list):
-        quality_warnings = []
+        quality_warnings = data.get("quality_warnings")
+        if not isinstance(quality_warnings, list):
+            quality_warnings = []
 
-    overall_summary = str(data.get("overall_summary") or "").strip()
-    overall_summary_source = str(data.get("overall_summary_source") or "").strip() or "heuristic"
-    if not overall_summary or overall_summary.endswith("..."):
-        overall_summary, overall_summary_source = build_overall_summary(
-            total_items=len(cluster_payload["item_cluster_map"]),
-            clusters=cluster_payload["clusters"],
-            quality_warnings=quality_warnings,
-            llm_model=_load_analysis_llm_model(analysis_id),
-        )
-        if not overall_summary:
-            overall_summary = build_overall_summary_fallback(
+        overall_summary = str(data.get("overall_summary") or "").strip()
+        overall_summary_source = str(data.get("overall_summary_source") or "").strip() or "heuristic"
+        if not overall_summary or overall_summary.endswith("..."):
+            overall_summary, overall_summary_source = build_overall_summary(
                 total_items=len(cluster_payload["item_cluster_map"]),
                 clusters=cluster_payload["clusters"],
                 quality_warnings=quality_warnings,
+                llm_model=_load_analysis_llm_model(analysis_id),
             )
-            overall_summary_source = "heuristic"
-        data["overall_summary"] = overall_summary
-        data["overall_summary_source"] = overall_summary_source
-        write_json_file(insights_file(analysis_id), data)
+            if not overall_summary:
+                overall_summary = build_overall_summary_fallback(
+                    total_items=len(cluster_payload["item_cluster_map"]),
+                    clusters=cluster_payload["clusters"],
+                    quality_warnings=quality_warnings,
+                )
+                overall_summary_source = "heuristic"
+            data["overall_summary"] = overall_summary
+            data["overall_summary_source"] = overall_summary_source
+            write_json_file(insights_file(analysis_id), data)
+            _patch_analysis_results_field(
+                owner_id=current_user.user_id,
+                analysis_id=analysis_id,
+                fields={"insights_json": data},
+            )
 
-    return {
-        "key_findings": key_findings,
-        "theme_summary": theme_summary,
-        "quality_warnings": quality_warnings,
-        "overall_summary": overall_summary,
-        "overall_summary_source": overall_summary_source,
-    }
+        return {
+            "key_findings": key_findings,
+            "theme_summary": theme_summary,
+            "quality_warnings": quality_warnings,
+            "overall_summary": overall_summary,
+            "overall_summary_source": overall_summary_source,
+        }
+    finally:
+        if hydrated:
+            delete_analysis_dir(analysis_id)
 
 
 @router.get("/{analysis_id}/clusters")
 def analysis_clusters(
     analysis_id: str,
     k_clusters: int | None = Query(default=None, ge=2, le=100),
+    current_user: AuthenticatedUser = Depends(require_authenticated_user),
 ) -> dict[str, Any]:
     """Return flat cluster summaries for requested k."""
 
-    _require_ready(analysis_id, str(clusters_file(analysis_id).name))
-    resolved_k = _coerce_optional_int(k_clusters)
-    payload = _build_cluster_payload(analysis_id=analysis_id, requested_k=resolved_k)
-    return {
-        "clusters": payload["clusters"],
-        "item_cluster_map": payload["item_cluster_map"],
-    }
+    _require_analysis_access(analysis_id, current_user.user_id)
+    hydrated = False
+    try:
+        hydrated |= _require_ready(analysis_id, str(clusters_file(analysis_id).name), current_user.user_id)
+        resolved_k = _coerce_optional_int(k_clusters)
+        payload = _build_cluster_payload(analysis_id=analysis_id, requested_k=resolved_k)
+        return {
+            "clusters": payload["clusters"],
+            "item_cluster_map": payload["item_cluster_map"],
+        }
+    finally:
+        if hydrated:
+            delete_analysis_dir(analysis_id)
 
 
 @router.get("/{analysis_id}/map")
 def analysis_map(
     analysis_id: str,
     k_clusters: int | None = Query(default=None, ge=2, le=100),
+    current_user: AuthenticatedUser = Depends(require_authenticated_user),
 ) -> dict[str, Any]:
     """Return 2D map points with cluster assignment and labels."""
 
-    _require_ready(analysis_id, str(umap_file(analysis_id).name))
-    _require_ready(analysis_id, str(clusters_file(analysis_id).name))
+    _require_analysis_access(analysis_id, current_user.user_id)
+    hydrated = False
+    try:
+        hydrated |= _require_ready(analysis_id, str(umap_file(analysis_id).name), current_user.user_id)
+        hydrated |= _require_ready(analysis_id, str(clusters_file(analysis_id).name), current_user.user_id)
 
-    items_data = read_json_file(items_file(analysis_id))
-    umap_data = read_json_file(umap_file(analysis_id))
-    resolved_k = _coerce_optional_int(k_clusters)
-    cluster_payload = _build_cluster_payload(analysis_id=analysis_id, requested_k=resolved_k)
+        items_data = read_json_file(items_file(analysis_id))
+        umap_data = read_json_file(umap_file(analysis_id))
+        resolved_k = _coerce_optional_int(k_clusters)
+        cluster_payload = _build_cluster_payload(analysis_id=analysis_id, requested_k=resolved_k)
 
-    items = _extract_items(items_data)
-    points_base = umap_data.get("points", [])
-    cluster_labels = cluster_payload["cluster_labels"]
-    clusters = cluster_payload["clusters"]
+        items = _extract_items(items_data)
+        points_base = umap_data.get("points", [])
+        cluster_labels = cluster_payload["cluster_labels"]
+        clusters = cluster_payload["clusters"]
 
-    if len(points_base) != len(items) or len(cluster_labels) != len(items):
-        raise HTTPException(status_code=500, detail="Artifact mismatch between items and map coordinates.")
+        if len(points_base) != len(items) or len(cluster_labels) != len(items):
+            raise HTTPException(status_code=500, detail="Artifact mismatch between items and map coordinates.")
 
-    label_by_cluster = {
-        int(cluster["cluster_id"]): str(cluster.get("label") or f"Cluster {cluster['cluster_id']}")
-        for cluster in clusters
-    }
+        label_by_cluster = {
+            int(cluster["cluster_id"]): str(cluster.get("label") or f"Cluster {cluster['cluster_id']}")
+            for cluster in clusters
+        }
 
-    points: list[dict[str, Any]] = []
-    for idx, item in enumerate(items):
-        point = points_base[idx]
-        cluster_id = int(cluster_labels[idx])
-        points.append(
-            {
-                "id": item["id"],
-                "x": float(point["x"]),
-                "y": float(point["y"]),
-                "x_raw": float(point["x_raw"]),
-                "y_raw": float(point["y_raw"]),
-                "cluster_id": cluster_id,
-                "cluster_label": label_by_cluster.get(cluster_id, f"Cluster {cluster_id}"),
-                "preview": build_preview(str(item.get("text", ""))),
-                "metadata": item.get("metadata", {}),
-            }
-        )
+        points: list[dict[str, Any]] = []
+        for idx, item in enumerate(items):
+            point = points_base[idx]
+            cluster_id = int(cluster_labels[idx])
+            points.append(
+                {
+                    "id": item["id"],
+                    "x": float(point["x"]),
+                    "y": float(point["y"]),
+                    "x_raw": float(point["x_raw"]),
+                    "y_raw": float(point["y_raw"]),
+                    "cluster_id": cluster_id,
+                    "cluster_label": label_by_cluster.get(cluster_id, f"Cluster {cluster_id}"),
+                    "preview": build_preview(str(item.get("text", ""))),
+                    "metadata": item.get("metadata", {}),
+                }
+            )
 
-    return {
-        "points": points,
-        "clusters": clusters,
-        "advanced": {
-            "umap_scaled": True,
-            "scale_clamp": 1.0,
-        },
-    }
+        return {
+            "points": points,
+            "clusters": clusters,
+            "advanced": {
+                "umap_scaled": True,
+                "scale_clamp": 1.0,
+            },
+        }
+    finally:
+        if hydrated:
+            delete_analysis_dir(analysis_id)
 
 
 def _parse_options(raw_options: str | None) -> AnalysisOptions:
@@ -513,15 +808,22 @@ def _parse_options(raw_options: str | None) -> AnalysisOptions:
     return options
 
 
-def _require_ready(analysis_id: str, artifact_name: str) -> None:
+def _require_ready(analysis_id: str, artifact_name: str, owner_id: str) -> bool:
     """Enforce artifact availability and 409-not-ready contract."""
 
+    hydrated = False
     if not analysis_exists(analysis_id):
-        raise HTTPException(status_code=404, detail="Analysis id not found.")
+        _try_hydrate_from_supabase(owner_id=owner_id, analysis_id=analysis_id)
+        hydrated = analysis_exists(analysis_id)
+        if not analysis_exists(analysis_id):
+            remote_entry = _load_remote_analysis_entry(owner_id=owner_id, analysis_id=analysis_id)
+            if remote_entry is None:
+                raise HTTPException(status_code=404, detail="Analysis id not found.")
+            _raise_not_ready_for_entry(remote_entry, artifact_name=artifact_name)
 
     target_path = _artifact_lookup(analysis_id, artifact_name)
     if target_path.exists():
-        return
+        return hydrated
 
     job = worker.get_job(analysis_id)
     if job is not None and job.status in {"queued", "processing"}:
@@ -530,7 +832,37 @@ def _require_ready(analysis_id: str, artifact_name: str) -> None:
     if job is not None and job.status == "failed":
         raise HTTPException(status_code=500, detail=job.error or "Analysis failed.")
 
+    _try_hydrate_from_supabase(owner_id=owner_id, analysis_id=analysis_id)
+    if target_path.exists():
+        return True
+
+    remote_entry = _load_remote_analysis_entry(owner_id=owner_id, analysis_id=analysis_id)
+    if remote_entry is not None:
+        _raise_not_ready_for_entry(remote_entry, artifact_name=artifact_name)
+
     raise HTTPException(status_code=409, detail=f"Artifact '{artifact_name}' is not ready yet.")
+
+
+def _require_analysis_access(analysis_id: str, owner_id: str) -> dict[str, Any]:
+    """Ensure the requested analysis belongs to the current user."""
+
+    entry = get_index_entry(analysis_id)
+    if isinstance(entry, dict):
+        stored_owner_id = str(entry.get("owner_id") or "").strip()
+        if stored_owner_id and stored_owner_id == owner_id:
+            return entry
+
+    _try_hydrate_from_supabase(owner_id=owner_id, analysis_id=analysis_id)
+    entry = get_index_entry(analysis_id)
+    if isinstance(entry, dict):
+        stored_owner_id = str(entry.get("owner_id") or "").strip()
+        if stored_owner_id and stored_owner_id == owner_id:
+            return entry
+
+    remote_entry = _load_remote_analysis_entry(owner_id=owner_id, analysis_id=analysis_id)
+    if remote_entry is None:
+        raise HTTPException(status_code=404, detail="Analysis id not found.")
+    return remote_entry
 
 
 def _artifact_lookup(analysis_id: str, artifact_name: str):
@@ -641,7 +973,11 @@ def _build_hierarchy_response(analysis_id: str, hierarchy_data: dict[str, Any]) 
     )
 
 
-def _ensure_hierarchy_enriched(analysis_id: str, hierarchy_data: dict[str, Any]) -> dict[str, Any]:
+def _ensure_hierarchy_enriched(
+    analysis_id: str,
+    owner_id: str,
+    hierarchy_data: dict[str, Any],
+) -> dict[str, Any]:
     """Backfill hierarchy labels/summaries for analyses generated before enrichment existed."""
 
     raw_nodes = hierarchy_data.get("nodes")
@@ -666,6 +1002,11 @@ def _ensure_hierarchy_enriched(analysis_id: str, hierarchy_data: dict[str, Any])
         clusters=clusters if isinstance(clusters, list) else [],
     )
     write_json_file(hierarchy_file(analysis_id), enriched)
+    _patch_analysis_results_field(
+        owner_id=owner_id,
+        analysis_id=analysis_id,
+        fields={"hierarchy_json": enriched},
+    )
     return enriched
 
 

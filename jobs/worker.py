@@ -9,7 +9,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Callable
 
-from services.storage import now_utc_iso, upsert_index_entry
+from services.supabase_persistence import upsert_analysis_run
+from services.storage import delete_analysis_dir, now_utc_iso, remove_index_entry, upsert_index_entry
 
 
 @dataclass(slots=True)
@@ -17,6 +18,7 @@ class JobState:
     """Mutable status for one background analysis job."""
 
     analysis_id: str
+    owner_id: str
     status: str
     stage: str
     pct: int
@@ -36,12 +38,13 @@ _JOBS: dict[str, JobState] = {}
 _FUTURES: dict[str, Future] = {}
 
 
-def create_job(analysis_id: str) -> JobState:
+def create_job(analysis_id: str, owner_id: str) -> JobState:
     """Register a queued job."""
 
     now = now_utc_iso()
     job = JobState(
         analysis_id=analysis_id,
+        owner_id=owner_id,
         status="queued",
         stage="queued",
         pct=0,
@@ -56,6 +59,7 @@ def create_job(analysis_id: str) -> JobState:
     upsert_index_entry(
         {
             "analysis_id": analysis_id,
+            "owner_id": owner_id,
             "created_at": now,
             "updated_at": now,
             "status": "queued",
@@ -63,6 +67,21 @@ def create_job(analysis_id: str) -> JobState:
             "pct": 0,
             "total_records": 0,
             "total_items": 0,
+        }
+    )
+    _sync_run_state(
+        {
+            "id": analysis_id,
+            "owner_id": owner_id,
+            "status": "queued",
+            "raw_stage": "queued",
+            "stage_label": "Queued",
+            "message": "Analysis queued.",
+            "progress_pct": 0,
+            "total_records": 0,
+            "total_items": 0,
+            "created_at": now,
+            "updated_at": now,
         }
     )
     return job
@@ -205,6 +224,7 @@ def _update(
         upsert_index_entry(
             {
                 "analysis_id": analysis_id,
+                "owner_id": job.owner_id,
                 "created_at": job.created_at,
                 "updated_at": job.updated_at,
                 "status": job.status,
@@ -214,3 +234,35 @@ def _update(
                 "total_items": job.total_items,
             }
         )
+        _sync_run_state(
+            {
+                "id": analysis_id,
+                "owner_id": job.owner_id,
+                "status": job.status,
+                "raw_stage": job.stage,
+                "stage_label": job.stage_label,
+                "message": job.message,
+                "progress_pct": job.pct,
+                "total_records": job.total_records,
+                "total_items": job.total_items,
+                "error_message": job.error,
+                "created_at": job.created_at,
+                "updated_at": job.updated_at,
+                "completed_at": job.updated_at if job.status == "completed" else None,
+            }
+        )
+        if job.status in {"completed", "failed"}:
+            _FUTURES.pop(analysis_id, None)
+            _JOBS.pop(analysis_id, None)
+            remove_index_entry(analysis_id)
+            if job.status == "failed":
+                delete_analysis_dir(analysis_id)
+
+
+def _sync_run_state(record: dict[str, object]) -> None:
+    """Persist one run snapshot to Supabase without breaking local execution."""
+
+    try:
+        upsert_analysis_run(record)
+    except Exception:
+        return

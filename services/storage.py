@@ -3,15 +3,16 @@
 from __future__ import annotations
 
 import json
+import shutil
 import threading
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 import numpy as np
 
-DATA_DIR = Path("data")
-INDEX_FILE = DATA_DIR / "index.json"
+DATA_DIR = Path(tempfile.gettempdir()) / "proyecto_integrador_analysis_cache"
 
 _ITEMS_FILE = "items.json"
 _EMBEDDINGS_FILE = "embeddings.npy"
@@ -24,14 +25,13 @@ _LABEL_CACHE_FILE = "labels_cache.json"
 _HIERARCHY_LABEL_CACHE_FILE = "hierarchy_labels_cache.json"
 
 _INDEX_LOCK = threading.Lock()
+_INDEX: list[dict[str, Any]] = []
 
 
 def ensure_data_dir() -> Path:
     """Ensure base data directory exists."""
 
     DATA_DIR.mkdir(parents=True, exist_ok=True)
-    if not INDEX_FILE.exists():
-        write_json_file(INDEX_FILE, [])
     return DATA_DIR
 
 
@@ -48,6 +48,14 @@ def analysis_dir(analysis_id: str) -> Path:
     """Get directory path for one analysis."""
 
     return DATA_DIR / analysis_id
+
+
+def delete_analysis_dir(analysis_id: str) -> None:
+    """Delete one analysis workspace directory if it exists."""
+
+    target = analysis_dir(analysis_id)
+    if target.exists():
+        shutil.rmtree(target, ignore_errors=True)
 
 
 def analysis_exists(analysis_id: str) -> bool:
@@ -152,32 +160,39 @@ def read_embeddings(path: Path) -> np.ndarray:
 
 
 def upsert_index_entry(entry: dict[str, Any], keep: int = 500) -> None:
-    """Insert/update one index entry and keep recent order."""
+    """Insert/update one in-memory index entry and keep recent order."""
 
-    ensure_data_dir()
     with _INDEX_LOCK:
-        current = []
-        if INDEX_FILE.exists():
-            loaded = read_json_file(INDEX_FILE)
-            if isinstance(loaded, list):
-                current = loaded
-
-        filtered = [item for item in current if item.get("analysis_id") != entry.get("analysis_id")]
+        filtered = [item for item in _INDEX if item.get("analysis_id") != entry.get("analysis_id")]
         filtered.insert(0, json_safe(entry))
-        write_json_file(INDEX_FILE, filtered[:keep])
+        _INDEX[:] = filtered[:keep]
 
 
-def list_recent(limit: int = 10) -> list[dict[str, Any]]:
-    """Return recent analyses from index file."""
+def get_index_entry(analysis_id: str) -> dict[str, Any] | None:
+    """Return one in-memory index entry by analysis id."""
 
-    ensure_data_dir()
     with _INDEX_LOCK:
-        if not INDEX_FILE.exists():
-            return []
-        loaded = read_json_file(INDEX_FILE)
-        if not isinstance(loaded, list):
-            return []
-        return loaded[: max(1, limit)]
+        for entry in _INDEX:
+            if isinstance(entry, dict) and str(entry.get("analysis_id") or "").strip() == analysis_id:
+                return entry
+    return None
+
+
+def list_recent(limit: int = 10, owner_id: str | None = None) -> list[dict[str, Any]]:
+    """Return recent analyses from the in-memory index."""
+
+    with _INDEX_LOCK:
+        items = [entry for entry in _INDEX if isinstance(entry, dict)]
+        if owner_id is not None:
+            items = [entry for entry in items if str(entry.get("owner_id") or "").strip() == owner_id]
+        return items[: max(1, limit)]
+
+
+def remove_index_entry(analysis_id: str) -> None:
+    """Remove one analysis entry from the in-memory index."""
+
+    with _INDEX_LOCK:
+        _INDEX[:] = [entry for entry in _INDEX if entry.get("analysis_id") != analysis_id]
 
 
 def now_utc_iso() -> str:

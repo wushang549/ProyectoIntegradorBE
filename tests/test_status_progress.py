@@ -5,9 +5,11 @@ from __future__ import annotations
 from types import SimpleNamespace
 
 import numpy as np
+from fastapi import HTTPException
 
 from api import routes_analysis
 from models.schemas import AnalysisOptions, GranulatedItem, IngestedRecord
+from services.auth import AuthenticatedUser
 from services import pipeline
 
 
@@ -101,6 +103,7 @@ def test_run_analysis_pipeline_reports_ai_summary_stage(monkeypatch) -> None:
 
     pipeline.run_analysis_pipeline(
         analysis_id="analysis-1",
+        owner_id="user-1",
         payload=pipeline.PipelinePayload(input_type="text", text="Great food\nSlow service"),
         options=AnalysisOptions(),
         progress=lambda stage, pct, stage_label, message, _records, _items: progress_calls.append(
@@ -115,6 +118,11 @@ def test_run_analysis_pipeline_reports_ai_summary_stage(monkeypatch) -> None:
 def test_analysis_status_normalizes_ai_summary_and_preserves_raw_stage(monkeypatch) -> None:
     """Status responses should expose the frontend stage and the raw backend stage."""
 
+    monkeypatch.setattr(
+        routes_analysis,
+        "_require_analysis_access",
+        lambda _analysis_id, _owner_id: {"analysis_id": "analysis-1", "owner_id": "user-1"},
+    )
     monkeypatch.setattr(
         routes_analysis.worker,
         "get_job_payload",
@@ -131,7 +139,7 @@ def test_analysis_status_normalizes_ai_summary_and_preserves_raw_stage(monkeypat
         },
     )
 
-    payload = routes_analysis.analysis_status("analysis-1")
+    payload = routes_analysis.analysis_status("analysis-1", current_user=AuthenticatedUser(user_id="user-1"))
 
     assert payload["progress"]["stage"] == "overview"
     assert payload["progress"]["raw_stage"] == "ai_summary"
@@ -145,9 +153,10 @@ def test_recent_analyses_normalizes_stage_and_keeps_raw_stage(monkeypatch) -> No
     monkeypatch.setattr(
         routes_analysis,
         "list_recent",
-        lambda limit=10: [
+        lambda limit=10, owner_id=None: [
             {
                 "analysis_id": "analysis-1",
+                "owner_id": owner_id,
                 "created_at": "2026-03-10T00:00:00+00:00",
                 "updated_at": "2026-03-10T00:00:30+00:00",
                 "status": "processing",
@@ -159,7 +168,26 @@ def test_recent_analyses_normalizes_stage_and_keeps_raw_stage(monkeypatch) -> No
         ],
     )
 
-    payload = routes_analysis.recent_analyses(limit=10)
+    payload = routes_analysis.recent_analyses(limit=10, current_user=AuthenticatedUser(user_id="user-1"))
 
     assert payload["items"][0]["stage"] == "overview"
     assert payload["items"][0]["raw_stage"] == "ai_summary"
+    assert payload["items"][0]["item_count"] == 18
+
+
+def test_analysis_status_hides_other_users_analyses(monkeypatch) -> None:
+    """Status should not expose analyses that belong to another user."""
+
+    monkeypatch.setattr(
+        routes_analysis,
+        "get_index_entry",
+        lambda _analysis_id: {"analysis_id": "analysis-1", "owner_id": "other-user"},
+    )
+
+    try:
+        routes_analysis.analysis_status("analysis-1", current_user=AuthenticatedUser(user_id="user-1"))
+    except HTTPException as exc:
+        assert exc.status_code == 404
+        assert exc.detail == "Analysis id not found."
+    else:  # pragma: no cover - defensive assertion
+        raise AssertionError("Expected HTTPException for unauthorized analysis access.")
