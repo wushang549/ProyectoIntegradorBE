@@ -66,6 +66,29 @@ def upsert_analysis_results(record: dict[str, Any]) -> None:
     )
 
 
+def patch_analysis_run(*, owner_id: str, analysis_id: str, fields: dict[str, Any]) -> None:
+    """Patch selected columns on one analysis_runs row."""
+
+    config = _load_config()
+    if config is None:
+        return
+
+    payload = dict(fields)
+    payload["updated_at"] = payload.get("updated_at") or _utc_now_iso()
+    query = urlencode(
+        [
+            ("owner_id", f"eq.{owner_id}"),
+            ("id", f"eq.{analysis_id}"),
+        ]
+    )
+    _request(
+        method="PATCH",
+        url=f"{config.url.rstrip('/')}/rest/v1/analysis_runs?{query}",
+        headers=_postgrest_headers(config.service_role_key, "return=minimal"),
+        body=json.dumps(payload).encode("utf-8"),
+    )
+
+
 def patch_analysis_results(*, owner_id: str, analysis_id: str, fields: dict[str, Any]) -> None:
     """Patch selected columns on one analysis_results row."""
 
@@ -178,6 +201,41 @@ def download_artifact(*, storage_path: str) -> bytes:
         },
         body=None,
     )
+
+
+def delete_analysis(*, owner_id: str, analysis_id: str) -> None:
+    """Delete one persisted analysis and its storage artifacts from Supabase."""
+
+    config = _load_config()
+    if config is None:
+        return
+
+    run_row = get_analysis_run(owner_id=owner_id, analysis_id=analysis_id)
+    storage_path = ""
+    if isinstance(run_row, dict):
+        storage_path = str(run_row.get("embeddings_storage_path") or "").strip()
+    if not storage_path:
+        storage_path = f"{owner_id}/{analysis_id}/embeddings.npy"
+
+    if storage_path:
+        _delete_artifact_if_exists(config=config, storage_path=storage_path)
+
+    query = urlencode(
+        [
+            ("owner_id", f"eq.{owner_id}"),
+            ("id", f"eq.{analysis_id}"),
+        ]
+    )
+    _request(
+        method="DELETE",
+        url=f"{config.url.rstrip('/')}/rest/v1/analysis_runs?{query}",
+        headers=_postgrest_headers(config.service_role_key, "return=minimal"),
+        body=None,
+    )
+
+    remaining = get_analysis_run(owner_id=owner_id, analysis_id=analysis_id)
+    if remaining is not None:
+        raise RuntimeError("Supabase delete did not remove the analysis row.")
 
 
 def hydrate_analysis_locally(*, owner_id: str, analysis_id: str) -> bool:
@@ -320,6 +378,27 @@ def _request(*, method: str, url: str, headers: dict[str, str], body: bytes | No
         raise RuntimeError(f"Supabase request failed ({exc.code}): {detail or exc.reason}") from exc
     except URLError as exc:
         raise RuntimeError(f"Supabase request failed: {exc.reason}") from exc
+
+
+def _delete_artifact_if_exists(*, config: SupabasePersistenceConfig, storage_path: str) -> None:
+    """Delete one Storage object and ignore missing-object responses."""
+
+    encoded_path = quote(f"{config.storage_bucket}/{storage_path}", safe="/")
+    try:
+        _request(
+            method="DELETE",
+            url=f"{config.url.rstrip('/')}/storage/v1/object/{encoded_path}",
+            headers={
+                "Authorization": f"Bearer {config.service_role_key}",
+                "apikey": config.service_role_key,
+            },
+            body=None,
+        )
+    except RuntimeError as exc:
+        message = str(exc)
+        if "(404)" in message:
+            return
+        raise
 
 
 def _write_optional_json(path: Path, payload: Any) -> None:

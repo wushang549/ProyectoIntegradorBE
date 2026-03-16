@@ -97,6 +97,8 @@ def test_run_analysis_pipeline_reports_ai_summary_stage(monkeypatch) -> None:
         "build_overall_summary",
         lambda **_kwargs: ("Overall summary text.", "llm"),
     )
+    monkeypatch.setattr(pipeline, "default_openai_text_model", lambda: "gpt-5-nano")
+    monkeypatch.setattr(pipeline, "_persist_to_supabase", lambda **_kwargs: None)
     monkeypatch.setattr(pipeline, "write_json_file", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(pipeline, "write_embeddings", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(pipeline, "now_utc_iso", lambda: "2026-03-10T00:00:00+00:00")
@@ -112,7 +114,7 @@ def test_run_analysis_pipeline_reports_ai_summary_stage(monkeypatch) -> None:
     )
 
     assert ("insights", 94, "Insights", "Extracting key findings and quality warnings.") in progress_calls
-    assert ("ai_summary", 97, "AI Summary", "Generating overall AI summary with gemma3:1b.") in progress_calls
+    assert ("ai_summary", 97, "AI Summary", "Generating overall AI summary with gpt-5-nano.") in progress_calls
 
 
 def test_analysis_status_normalizes_ai_summary_and_preserves_raw_stage(monkeypatch) -> None:
@@ -132,7 +134,7 @@ def test_analysis_status_normalizes_ai_summary_and_preserves_raw_stage(monkeypat
             "stage": "ai_summary",
             "pct": 97,
             "stage_label": "AI Summary",
-            "message": "Generating overall AI summary with deepseek-r1:8b.",
+            "message": "Generating overall AI summary with gpt-5-nano.",
             "elapsed_sec": 12.3,
             "updated_at": "2026-03-10T00:00:00+00:00",
             "error": None,
@@ -144,7 +146,7 @@ def test_analysis_status_normalizes_ai_summary_and_preserves_raw_stage(monkeypat
     assert payload["progress"]["stage"] == "overview"
     assert payload["progress"]["raw_stage"] == "ai_summary"
     assert payload["progress"]["stage_label"] == "AI Summary"
-    assert payload["progress"]["message"] == "Generating overall AI summary with deepseek-r1:8b."
+    assert payload["progress"]["message"] == "Generating overall AI summary with gpt-5-nano."
 
 
 def test_recent_analyses_normalizes_stage_and_keeps_raw_stage(monkeypatch) -> None:

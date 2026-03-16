@@ -9,8 +9,8 @@ from services.labeling import LabelingError
 def test_build_insights_generates_llm_overall_summary(monkeypatch) -> None:
     """Insights should expose one cleaned overall summary when the LLM succeeds."""
 
-    def fake_call_ollama(_prompt: str, model_name: str) -> str:
-        assert model_name == "deepseek-r1:8b"
+    def fake_call_openai(_prompt: str, model_name: str) -> str:
+        assert model_name == "gpt-5-nano"
         return (
             "<think>internal reasoning</think>\n"
             "Executive summary: Customers consistently praise food freshness, attentive staff, and a reliable dining "
@@ -18,7 +18,7 @@ def test_build_insights_generates_llm_overall_summary(monkeypatch) -> None:
             "Overall sentiment is positive, but operational consistency during busy periods remains the main risk."
         )
 
-    monkeypatch.setattr("services.insights._call_ollama_summary", fake_call_ollama)
+    monkeypatch.setattr("services.insights._call_openai_summary", fake_call_openai)
 
     insights = build_insights(
         total_items=40,
@@ -49,7 +49,7 @@ def test_build_insights_generates_llm_overall_summary(monkeypatch) -> None:
                 "aspect_purity": 0.86,
             },
         ],
-        llm_model="deepseek-r1:8b",
+        llm_model="gpt-5-nano",
     )
 
     assert insights["overall_summary_source"] == "llm"
@@ -58,12 +58,12 @@ def test_build_insights_generates_llm_overall_summary(monkeypatch) -> None:
 
 
 def test_build_insights_falls_back_when_llm_generation_fails(monkeypatch) -> None:
-    """Insights should still return a general summary if Ollama fails."""
+    """Insights should still return a general summary if OpenAI fails."""
 
-    def fake_call_ollama(_prompt: str, model_name: str) -> str:
+    def fake_call_openai(_prompt: str, model_name: str) -> str:
         raise LabelingError(f"failed for {model_name}")
 
-    monkeypatch.setattr("services.insights._call_ollama_summary", fake_call_ollama)
+    monkeypatch.setattr("services.insights._call_openai_summary", fake_call_openai)
 
     insights = build_insights(
         total_items=30,
@@ -87,7 +87,7 @@ def test_build_insights_falls_back_when_llm_generation_fails(monkeypatch) -> Non
                 "aspect_purity": 0.8,
             },
         ],
-        llm_model="deepseek-r1:8b",
+        llm_model="gpt-5-nano",
     )
 
     assert insights["overall_summary_source"] == "heuristic"

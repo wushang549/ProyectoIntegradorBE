@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-import json
+import logging
 import re
 from typing import Any
-import urllib.error
-import urllib.request
+
+from services.labeling import LabelingError
+from services.openai_text import OpenAITextError, request_openai_text, resolve_openai_text_model
 
 _WARNING_TERMS = {
     "slow",
@@ -24,6 +25,7 @@ _WARNING_TERMS = {
     "delay",
 }
 _THINK_BLOCK_RE = re.compile(r"<think>.*?</think>", re.IGNORECASE | re.DOTALL)
+_LOGGER = logging.getLogger(__name__)
 
 
 def build_insights(
@@ -226,19 +228,15 @@ def _build_overall_summary_with_llm(
     if total_items <= 0 or not clusters or not str(llm_model or "").strip():
         return ""
 
-    try:
-        from services.labeling import LabelingError, normalize_requested_ollama_model
-    except Exception:
-        return ""
-
     prompt = _build_overall_summary_prompt(
         total_items=total_items,
         clusters=clusters,
         quality_warnings=quality_warnings,
     )
     try:
-        raw = _call_ollama_summary(prompt, model_name=normalize_requested_ollama_model(llm_model))
-    except LabelingError:
+        raw = _call_openai_summary(prompt, model_name=resolve_openai_text_model(llm_model))
+    except LabelingError as exc:
+        _LOGGER.warning("OpenAI summary generation failed; using heuristic summary. model=%s error=%s", llm_model, exc)
         return ""
     except Exception:
         return ""
@@ -338,41 +336,19 @@ def _sanitize_summary(value: str) -> str:
     return collapsed
 
 
-def _call_ollama_summary(prompt: str, model_name: str) -> str:
-    """Call Ollama with reasoning disabled for longer-form summaries."""
-
-    payload = {
-        "model": model_name,
-        "prompt": prompt,
-        "stream": False,
-        "think": False,
-        "options": {
-            "temperature": 0,
-            "top_p": 0.9,
-            "seed": 42,
-            "num_predict": 220,
-        },
-    }
-    body = json.dumps(payload).encode("utf-8")
-    request = urllib.request.Request(
-        "http://localhost:11434/api/generate",
-        data=body,
-        headers={"Content-Type": "application/json"},
-        method="POST",
-    )
+def _call_openai_summary(prompt: str, model_name: str) -> str:
+    """Call OpenAI for one longer-form summary."""
 
     try:
-        with urllib.request.urlopen(request, timeout=90) as response:
-            raw = response.read().decode("utf-8")
-    except urllib.error.URLError as exc:
-        from services.labeling import LabelingError
-
-        raise LabelingError("Ollama service is unavailable.") from exc
-
-    parsed = json.loads(raw)
-    result = parsed.get("response", "")
-    if not isinstance(result, str):
-        from services.labeling import LabelingError
-
-        raise LabelingError("Ollama response is invalid.")
-    return result
+        return request_openai_text(
+            prompt,
+            model_name=model_name,
+            instructions=(
+                "You summarize clustered customer feedback for a product analytics interface. "
+                "Return a single plain-text executive summary with no bullets, no heading, and no reasoning trace."
+            ),
+            max_output_tokens=220,
+            timeout_sec=60,
+        )
+    except OpenAITextError as exc:
+        raise LabelingError(str(exc)) from exc

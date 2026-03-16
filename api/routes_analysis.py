@@ -24,12 +24,15 @@ from services.auth import AuthenticatedUser, require_authenticated_user
 from services.hierarchy import enrich_hierarchy_nodes, refine_hierarchy_labels_for_nodes
 from services.insights import build_overall_summary, build_overall_summary_fallback
 from services.pipeline import PipelinePayload, run_analysis_pipeline
+from services.openai_text import default_openai_text_model, resolve_openai_text_model
 from services.supabase_persistence import (
+    delete_analysis as delete_persisted_analysis,
     get_analysis_run,
     hydrate_analysis_locally,
+    is_configured as is_supabase_persistence_configured,
     list_analysis_runs,
+    patch_analysis_run,
     patch_analysis_results,
-    upsert_analysis_run,
 )
 from services.storage import (
     analysis_exists,
@@ -47,19 +50,13 @@ from services.storage import (
     overview_file,
     read_embeddings,
     read_json_file,
+    remove_index_entry,
     umap_file,
     upsert_index_entry,
     write_json_file,
 )
 from services.summaries import build_cluster_summaries
-from services.labeling import (
-    LabelingError,
-    apply_labels,
-    default_ollama_model,
-    list_ollama_models,
-    normalize_requested_ollama_model,
-    validate_requested_ollama_model,
-)
+from services.labeling import apply_labels
 from utils.text_utils import build_preview
 
 router = APIRouter(prefix="/analysis", tags=["analysis"])
@@ -116,7 +113,7 @@ async def create_analysis(
         owner_id=current_user.user_id,
         input_type=source_type,
         source_name=source_name,
-        llm_model=parsed_options.llm_model,
+        llm_model=default_openai_text_model(),
         created_at=created_at.isoformat(),
     )
 
@@ -185,16 +182,16 @@ def _sync_analysis_run_metadata(
         }
     )
     try:
-        upsert_analysis_run(
-            {
-                "id": analysis_id,
-                "owner_id": owner_id,
+        patch_analysis_run(
+            owner_id=owner_id,
+            analysis_id=analysis_id,
+            fields={
                 "input_type": input_type,
                 "source_name": source_name,
                 "llm_model": llm_model,
                 "created_at": created_at,
                 "updated_at": created_at,
-            }
+            },
         )
     except Exception:
         return
@@ -204,15 +201,23 @@ def _load_recent_entries(*, owner_id: str, limit: int) -> list[dict[str, Any]]:
     """Load recent analyses, preferring Supabase when available."""
 
     merged: dict[str, dict[str, Any]] = {}
+    remote_loaded = False
 
-    try:
-        for row in list_analysis_runs(owner_id=owner_id, limit=limit):
-            entry = _analysis_run_row_to_entry(row)
-            analysis_id = str(entry.get("analysis_id") or "").strip()
-            if analysis_id:
-                merged[analysis_id] = entry
-    except Exception:
-        pass
+    if is_supabase_persistence_configured():
+        try:
+            for row in list_analysis_runs(owner_id=owner_id, limit=limit):
+                entry = _analysis_run_row_to_entry(row)
+                analysis_id = str(entry.get("analysis_id") or "").strip()
+                if analysis_id:
+                    merged[analysis_id] = entry
+            remote_loaded = True
+        except Exception:
+            remote_loaded = False
+
+    if remote_loaded:
+        items = list(merged.values())
+        items.sort(key=lambda entry: str(entry.get("created_at") or ""), reverse=True)
+        return items[: max(1, limit)]
 
     for entry in list_recent(limit=limit, owner_id=owner_id):
         if not isinstance(entry, dict):
@@ -353,34 +358,6 @@ def _raise_not_ready_for_entry(entry: dict[str, Any], *, artifact_name: str) -> 
     raise HTTPException(status_code=409, detail=f"Artifact '{artifact_name}' is not ready yet.")
 
 
-@router.get("/models")
-def analysis_models() -> dict[str, Any]:
-    """Return installed Ollama models for frontend selectors."""
-
-    default_model = default_ollama_model()
-    models = []
-    for entry in list_ollama_models():
-        if not isinstance(entry, dict):
-            continue
-        model_name = str(entry.get("name") or "").strip()
-        if not model_name:
-            continue
-        models.append(
-            {
-                "name": model_name,
-                "id": str(entry.get("id") or "").strip(),
-                "size": str(entry.get("size") or "").strip(),
-                "modified": str(entry.get("modified") or "").strip(),
-                "is_default": model_name == default_model,
-            }
-        )
-
-    return {
-        "default_model": default_model,
-        "models": models,
-    }
-
-
 @router.get("/recent")
 def recent_analyses(
     limit: int = Query(default=10, ge=1, le=100),
@@ -401,6 +378,29 @@ def recent_analyses(
         items.append(normalized)
 
     return {"items": items}
+
+
+@router.delete("/{analysis_id}")
+def delete_analysis(
+    analysis_id: str,
+    current_user: AuthenticatedUser = Depends(require_authenticated_user),
+) -> dict[str, Any]:
+    """Delete one analysis owned by the current user."""
+
+    _require_analysis_access(analysis_id, current_user.user_id)
+
+    job = worker.get_job(analysis_id)
+    if job is not None and job.status in {"queued", "processing"}:
+        raise HTTPException(status_code=409, detail="Cannot delete an analysis while it is still running.")
+
+    try:
+        delete_persisted_analysis(owner_id=current_user.user_id, analysis_id=analysis_id)
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+    remove_index_entry(analysis_id)
+    delete_analysis_dir(analysis_id)
+    return {"deleted": True, "analysis_id": analysis_id}
 
 
 @router.get("/{analysis_id}/status")
@@ -489,7 +489,7 @@ def analysis_overview(
                 "llm_model": _load_analysis_llm_model(analysis_id, overview_data=overview_data),
             },
             "timing": timing,
-        },
+        }
     finally:
         if hydrated:
             delete_analysis_dir(analysis_id)
@@ -643,7 +643,9 @@ def analysis_insights(
 
         theme_summary = [
             {
+                "cluster_id": int(theme["cluster_id"]),
                 "label": theme["label"],
+                "label_source": str(theme.get("label_source") or "unknown"),
                 "size": int(theme["size"]),
                 "top_terms": theme.get("top_terms", [])[:8],
                 "examples": [rep.get("preview", "") for rep in theme.get("representatives", [])[:2]],
@@ -798,9 +800,6 @@ def _parse_options(raw_options: str | None) -> AnalysisOptions:
 
     try:
         options = AnalysisOptions.model_validate(options_data)
-        options.llm_model = validate_requested_ollama_model(options.llm_model)
-    except LabelingError as exc:
-        raise HTTPException(status_code=422, detail=str(exc)) from exc
     except Exception as exc:
         raise HTTPException(status_code=422, detail=f"Invalid options: {exc}") from exc
 
@@ -1147,6 +1146,7 @@ def _build_cluster_payload(analysis_id: str, requested_k: int | None) -> dict[st
             {
                 "cluster_id": display_cluster_id,
                 "label": str(cluster.get("label") or f"Cluster {display_cluster_id}"),
+                "label_source": str(cluster.get("label_source") or "unknown"),
                 "size": int(cluster.get("size", 0)),
                 "top_terms": [str(term) for term in cluster.get("top_terms", [])],
                 "representatives": representatives,
@@ -1217,7 +1217,7 @@ def _load_analysis_llm_model(
     if isinstance(cluster_data, dict):
         value = cluster_data.get("llm_model")
         if isinstance(value, str) and value.strip():
-            return normalize_requested_ollama_model(value)
+            return resolve_openai_text_model(value)
 
     if overview_data is None:
         overview_path = overview_file(analysis_id)
@@ -1229,9 +1229,9 @@ def _load_analysis_llm_model(
     if isinstance(overview_data, dict):
         value = overview_data.get("llm_model")
         if isinstance(value, str) and value.strip():
-            return normalize_requested_ollama_model(value)
+            return resolve_openai_text_model(value)
 
-    return default_ollama_model()
+    return default_openai_text_model()
 
 
 def _extract_top_aspects(analysis_data: dict[str, Any]) -> list[dict[str, Any]]:

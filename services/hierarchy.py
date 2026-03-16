@@ -190,9 +190,10 @@ def refine_hierarchy_labels_for_nodes(
         return {}
 
     # Local import avoids coupling for call sites that do not need LLM.
-    from services.labeling import generate_label_from_context, normalize_requested_ollama_model
+    from services.labeling import generate_label_from_context
+    from services.openai_text import resolve_openai_text_model
 
-    resolved_model_name = normalize_requested_ollama_model(model_name)
+    resolved_model_name = resolve_openai_text_model(model_name)
 
     output: dict[str, str] = {}
     for node_id in selected:

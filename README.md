@@ -6,20 +6,14 @@ FastAPI backend that runs a local NLP analysis pipeline for user comments (resta
 - Hierarchical themes
 - Flat clusters (`k_clusters`)
 - 2D map projection (UMAP)
-- Cluster labels (Ollama local)
+- Cluster labels (OpenAI `gpt-5-nano` by default)
 - High-level insights
 
 ## Requirements
 
 - Python 3.11+
-- Local Ollama server at `http://localhost:11434`
-- Model available in Ollama: `gemma3:1b`
-
-Install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
+- Supabase project configured with the analysis schema
+- OpenAI API key for AI labels and summaries
 
 Run server:
 
@@ -45,6 +39,8 @@ Setup:
 SUPABASE_URL=https://your-project-ref.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 SUPABASE_STORAGE_BUCKET=analysis-artifacts
+OPENAI_API_KEY=your_openai_api_key
+OPENAI_TEXT_MODEL=gpt-5-nano
 ```
 
 4. Restart FastAPI.
@@ -60,6 +56,7 @@ Current behavior:
 - Supabase is the persistent source of truth
 - Local files are temporary and are cleaned after sync or failure
 - If an endpoint needs a local artifact later, the backend hydrates it from Supabase on demand
+- Labels and executive summaries use OpenAI; if the API is unavailable, deterministic fallbacks still keep the pipeline usable
 - Existing legacy local analyses are not migrated automatically
 
 ## Main Endpoints

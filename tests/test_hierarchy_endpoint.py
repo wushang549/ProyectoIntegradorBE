@@ -52,7 +52,7 @@ def test_hierarchy_handler_returns_frontend_contract(monkeypatch) -> None:
         "_require_analysis_access",
         lambda _analysis_id, _owner_id: {"analysis_id": "test-analysis", "owner_id": "user-1"},
     )
-    monkeypatch.setattr(routes_analysis, "_require_ready", lambda _analysis_id, _artifact_name: None)
+    monkeypatch.setattr(routes_analysis, "_require_ready", lambda _analysis_id, _artifact_name, _owner_id: False)
     monkeypatch.setattr(routes_analysis, "hierarchy_file", lambda _analysis_id: Path("fake_hierarchy.json"))
     monkeypatch.setattr(
         routes_analysis,

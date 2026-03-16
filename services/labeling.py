@@ -1,31 +1,15 @@
-"""Cluster labeling with local Ollama and deterministic fallback."""
+"""Cluster labeling with OpenAI-backed naming and deterministic fallback."""
 
 from __future__ import annotations
 
-import json
-import os
+import logging
 import re
-import shutil
-import subprocess
-import urllib.error
-import urllib.request
 from collections import Counter
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from services.openai_text import OpenAITextError, request_openai_text, resolve_openai_text_model
 from services.storage import read_json_file, write_json_file
-
-OLLAMA_URL = "http://localhost:11434/api/generate"
-OLLAMA_TAGS_URL = "http://localhost:11434/api/tags"
-DEFAULT_OLLAMA_MODEL = "gemma3:1b"
-_DEFAULT_MODEL_SENTINELS = {"", "auto", "default"}
-_OLLAMA_BIN_ENV = "OLLAMA_BIN"
-_OLLAMA_WINDOWS_CANDIDATES = (
-    r"C:\Users\%USERNAME%\AppData\Local\Programs\Ollama\ollama.exe",
-    r"C:\Program Files\Ollama\ollama.exe",
-    r"C:\Program Files (x86)\Ollama\ollama.exe",
-)
 
 _TOKEN_RE = re.compile(r"[a-zA-Z][a-zA-Z\-]{1,}")
 _GENERIC_TOKENS = {"food", "service", "restaurant", "place", "staff", "good", "great", "nice"}
@@ -225,226 +209,11 @@ _ASPECT_DISPLAY = {
     "general": "General",
 }
 
+_LOGGER = logging.getLogger(__name__)
+
 
 class LabelingError(RuntimeError):
     """Raised when label generation cannot complete."""
-
-
-def default_ollama_model() -> str:
-    """Return the backend default Ollama model."""
-
-    return DEFAULT_OLLAMA_MODEL
-
-
-def normalize_requested_ollama_model(model_name: str | None) -> str:
-    """Normalize user-provided model input to one concrete model name."""
-
-    candidate = str(model_name or "").strip()
-    if candidate.lower() in _DEFAULT_MODEL_SENTINELS:
-        return DEFAULT_OLLAMA_MODEL
-    return candidate or DEFAULT_OLLAMA_MODEL
-
-
-def list_ollama_models() -> list[dict[str, str]]:
-    """List locally installed Ollama models through the Ollama API or CLI."""
-
-    models = _list_ollama_models_via_api()
-    if models:
-        return models
-    return _list_ollama_models_via_cli()
-
-
-def _list_ollama_models_via_api() -> list[dict[str, str]]:
-    """List installed models through the local Ollama HTTP API."""
-
-    try:
-        with urllib.request.urlopen(OLLAMA_TAGS_URL, timeout=10) as response:
-            raw = response.read().decode("utf-8")
-        payload = json.loads(raw)
-    except (urllib.error.URLError, TimeoutError, UnicodeDecodeError, json.JSONDecodeError):
-        return []
-
-    raw_models = payload.get("models")
-    if not isinstance(raw_models, list):
-        return []
-
-    models: list[dict[str, str]] = []
-    for entry in raw_models:
-        if not isinstance(entry, dict):
-            continue
-
-        model_name = str(entry.get("name") or entry.get("model") or "").strip()
-        if not model_name:
-            continue
-
-        normalized: dict[str, str] = {"name": model_name}
-        digest = str(entry.get("digest") or "").strip()
-        if digest:
-            normalized["id"] = digest[:12]
-
-        size = _format_ollama_size(entry.get("size"))
-        if size:
-            normalized["size"] = size
-
-        modified = _format_ollama_modified(entry.get("modified_at"))
-        if modified:
-            normalized["modified"] = modified
-
-        models.append(normalized)
-
-    return models
-
-
-def _list_ollama_models_via_cli() -> list[dict[str, str]]:
-    """List installed models through the Ollama CLI."""
-
-    ollama_bin = _resolve_ollama_cli_command()
-    if not ollama_bin:
-        return []
-
-    try:
-        result = subprocess.run(
-            [ollama_bin, "list"],
-            capture_output=True,
-            text=True,
-            check=True,
-            timeout=10,
-        )
-    except (OSError, subprocess.SubprocessError):
-        return []
-
-    lines = [line.rstrip() for line in result.stdout.splitlines() if line.strip()]
-    if len(lines) <= 1:
-        return []
-
-    models: list[dict[str, str]] = []
-    for line in lines[1:]:
-        parts = [part.strip() for part in re.split(r"\s{2,}", line.strip()) if part.strip()]
-        if not parts:
-            continue
-
-        entry = {"name": parts[0]}
-        if len(parts) >= 2:
-            entry["id"] = parts[1]
-        if len(parts) >= 3:
-            entry["size"] = parts[2]
-        if len(parts) >= 4:
-            entry["modified"] = parts[3]
-        models.append(entry)
-
-    return models
-
-
-def _resolve_ollama_cli_command() -> str | None:
-    """Resolve an Ollama executable path without relying only on PATH."""
-
-    override = str(os.environ.get(_OLLAMA_BIN_ENV) or "").strip()
-    if override:
-        return override
-
-    discovered = shutil.which("ollama")
-    if discovered:
-        return discovered
-
-    for candidate in _OLLAMA_WINDOWS_CANDIDATES:
-        expanded = os.path.expandvars(candidate)
-        if Path(expanded).exists():
-            return expanded
-    return None
-
-
-def _format_ollama_size(value: Any) -> str:
-    """Format a byte count into a compact human-readable size string."""
-
-    try:
-        size = float(value)
-    except (TypeError, ValueError):
-        return ""
-
-    units = ("B", "KB", "MB", "GB", "TB")
-    for unit in units:
-        if size < 1000 or unit == units[-1]:
-            if unit == "B":
-                return f"{int(size)} {unit}"
-
-            rounded = round(size, 1)
-            if rounded >= 100 or float(rounded).is_integer():
-                return f"{int(rounded)} {unit}"
-            return f"{rounded:.1f} {unit}"
-        size /= 1000
-
-    return ""
-
-
-def _format_ollama_modified(value: Any) -> str:
-    """Format an Ollama timestamp as a short relative string."""
-
-    raw = str(value or "").strip()
-    if not raw:
-        return ""
-
-    try:
-        modified_at = datetime.fromisoformat(raw.replace("Z", "+00:00"))
-    except ValueError:
-        return raw
-
-    if modified_at.tzinfo is None:
-        modified_at = modified_at.replace(tzinfo=timezone.utc)
-
-    now = datetime.now(modified_at.tzinfo)
-    delta_seconds = max(0, int((now - modified_at).total_seconds()))
-    return _humanize_elapsed(delta_seconds)
-
-
-def _humanize_elapsed(delta_seconds: int) -> str:
-    """Render elapsed seconds into the short strings used by the UI."""
-
-    if delta_seconds < 60:
-        value = delta_seconds
-        unit = "second"
-    elif delta_seconds < 3600:
-        value = delta_seconds // 60
-        unit = "minute"
-    elif delta_seconds < 86400:
-        value = delta_seconds // 3600
-        unit = "hour"
-    elif delta_seconds < 604800:
-        value = delta_seconds // 86400
-        unit = "day"
-    elif delta_seconds < 2629800:
-        value = delta_seconds // 604800
-        unit = "week"
-    elif delta_seconds < 31557600:
-        value = delta_seconds // 2629800
-        unit = "month"
-    else:
-        value = delta_seconds // 31557600
-        unit = "year"
-
-    suffix = "" if value == 1 else "s"
-    return f"{value} {unit}{suffix} ago"
-
-
-def validate_requested_ollama_model(model_name: str | None) -> str:
-    """Validate an explicit model selection against installed Ollama models."""
-
-    raw = str(model_name or "").strip()
-    normalized = normalize_requested_ollama_model(model_name)
-    if raw.lower() in _DEFAULT_MODEL_SENTINELS:
-        return normalized
-
-    installed = list_ollama_models()
-    installed_names = {
-        str(entry.get("name")).strip()
-        for entry in installed
-        if isinstance(entry, dict) and str(entry.get("name", "")).strip()
-    }
-    if installed_names and normalized not in installed_names:
-        options = ", ".join(sorted(installed_names))
-        raise LabelingError(f"Unknown Ollama model '{normalized}'. Installed models: {options}.")
-
-    return normalized
-
 
 def apply_labels(
     cluster_summaries: list[dict[str, Any]],
@@ -454,7 +223,7 @@ def apply_labels(
 ) -> list[dict[str, Any]]:
     """Assign labels to clusters with cache + fallback strategy."""
 
-    resolved_model_name = normalize_requested_ollama_model(model_name)
+    resolved_model_name = resolve_openai_text_model(model_name)
     cache = _load_cache(cache_path)
 
     for cluster in cluster_summaries:
@@ -466,13 +235,22 @@ def apply_labels(
         )
 
         cached = cache.get(cache_key)
+        if isinstance(cached, dict):
+            cached_label = str(cached.get("label") or "").strip()
+            cached_source = str(cached.get("source") or "").strip() or "unknown"
+            if cached_label:
+                cluster["label"] = cached_label
+                cluster["label_source"] = cached_source
+                continue
         if isinstance(cached, str) and cached.strip():
             cluster["label"] = cached
+            cluster["label_source"] = "unknown"
             continue
 
-        label = _generate_label(cluster, model_name=resolved_model_name)
-        cache[cache_key] = label
+        label, label_source = _generate_label(cluster, model_name=resolved_model_name)
+        cache[cache_key] = {"label": label, "source": label_source}
         cluster["label"] = label
+        cluster["label_source"] = label_source
 
     _disambiguate_duplicate_labels(cluster_summaries)
     _save_cache(cache_path, cache)
@@ -490,11 +268,11 @@ def generate_label_from_context(
     normalized_terms = [str(term) for term in top_terms if str(term).strip()]
     normalized_reps = [str(rep) for rep in representatives if str(rep).strip()]
     cluster_size = max(3, len(normalized_reps))
-    resolved_model_name = normalize_requested_ollama_model(model_name)
+    resolved_model_name = resolve_openai_text_model(model_name)
 
     try:
         prompt = _build_prompt(top_terms=normalized_terms, representatives=normalized_reps)
-        result = _call_ollama(prompt, model_name=resolved_model_name)
+        result = _call_openai_label(prompt, model_name=resolved_model_name)
         cleaned = _sanitize_label(result)
         if (
             cleaned
@@ -502,8 +280,8 @@ def generate_label_from_context(
             and not _is_low_information_label(cleaned, cluster_size=cluster_size)
         ):
             return cleaned
-    except Exception:
-        pass
+    except Exception as exc:
+        _LOGGER.warning("OpenAI node label generation failed; using fallback. model=%s error=%s", resolved_model_name, exc)
 
     heuristic = _heuristic_label(top_terms=normalized_terms, representatives=normalized_reps)
     if heuristic:
@@ -515,7 +293,7 @@ def generate_label_from_context(
     return fallback
 
 
-def _generate_label(cluster: dict[str, Any], model_name: str | None = None) -> str:
+def _generate_label(cluster: dict[str, Any], model_name: str | None = None) -> tuple[str, str]:
     """Generate one short label for a cluster."""
 
     top_terms = [str(term) for term in cluster.get("top_terms", [])]
@@ -524,15 +302,17 @@ def _generate_label(cluster: dict[str, Any], model_name: str | None = None) -> s
     signature_label = _theme_signature_label(cluster)
     contextual_label = _contextual_label(top_terms=top_terms, representatives=representatives, cluster=cluster)
     heuristic_label = _heuristic_label(top_terms=top_terms, representatives=representatives, cluster=cluster)
-    resolved_model_name = normalize_requested_ollama_model(model_name)
+    resolved_model_name = resolve_openai_text_model(model_name)
 
     # Tiny clusters are best labeled deterministically from terms/examples.
     if cluster_size <= 2:
-        return contextual_label or _fallback_label(top_terms=top_terms, representatives=representatives)
+        if contextual_label:
+            return contextual_label, "contextual"
+        return _fallback_label(top_terms=top_terms, representatives=representatives), "fallback"
 
     prompt = _build_prompt(top_terms=top_terms, representatives=representatives)
     try:
-        result = _call_ollama(prompt, model_name=resolved_model_name)
+        result = _call_openai_label(prompt, model_name=resolved_model_name)
         cleaned = _sanitize_label(result)
         if (
             cleaned
@@ -540,23 +320,25 @@ def _generate_label(cluster: dict[str, Any], model_name: str | None = None) -> s
             and not _is_low_information_label(cleaned, cluster_size=cluster_size)
         ):
             if signature_label and not _label_matches_signature(cleaned, cluster):
-                return contextual_label or signature_label
-            return cleaned
-    except Exception:
-        pass
+                if contextual_label:
+                    return contextual_label, "contextual"
+                return signature_label, "signature"
+            return cleaned, "openai"
+    except Exception as exc:
+        _LOGGER.warning("OpenAI cluster labeling failed; using fallback. model=%s error=%s", resolved_model_name, exc)
 
     if contextual_label:
-        return contextual_label
+        return contextual_label, "contextual"
     if signature_label:
-        return signature_label
+        return signature_label, "signature"
     if heuristic_label:
-        return heuristic_label
+        return heuristic_label, "heuristic"
 
-    return _fallback_label(top_terms=top_terms, representatives=representatives)
+    return _fallback_label(top_terms=top_terms, representatives=representatives), "fallback"
 
 
 def _build_prompt(top_terms: list[str], representatives: list[str]) -> str:
-    """Create the Ollama prompt with cluster context."""
+    """Create the prompt with cluster context."""
 
     reps = "\n".join(f"- {entry}" for entry in representatives[:5])
     return (
@@ -569,38 +351,22 @@ def _build_prompt(top_terms: list[str], representatives: list[str]) -> str:
     )
 
 
-def _call_ollama(prompt: str, model_name: str | None = None) -> str:
-    """Call local Ollama /api/generate endpoint."""
-
-    payload = {
-        "model": normalize_requested_ollama_model(model_name),
-        "prompt": prompt,
-        "stream": False,
-        "options": {
-            "temperature": 0,
-            "top_p": 0.9,
-            "seed": 42,
-        },
-    }
-    body = json.dumps(payload).encode("utf-8")
-    request = urllib.request.Request(
-        OLLAMA_URL,
-        data=body,
-        headers={"Content-Type": "application/json"},
-        method="POST",
-    )
+def _call_openai_label(prompt: str, model_name: str | None = None) -> str:
+    """Call OpenAI for one short cluster label."""
 
     try:
-        with urllib.request.urlopen(request, timeout=20) as response:
-            raw = response.read().decode("utf-8")
-    except urllib.error.URLError as exc:
-        raise LabelingError("Ollama service is unavailable.") from exc
-
-    parsed = json.loads(raw)
-    result = parsed.get("response", "")
-    if not isinstance(result, str):
-        raise LabelingError("Ollama response is invalid.")
-    return result
+        return request_openai_text(
+            prompt,
+            model_name=model_name,
+            instructions=(
+                "You generate short labels for clustered feedback. "
+                "Return exactly one label of 1 to 3 words, with no punctuation and no explanation."
+            ),
+            max_output_tokens=64,
+            timeout_sec=30,
+        )
+    except OpenAITextError as exc:
+        raise LabelingError(str(exc)) from exc
 
 
 def _sanitize_label(label: str) -> str:
@@ -723,7 +489,22 @@ def _label_matches_signature(label: str, cluster: dict[str, Any]) -> bool:
 
     label_tokens = {token.lower() for token in _TOKEN_RE.findall(label.lower())}
     signature_tokens = {token.lower() for token in _TOKEN_RE.findall(signature.lower())}
-    return bool(label_tokens.intersection(signature_tokens))
+    if label_tokens.intersection(signature_tokens):
+        return True
+
+    aspect = str(cluster.get("dominant_aspect", "")).strip().lower()
+    if not aspect or aspect == "general":
+        return False
+
+    aspect_name = _ASPECT_DISPLAY.get(aspect, "")
+    aspect_keywords = {
+        token.lower()
+        for token in _ASPECT_KEYWORDS.get(aspect_name, set())
+        if str(token).strip()
+    }
+    if aspect_name and aspect_name.lower() in label_tokens:
+        return True
+    return bool(label_tokens.intersection(aspect_keywords))
 
 
 def _fallback_label(top_terms: list[str], representatives: list[str]) -> str:
@@ -944,18 +725,28 @@ def _build_disambiguated_label(base_label: str, qualifier: str, used: set[str]) 
         suffix += 1
 
 
-def _load_cache(cache_path: Path) -> dict[str, str]:
+def _load_cache(cache_path: Path) -> dict[str, Any]:
     """Load cluster label cache."""
 
     if not cache_path.exists():
         return {}
     data = read_json_file(cache_path)
     if isinstance(data, dict):
-        return {str(key): str(value) for key, value in data.items()}
+        normalized: dict[str, Any] = {}
+        for key, value in data.items():
+            cache_key = str(key)
+            if isinstance(value, dict):
+                normalized[cache_key] = {
+                    "label": str(value.get("label") or "").strip(),
+                    "source": str(value.get("source") or "").strip() or "unknown",
+                }
+            else:
+                normalized[cache_key] = str(value)
+        return normalized
     return {}
 
 
-def _save_cache(cache_path: Path, cache: dict[str, str]) -> None:
+def _save_cache(cache_path: Path, cache: dict[str, Any]) -> None:
     """Persist cluster label cache to disk."""
 
     write_json_file(cache_path, cache)
@@ -964,5 +755,5 @@ def _save_cache(cache_path: Path, cache: dict[str, str]) -> None:
 def _cluster_cache_key(model_name: str, k_clusters: int, cluster_id: int) -> str:
     """Build one cache key scoped by model and partition size."""
 
-    normalized_model = normalize_requested_ollama_model(model_name).lower()
+    normalized_model = resolve_openai_text_model(model_name).lower()
     return f"model::{normalized_model}::k{k_clusters}_c{cluster_id}"

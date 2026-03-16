@@ -14,7 +14,6 @@ class AnalysisOptions(BaseModel):
     model_config = ConfigDict(extra="ignore")
 
     k_clusters: int | None = Field(default=None, ge=2, le=100)
-    llm_model: str | None = None
     granulate: bool = True
     granulate_return_items: bool = True
 

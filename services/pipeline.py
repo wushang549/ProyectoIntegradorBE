@@ -20,7 +20,8 @@ from services.granulation import granulate_records
 from services.hierarchy import build_hierarchy, enrich_hierarchy_nodes
 from services.ingestion import IngestionPayload, ingest
 from services.insights import build_insight_heuristics, build_overall_summary
-from services.labeling import apply_labels, normalize_requested_ollama_model
+from services.labeling import apply_labels
+from services.openai_text import default_openai_text_model
 from services.storage import (
     clusters_file,
     delete_analysis_dir,
@@ -63,7 +64,7 @@ def run_analysis_pipeline(
 
     ensure_analysis_dir(analysis_id)
     options.granulate_return_items = True
-    selected_llm_model = normalize_requested_ollama_model(options.llm_model)
+    selected_llm_model = default_openai_text_model()
 
     progress("ingestion", 10, "Ingestion", "Reading input rows.", None, None)
     records = ingest(
@@ -321,9 +322,9 @@ def _persist_to_supabase(
 
     from services.supabase_persistence import (
         is_configured,
+        patch_analysis_run,
         upload_artifact,
         upsert_analysis_results,
-        upsert_analysis_run,
     )
 
     if not is_configured():
@@ -353,10 +354,10 @@ def _persist_to_supabase(
             "updated_at": now_utc_iso(),
         }
     )
-    upsert_analysis_run(
-        {
-            "id": analysis_id,
-            "owner_id": owner_id,
+    patch_analysis_run(
+        owner_id=owner_id,
+        analysis_id=analysis_id,
+        fields={
             "llm_model": llm_model,
             "embedding_method": embedding_method,
             "total_records": total_records,
@@ -364,7 +365,7 @@ def _persist_to_supabase(
             "embeddings_storage_path": embeddings_storage_path,
             "artifacts_synced": True,
             "updated_at": now_utc_iso(),
-        }
+        },
     )
     delete_analysis_dir(analysis_id)
 
