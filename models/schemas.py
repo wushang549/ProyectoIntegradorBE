@@ -27,6 +27,7 @@ class TabLinks(BaseModel):
     granulate: str
     hierarchy: str
     insights: str
+    chat: str
     status: str
 
 
@@ -117,3 +118,41 @@ class HierarchyResponse(BaseModel):
     root_id: str
     nodes: dict[str, HierarchyNodeResponse]
     leaves: list[HierarchyLeafResponse]
+
+
+class AnalysisChatMessage(BaseModel):
+    """One chat message in the analysis chat session."""
+
+    role: Literal["user", "assistant"]
+    content: str = Field(min_length=1)
+
+
+class AnalysisChatSelection(BaseModel):
+    """Optional UI selection context sent with chat questions."""
+
+    selected_cluster_id: int | None = None
+    selected_point_id: str | None = None
+    selected_node_id: str | None = None
+
+
+class AnalysisChatRequest(BaseModel):
+    """POST payload for grounded chat over one analysis."""
+
+    messages: list[AnalysisChatMessage] = Field(default_factory=list)
+    selection: AnalysisChatSelection | None = None
+
+
+class AnalysisChatGrounding(BaseModel):
+    """Grounding metadata returned with each chat answer."""
+
+    analysis_id: str
+    sections: list[str] = Field(default_factory=list)
+    selection_applied: bool = False
+
+
+class AnalysisChatResponse(BaseModel):
+    """Response payload for grounded analysis chat."""
+
+    answer: str
+    model: str
+    grounding: AnalysisChatGrounding

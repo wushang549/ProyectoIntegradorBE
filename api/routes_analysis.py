@@ -12,6 +12,8 @@ from fastapi import APIRouter, Body, Depends, File, Form, HTTPException, Query, 
 
 from jobs import worker
 from models.schemas import (
+    AnalysisChatRequest,
+    AnalysisChatResponse,
     AnalysisOptions,
     CreateAnalysisResponse,
     HierarchyLeafResponse,
@@ -19,6 +21,7 @@ from models.schemas import (
     HierarchyResponse,
     TabLinks,
 )
+from services.analysis_chat import generate_analysis_chat_answer
 from services.clustering import cut_clusters, normalize_k_clusters
 from services.auth import AuthenticatedUser, require_authenticated_user
 from services.hierarchy import enrich_hierarchy_nodes, refine_hierarchy_labels_for_nodes
@@ -149,6 +152,7 @@ async def create_analysis(
         granulate=f"{base}/granulate",
         hierarchy=f"{base}/hierarchy",
         insights=f"{base}/insights",
+        chat=f"{base}/chat",
         status=f"{base}/status",
     )
 
@@ -784,6 +788,58 @@ def analysis_map(
             delete_analysis_dir(analysis_id)
 
 
+@router.post("/{analysis_id}/chat", response_model=AnalysisChatResponse)
+def analysis_chat(
+    analysis_id: str,
+    payload: AnalysisChatRequest,
+    current_user: AuthenticatedUser = Depends(require_authenticated_user),
+) -> dict[str, Any]:
+    """Return one grounded chat response for the current analysis."""
+
+    _require_analysis_access(analysis_id, current_user.user_id)
+    hydrated = False
+    try:
+        for artifact_name in ("overview.json", "insights.json", "clusters.json", "hierarchy.json", "umap.json", "items.json"):
+            hydrated |= _require_ready(analysis_id, artifact_name, current_user.user_id)
+
+        overview_payload = _build_chat_overview_payload(analysis_id)
+        insights_payload = _build_chat_insights_payload(analysis_id)
+        cluster_payload = _build_cluster_payload(analysis_id=analysis_id, requested_k=None)
+        map_payload = _build_map_payload_from_artifacts(analysis_id=analysis_id, cluster_payload=cluster_payload)
+        items_payload = _extract_items(read_json_file(items_file(analysis_id)))
+
+        hierarchy_data = read_json_file(hierarchy_file(analysis_id))
+        if not isinstance(hierarchy_data, dict):
+            raise HTTPException(status_code=500, detail="Invalid hierarchy artifact format: expected object.")
+        hierarchy_data = _ensure_hierarchy_enriched(
+            analysis_id=analysis_id,
+            owner_id=current_user.user_id,
+            hierarchy_data=hierarchy_data,
+        )
+        hierarchy_payload = _build_hierarchy_response(analysis_id=analysis_id, hierarchy_data=hierarchy_data)
+
+        try:
+            return generate_analysis_chat_answer(
+                analysis_id=analysis_id,
+                messages=[message.model_dump() for message in payload.messages],
+                items_payload=items_payload,
+                overview_payload=overview_payload,
+                insights_payload=insights_payload,
+                clusters_payload=cluster_payload,
+                map_payload=map_payload,
+                hierarchy_payload=hierarchy_payload.model_dump(),
+                selection=payload.selection.model_dump() if payload.selection is not None else None,
+                model_name=_load_analysis_llm_model(analysis_id, overview_data=overview_payload),
+            )
+        except ValueError as exc:
+            raise HTTPException(status_code=422, detail=str(exc)) from exc
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc)) from exc
+    finally:
+        if hydrated:
+            delete_analysis_dir(analysis_id)
+
+
 def _parse_options(raw_options: str | None) -> AnalysisOptions:
     """Parse JSON options field from multipart form request."""
 
@@ -805,6 +861,136 @@ def _parse_options(raw_options: str | None) -> AnalysisOptions:
 
     options.granulate_return_items = True
     return options
+
+
+def _build_chat_overview_payload(analysis_id: str) -> dict[str, Any]:
+    """Build normalized overview payload for grounded analysis chat."""
+
+    overview_data = read_json_file(overview_file(analysis_id))
+    items_payload = read_json_file(items_file(analysis_id))
+    cluster_payload = _build_cluster_payload(analysis_id=analysis_id, requested_k=None)
+    items = _extract_items(items_payload)
+    top_aspects = _extract_top_aspects(analysis_data=overview_data if isinstance(overview_data, dict) else {})
+
+    return {
+        "counts": {
+            "items": len(items),
+            "clusters": len(cluster_payload["clusters"]),
+            "aspects": len(top_aspects),
+        },
+        "top_clusters": sorted(cluster_payload["clusters"], key=lambda cluster: int(cluster["size"]), reverse=True)[:5],
+        "top_aspects": top_aspects,
+        "runtime": {
+            "llm_model": _load_analysis_llm_model(
+                analysis_id,
+                overview_data=overview_data if isinstance(overview_data, dict) else {},
+            ),
+        },
+    }
+
+
+def _build_chat_insights_payload(analysis_id: str) -> dict[str, Any]:
+    """Build normalized insights payload for grounded analysis chat."""
+
+    data = read_json_file(insights_file(analysis_id))
+    if not isinstance(data, dict):
+        raise HTTPException(status_code=500, detail="Invalid insights artifact format.")
+
+    cluster_payload = _build_cluster_payload(analysis_id=analysis_id, requested_k=None)
+    top_themes = sorted(cluster_payload["clusters"], key=lambda cluster: int(cluster["size"]), reverse=True)[:5]
+
+    theme_summary = [
+        {
+            "cluster_id": int(theme["cluster_id"]),
+            "label": theme["label"],
+            "label_source": str(theme.get("label_source") or "unknown"),
+            "size": int(theme["size"]),
+            "top_terms": theme.get("top_terms", [])[:8],
+            "examples": [rep.get("preview", "") for rep in theme.get("representatives", [])[:2]],
+        }
+        for theme in top_themes
+    ]
+
+    quality_warnings = data.get("quality_warnings")
+    if not isinstance(quality_warnings, list):
+        quality_warnings = []
+
+    overall_summary = str(data.get("overall_summary") or "").strip()
+    overall_summary_source = str(data.get("overall_summary_source") or "").strip() or "heuristic"
+    if not overall_summary or overall_summary.endswith("..."):
+        overall_summary, overall_summary_source = build_overall_summary(
+            total_items=len(cluster_payload["item_cluster_map"]),
+            clusters=cluster_payload["clusters"],
+            quality_warnings=quality_warnings,
+            llm_model=_load_analysis_llm_model(analysis_id),
+        )
+        if not overall_summary:
+            overall_summary = build_overall_summary_fallback(
+                total_items=len(cluster_payload["item_cluster_map"]),
+                clusters=cluster_payload["clusters"],
+                quality_warnings=quality_warnings,
+            )
+            overall_summary_source = "heuristic"
+        data["overall_summary"] = overall_summary
+        data["overall_summary_source"] = overall_summary_source
+
+    key_findings = data.get("key_findings")
+    if not isinstance(key_findings, list):
+        key_findings = []
+
+    return {
+        "key_findings": key_findings,
+        "theme_summary": theme_summary,
+        "quality_warnings": quality_warnings,
+        "overall_summary": overall_summary,
+        "overall_summary_source": overall_summary_source,
+    }
+
+
+def _build_map_payload_from_artifacts(analysis_id: str, cluster_payload: dict[str, Any]) -> dict[str, Any]:
+    """Build a normalized map payload from persisted analysis artifacts."""
+
+    items_data = read_json_file(items_file(analysis_id))
+    umap_data = read_json_file(umap_file(analysis_id))
+    items = _extract_items(items_data)
+    points_base = umap_data.get("points", []) if isinstance(umap_data, dict) else []
+    cluster_labels = cluster_payload["cluster_labels"]
+    clusters = cluster_payload["clusters"]
+
+    if len(points_base) != len(items) or len(cluster_labels) != len(items):
+        raise HTTPException(status_code=500, detail="Artifact mismatch between items and map coordinates.")
+
+    label_by_cluster = {
+        int(cluster["cluster_id"]): str(cluster.get("label") or f"Cluster {cluster['cluster_id']}")
+        for cluster in clusters
+    }
+
+    points: list[dict[str, Any]] = []
+    for idx, item in enumerate(items):
+        point = points_base[idx]
+        cluster_id = int(cluster_labels[idx])
+        points.append(
+            {
+                "id": item["id"],
+                "x": float(point["x"]),
+                "y": float(point["y"]),
+                "x_raw": float(point["x_raw"]),
+                "y_raw": float(point["y_raw"]),
+                "cluster_id": cluster_id,
+                "cluster_label": label_by_cluster.get(cluster_id, f"Cluster {cluster_id}"),
+                "preview": build_preview(str(item.get("text", ""))),
+                "metadata": item.get("metadata", {}),
+            }
+        )
+
+    return {
+        "points": points,
+        "clusters": clusters,
+        "advanced": {
+            "umap_scaled": True,
+            "scale_clamp": 1.0,
+        },
+    }
 
 
 def _require_ready(analysis_id: str, artifact_name: str, owner_id: str) -> bool:
