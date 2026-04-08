@@ -15,6 +15,12 @@ FastAPI backend that runs a local NLP analysis pipeline for user comments (resta
 - Supabase project configured with the analysis schema
 - OpenAI API key for AI labels and summaries
 
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
 Run server:
 
 ```bash
@@ -41,6 +47,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 SUPABASE_STORAGE_BUCKET=analysis-artifacts
 OPENAI_API_KEY=your_openai_api_key
 OPENAI_TEXT_MODEL=gpt-5-nano
+CORS_ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
 ```
 
 4. Restart FastAPI.
@@ -113,3 +120,13 @@ Temporary generated files:
 - `hierarchy.json`
 - `overview.json`
 - `insights.json`
+
+## Deployment
+
+Deployment templates are versioned in [`deploy`](deploy):
+
+- Cloudflare Pages frontend setup
+- Oracle Cloud Always Free backend setup
+- Caddy reverse proxy example
+- `systemd` service template
+- Render Free fallback notes

@@ -3,15 +3,14 @@
 from __future__ import annotations
 
 import json
-import os
 from dataclasses import dataclass
 from functools import lru_cache
-from pathlib import Path
-from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 from fastapi import Header, HTTPException, status
+
+from services.config import first_nonempty, get_backend_setting
 
 
 @dataclass(frozen=True, slots=True)
@@ -68,30 +67,12 @@ def _extract_bearer_token(authorization: str | None) -> str:
 
 @lru_cache(maxsize=1)
 def _load_supabase_auth_config() -> tuple[str, str]:
-    """Load Supabase URL and an API key from env or frontend local config."""
+    """Load Supabase URL and a backend API key."""
 
-    backend_env = _read_env_file(_backend_env_path())
-    frontend_env = _read_env_file(_frontend_env_path())
-
-    supabase_url = _first_nonempty(
-        os.getenv("SUPABASE_URL"),
-        backend_env.get("SUPABASE_URL"),
-        os.getenv("VITE_SUPABASE_URL"),
-        frontend_env.get("VITE_SUPABASE_URL"),
-    )
-    api_key = _first_nonempty(
-        os.getenv("SUPABASE_SERVICE_ROLE_KEY"),
-        backend_env.get("SUPABASE_SERVICE_ROLE_KEY"),
-        os.getenv("SUPABASE_SECRET_KEY"),
-        backend_env.get("SUPABASE_SECRET_KEY"),
-        os.getenv("SUPABASE_PUBLISHABLE_KEY"),
-        backend_env.get("SUPABASE_PUBLISHABLE_KEY"),
-        os.getenv("SUPABASE_ANON_KEY"),
-        backend_env.get("SUPABASE_ANON_KEY"),
-        os.getenv("VITE_SUPABASE_PUBLISHABLE_KEY"),
-        os.getenv("VITE_SUPABASE_ANON_KEY"),
-        frontend_env.get("VITE_SUPABASE_PUBLISHABLE_KEY"),
-        frontend_env.get("VITE_SUPABASE_ANON_KEY"),
+    supabase_url = get_backend_setting("SUPABASE_URL")
+    api_key = first_nonempty(
+        get_backend_setting("SUPABASE_SERVICE_ROLE_KEY"),
+        get_backend_setting("SUPABASE_SECRET_KEY"),
     )
 
     if not supabase_url or not api_key:
@@ -101,44 +82,3 @@ def _load_supabase_auth_config() -> tuple[str, str]:
         )
 
     return supabase_url, api_key
-
-
-def _backend_env_path() -> Path:
-    """Locate backend .env file for local development and deployment."""
-
-    return Path(__file__).resolve().parents[1] / ".env"
-
-
-def _frontend_env_path() -> Path:
-    """Locate the frontend .env.local file for local development fallback."""
-
-    return Path(__file__).resolve().parents[2] / "ProyectoIntegradorUI" / "my-react-app" / ".env.local"
-
-
-def _read_env_file(path: Path) -> dict[str, str]:
-    """Read a simple KEY=VALUE env file without external dependencies."""
-
-    if not path.exists():
-        return {}
-
-    values: dict[str, str] = {}
-    for raw_line in path.read_text(encoding="utf-8").splitlines():
-        line = raw_line.strip()
-        if not line or line.startswith("#") or "=" not in line:
-            continue
-        key, raw_value = line.split("=", 1)
-        key = key.strip()
-        value = raw_value.strip().strip("'").strip('"')
-        if key:
-            values[key] = value
-    return values
-
-
-def _first_nonempty(*values: Any) -> str:
-    """Return the first non-empty string candidate."""
-
-    for value in values:
-        candidate = str(value or "").strip()
-        if candidate:
-            return candidate
-    return ""

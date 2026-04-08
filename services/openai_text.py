@@ -4,13 +4,12 @@ from __future__ import annotations
 
 import json
 import logging
-import os
 import time
 from functools import lru_cache
-from pathlib import Path
-from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
+
+from services.config import get_backend_setting
 
 DEFAULT_OPENAI_TEXT_MODEL = "gpt-5-nano"
 DEFAULT_OPENAI_BASE_URL = "https://api.openai.com/v1"
@@ -140,27 +139,11 @@ def request_openai_text(
 def _load_openai_config() -> dict[str, str]:
     """Load OpenAI configuration from process env or backend .env."""
 
-    backend_env = _read_env_file(_backend_env_path())
     return {
-        "api_key": _first_nonempty(
-            os.getenv("OPENAI_API_KEY"),
-            backend_env.get("OPENAI_API_KEY"),
-        ),
-        "base_url": _first_nonempty(
-            os.getenv("OPENAI_BASE_URL"),
-            backend_env.get("OPENAI_BASE_URL"),
-            DEFAULT_OPENAI_BASE_URL,
-        ),
-        "default_model": _first_nonempty(
-            os.getenv("OPENAI_TEXT_MODEL"),
-            backend_env.get("OPENAI_TEXT_MODEL"),
-            DEFAULT_OPENAI_TEXT_MODEL,
-        ),
-        "log_usage": _first_nonempty(
-            os.getenv("OPENAI_LOG_USAGE"),
-            backend_env.get("OPENAI_LOG_USAGE"),
-            "0",
-        ),
+        "api_key": get_backend_setting("OPENAI_API_KEY"),
+        "base_url": get_backend_setting("OPENAI_BASE_URL", default=DEFAULT_OPENAI_BASE_URL),
+        "default_model": get_backend_setting("OPENAI_TEXT_MODEL", default=DEFAULT_OPENAI_TEXT_MODEL),
+        "log_usage": get_backend_setting("OPENAI_LOG_USAGE", default="0"),
     }
 
 
@@ -291,38 +274,3 @@ def _is_truthy_env(value: str | None) -> bool:
     """Parse simple env toggles such as 1/true/on/yes."""
 
     return str(value or "").strip().lower() in {"1", "true", "yes", "on"}
-
-
-def _backend_env_path() -> Path:
-    """Locate backend .env file for local development and deployment."""
-
-    return Path(__file__).resolve().parents[1] / ".env"
-
-
-def _read_env_file(path: Path) -> dict[str, str]:
-    """Read a simple KEY=VALUE env file without extra dependencies."""
-
-    if not path.exists():
-        return {}
-
-    values: dict[str, str] = {}
-    for raw_line in path.read_text(encoding="utf-8").splitlines():
-        line = raw_line.strip()
-        if not line or line.startswith("#") or "=" not in line:
-            continue
-        key, raw_value = line.split("=", 1)
-        key = key.strip()
-        value = raw_value.strip().strip("'").strip('"')
-        if key:
-            values[key] = value
-    return values
-
-
-def _first_nonempty(*values: Any) -> str:
-    """Return the first non-empty string candidate."""
-
-    for value in values:
-        candidate = str(value or "").strip()
-        if candidate:
-            return candidate
-    return ""

@@ -1,0 +1,16 @@
+[Unit]
+Description=Granulate FastAPI backend
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/opt/granulate/backend/ProyectoIntegradorBE
+EnvironmentFile=/opt/granulate/backend/ProyectoIntegradorBE/.env
+ExecStart=/opt/granulate/backend/.venv/bin/uvicorn main:app --host 127.0.0.1 --port 8000
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
